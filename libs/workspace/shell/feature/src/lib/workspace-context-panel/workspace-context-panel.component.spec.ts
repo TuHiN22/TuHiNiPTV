@@ -195,7 +195,8 @@ describe('WorkspaceContextPanelComponent', () => {
             fixture.nativeElement.querySelectorAll('.context-header__action')
         ).at(-1) as HTMLButtonElement | undefined;
 
-        expect(countPlaceholders).toHaveLength(2);
+        // News + Sports + the synthetic ALL live category.
+        expect(countPlaceholders).toHaveLength(3);
         expect(categoryButtons.every((button) => button.disabled)).toBe(true);
         expect(status?.textContent).toContain('Syncing live categories...');
         expect(status?.textContent).toContain(
@@ -407,7 +408,8 @@ describe('WorkspaceContextPanelComponent', () => {
             fixture.nativeElement.querySelectorAll('.category-item')
         ) as HTMLButtonElement[];
 
-        categoryButtons[1]?.click();
+        // Index 0 is the synthetic ALL entry; Sports (id 2) is now index 2.
+        categoryButtons[2]?.click();
 
         expect(xtreamStore.setSelectedCategory).toHaveBeenCalledWith(2);
         expect(xtreamStore.setSelectedItem).not.toHaveBeenCalled();
@@ -426,12 +428,39 @@ describe('WorkspaceContextPanelComponent', () => {
             fixture.nativeElement.querySelectorAll('.category-item')
         ) as HTMLButtonElement[];
 
-        categoryButtons[1]?.click();
+        // Index 0 is the synthetic ALL entry; Sports (id 2) is now index 2.
+        categoryButtons[2]?.click();
 
         expect(xtreamStore.setSelectedCategory).toHaveBeenCalledWith(2);
         expect(xtreamStore.setSelectedItem).not.toHaveBeenCalled();
         expect(router.navigate).toHaveBeenCalledWith(
             ['/workspace', 'xtreams', 'playlist-1', 'live', 2],
+            {
+                queryParamsHandling: 'preserve',
+                replaceUrl: true,
+            }
+        );
+    });
+
+    it('surfaces an ALL live category pinned first that clears the selection and routes to the live root', () => {
+        fixture.componentRef.setInput('section', 'live');
+        router.routerState.snapshot.root = createRouteSnapshot(null, false, [
+            createRouteSnapshot('live/:categoryId', true),
+        ]);
+        xtreamSelectedTypeContentState.set('ready');
+        fixture.detectChanges();
+
+        expect(getCategoryLabels(fixture)).toEqual(['ALL', 'News', 'Sports']);
+
+        const categoryButtons = Array.from(
+            fixture.nativeElement.querySelectorAll('.category-item')
+        ) as HTMLButtonElement[];
+
+        categoryButtons[0]?.click();
+
+        expect(xtreamStore.setSelectedCategory).toHaveBeenCalledWith(null);
+        expect(router.navigate).toHaveBeenCalledWith(
+            ['/workspace', 'xtreams', 'playlist-1', 'live'],
             {
                 queryParamsHandling: 'preserve',
                 replaceUrl: true,

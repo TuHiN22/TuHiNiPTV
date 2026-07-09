@@ -12,6 +12,8 @@ class MockArtplayer {
 
     readonly video = document.createElement('video');
     readonly setting = { add: jest.fn() };
+    readonly layers = { add: jest.fn() };
+    readonly controls = { add: jest.fn() };
     readonly on = jest.fn();
     readonly destroy = jest.fn();
     readonly currentTime = 0;
@@ -29,6 +31,13 @@ class MockHls {
         MANIFEST_PARSED: 'manifestParsed',
         ERROR: 'error',
         AUDIO_TRACKS_UPDATED: 'audioTracksUpdated',
+        LEVEL_SWITCHED: 'levelSwitched',
+        AUDIO_TRACK_SWITCHED: 'audioTrackSwitched',
+    };
+
+    static ErrorTypes = {
+        NETWORK_ERROR: 'networkError',
+        MEDIA_ERROR: 'mediaError',
     };
 
     static isSupported = jest.fn(() => true);
@@ -41,6 +50,8 @@ class MockHls {
     );
     readonly loadSource = jest.fn();
     readonly attachMedia = jest.fn();
+    readonly startLoad = jest.fn();
+    readonly recoverMediaError = jest.fn();
     readonly destroy = jest.fn();
     readonly audioTracks: unknown[] = [];
 
@@ -198,6 +209,116 @@ describe('ArtPlayerComponent', () => {
         });
 
         expect(issues).toEqual([]);
+    });
+
+    it('recovers a fatal HLS network error before surfacing a diagnostic', () => {
+        createComponent({
+            url: 'https://example.com/live/playlist.m3u8',
+            name: 'HLS Live',
+        });
+        const issues: unknown[] = [];
+        component.playbackIssue.subscribe((issue) => {
+            if (issue) issues.push(issue);
+        });
+
+        getCustomType('m3u8')(
+            artPlayerInstances[0].video,
+            'https://example.com/live/playlist.m3u8'
+        );
+        hlsInstances[0].handlers.get(MockHls.Events.ERROR)?.(null, {
+            type: 'networkError',
+            details: 'fragLoadError',
+            fatal: true,
+            error: new Error('segment failed'),
+        });
+
+        expect(hlsInstances[0].startLoad).toHaveBeenCalledTimes(1);
+        expect(issues).toEqual([]);
+    });
+
+    it('surfaces a network diagnostic once HLS recovery attempts are exhausted', () => {
+        createComponent({
+            url: 'https://example.com/live/playlist.m3u8',
+            name: 'HLS Live',
+        });
+        const issues: Array<{ code: string }> = [];
+        component.playbackIssue.subscribe((issue) => {
+            if (issue) issues.push(issue as { code: string });
+        });
+
+        getCustomType('m3u8')(
+            artPlayerInstances[0].video,
+            'https://example.com/live/playlist.m3u8'
+        );
+        const emitNetworkError = () =>
+            hlsInstances[0].handlers.get(MockHls.Events.ERROR)?.(null, {
+                type: 'networkError',
+                details: 'fragLoadError',
+                fatal: true,
+                error: new Error('segment failed'),
+            });
+
+        // 3 recovery attempts are allowed; the 4th surfaces the diagnostic.
+        emitNetworkError();
+        emitNetworkError();
+        emitNetworkError();
+        emitNetworkError();
+
+        expect(hlsInstances[0].startLoad).toHaveBeenCalledTimes(3);
+        expect(issues).toEqual([
+            expect.objectContaining({ code: 'network-error' }),
+        ]);
+    });
+
+    it('does not attempt recovery for HLS codec media errors', () => {
+        createComponent({
+            url: 'https://example.com/live/playlist.m3u8',
+            name: 'HLS Live',
+        });
+        const issues: unknown[] = [];
+        component.playbackIssue.subscribe((issue) => {
+            if (issue) issues.push(issue);
+        });
+
+        getCustomType('m3u8')(
+            artPlayerInstances[0].video,
+            'https://example.com/live/playlist.m3u8'
+        );
+        hlsInstances[0].handlers.get(MockHls.Events.ERROR)?.(null, {
+            type: 'mediaError',
+            details: 'bufferAddCodecError',
+            fatal: true,
+            error: new Error('codec unsupported'),
+        });
+
+        expect(hlsInstances[0].recoverMediaError).not.toHaveBeenCalled();
+        expect(issues).toEqual([
+            expect.objectContaining({ code: 'unsupported-codec' }),
+        ]);
+    });
+
+    it('emits an unsupported-container diagnostic for MPEG-DASH (.mpd) sources', () => {
+        createComponent({
+            url: 'https://example.com/live/manifest.mpd',
+            name: 'DASH Live',
+        });
+        const issues: unknown[] = [];
+        component.playbackIssue.subscribe((issue) => {
+            if (issue) issues.push(issue);
+        });
+
+        getCustomType('mpd')(
+            artPlayerInstances[0].video,
+            'https://example.com/live/manifest.mpd'
+        );
+
+        expect(issues).toEqual([
+            expect.objectContaining({
+                code: 'unsupported-container',
+                container: 'mpd',
+                externalFallbackRecommended: true,
+            }),
+        ]);
     });
 
     it('uses HLS playback for URLs with a query-declared m3u8 extension', () => {

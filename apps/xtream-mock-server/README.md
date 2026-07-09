@@ -160,20 +160,8 @@ screenshots. Poster and backdrop PNGs are served from:
 apps/xtream-mock-server/public/marketing/{poster,backdrop}/
 ```
 
-Generate or validate those assets with:
-
-```bash
-pnpm release:artwork:dry-run
-pnpm release:artwork:generate
-pnpm release:artwork:validate
-```
-
-`release:artwork:generate` uses `gpt-image-2` through the OpenAI Image API and
-requires `OPENAI_API_KEY`. The screenshot capture workflow only reads committed
-local assets; it does not call OpenAI. If a local PNG is missing, the mock
+Those assets are committed to the repo. If a local PNG is missing, the mock
 server falls back to its deterministic SVG renderer for development continuity.
-The prompt manifest deliberately varies genres and visual media across titles
-so the catalog does not collapse into one superhero/poster style.
 
 ---
 

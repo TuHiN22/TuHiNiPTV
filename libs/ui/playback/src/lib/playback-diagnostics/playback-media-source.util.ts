@@ -14,6 +14,10 @@ const UNSUPPORTED_CONTAINER_EXTENSIONS = new Set([
     'm4v',
     'mkv',
     'mov',
+    // MPEG-DASH manifests cannot be decoded by the browser players (hls.js /
+    // mpegts.js / native), so classify them as an unsupported container and
+    // steer users to an external player (MPV/VLC).
+    'mpd',
     'mpeg',
     'mpg',
     'rm',

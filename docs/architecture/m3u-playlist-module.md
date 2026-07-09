@@ -626,6 +626,93 @@ class EpgService {
 - External player support (MPV, VLC) in Electron
 - M3U archive/catch-up playback for supported replay schemes
 
+### Playlist Import Normalization
+
+- Remote and file M3U content is normalized before parsing by
+  `sanitizePlaylistContent()` in
+  `apps/electron-backend/src/app/events/playlist-source.ts`.
+- Some providers prepend a decorative banner (comment lines such as `#====`,
+  `# Developed by ...`) or a UTF-8 BOM before the `#EXTM3U` header. The
+  underlying `iptv-playlist-parser` treats those leading lines as invalid and
+  returns an empty playlist, so the sanitizer strips a leading BOM and any lines
+  before the first `#EXTM3U` header. Content with the header already first, or
+  with no header at all, is passed through unchanged.
+- This is why URL-shortened playlists (e.g. links that redirect to a
+  GitHub-hosted `.m3u` with a banner) now import instead of failing. Redirects
+  themselves are followed and validated by `requestWithValidatedRedirects`.
+
+### Video Quality Labels (SD / HD / FHD / 4K)
+
+- The ArtPlayer settings menu splits how a level is described:
+    - The expanded **Video Quality selector list** shows each hls.js level as the
+      exact `WIDTH × HEIGHT, N.NN Mbps` detail (no tier prefix).
+    - The collapsed **Video Quality row** (and the value returned when a level is
+      picked) shows only the broadcast-style tier — `SD`, `HD`, `FHD`, or `4K` —
+      for the currently selected level.
+- The tier mapping lives in
+  `libs/ui/playback/src/lib/art-player/video-quality-tier.util.ts`
+  (`resolutionToQualityTier`). `art-player-settings-menu.ts` uses `levelLabel`
+  for the list rows and `levelTierLabel` (carried on each option as
+  `valueLabel`) for the collapsed row. Tiers are chosen from the vertical
+  resolution: `≥ 2160 → 4K`, `≥ 1080 → FHD`, `≥ 720 → HD`, otherwise `SD`. When
+  the vertical resolution is unknown the full detail is used instead of a
+  guessed tier.
+
+### Inline Playback Error Recovery & Diagnostics
+
+- Fatal hls.js errors are no longer surfaced immediately. `ArtPlayerComponent`
+  first runs hls.js self-recovery — `startLoad()` for `NETWORK_ERROR` (up to 3
+  attempts) and `recoverMediaError()` for `MEDIA_ERROR` (up to 2 attempts) —
+  before showing the "stream could not be loaded" diagnostic overlay. This
+  clears transient network stalls that previously ended playback outright.
+- MPEG-DASH (`.mpd`) manifests are not decodable by the browser players
+  (hls.js / mpegts.js / native), so they are classified as an unsupported
+  container. `.mpd` is listed in `UNSUPPORTED_CONTAINER_EXTENSIONS`
+  (`playback-media-source.util.ts`) and ArtPlayer registers an explicit `mpd`
+  custom-type handler that emits the unsupported-container diagnostic
+  immediately instead of letting the native element retry-loop. On Electron the
+  diagnostic offers the external-player fallback (MPV/VLC).
+
+### Video Quality Labels (ArtPlayer)
+
+The ArtPlayer "Video Quality" settings-menu entry lists every hls.js level and,
+next to the raw resolution/bitrate, shows a broadcast-style tier label so users
+recognize the quality at a glance. Each level renders as
+`TIER · WIDTH × HEIGHT, N.NN Mbps` (for example, `HD · 1280 × 720, 2.76 Mbps`).
+
+- Tier mapping (by vertical resolution, `resolutionToQualityTier` in
+  `libs/ui/playback/src/lib/art-player/video-quality-tier.util.ts`):
+    - `4K` ≥ 2160 lines
+    - `FHD` ≥ 1080 lines
+    - `HD` ≥ 720 lines
+    - `SD` below 720 lines
+- The tier is derived from the smaller of width/height so portrait streams
+  classify correctly; when neither dimension is known the tier is omitted and
+  only the resolution/bitrate detail is shown.
+- Labels are produced by `levelLabel()` in
+  `libs/ui/playback/src/lib/art-player/art-player-settings-menu.ts` and refresh
+  on hls.js `MANIFEST_PARSED` / `LEVEL_SWITCHED`.
+
+### Playback Error Recovery & Unsupported Formats
+
+Inline browser playback surfaces a diagnostic overlay (see
+`libs/ui/playback/src/lib/playback-diagnostics/`) when a stream cannot play.
+Two behaviors reduce spurious failures and dead-end retries:
+
+- **HLS self-recovery** (`ArtPlayerComponent`): before showing the "stream could
+  not be loaded" overlay, fatal hls.js errors are retried using hls.js's own
+  recovery — `startLoad()` for network errors (up to 3 attempts) and
+  `recoverMediaError()` for media errors (up to 2 attempts). The overlay only
+  appears once the retry budget is exhausted or the error is unrecoverable.
+  Counters reset each time a new source loads.
+- **MPEG-DASH (`.mpd`)**: the browser players cannot decode DASH manifests.
+  `.mpd` is classified as an unsupported container
+  (`UNSUPPORTED_CONTAINER_EXTENSIONS` in
+  `playback-media-source.util.ts`), and ArtPlayer's `mpd` custom-type handler
+  emits the unsupported-container diagnostic immediately instead of letting the
+  native `<video>` element retry-loop. This shows the external-player fallback
+  (Open in MPV/VLC) right away on desktop.
+
 ### Archive / Catch-Up Playback
 
 - The shared EPG UI only shows the archive replay badge when the host confirms

@@ -34,6 +34,28 @@
         <input matInput type="text" id="password" formControlName="password" />
     </mat-form-field>
 
+    <div class="content-type-select">
+        <span class="content-type-select__label">{{
+            'HOME.XTREAM_PLAYLIST.CONTENT_TO_IMPORT' | translate
+        }}</span>
+        <div class="content-type-select__options">
+            <mat-checkbox formControlName="importLive">
+                {{ 'HOME.XTREAM_PLAYLIST.LIVE_TV' | translate }}
+            </mat-checkbox>
+            <mat-checkbox formControlName="importVod">
+                {{ 'HOME.XTREAM_PLAYLIST.MOVIES' | translate }}
+            </mat-checkbox>
+            <mat-checkbox formControlName="importSeries">
+                {{ 'HOME.XTREAM_PLAYLIST.SERIES' | translate }}
+            </mat-checkbox>
+        </div>
+        @if (form.hasError('noContentType')) {
+            <span class="content-type-select__error">{{
+                'HOME.XTREAM_PLAYLIST.CONTENT_TO_IMPORT_ERROR' | translate
+            }}</span>
+        }
+    </div>
+
     @if (connectionStatus) {
         <div class="connection-status">
             <mat-icon [class]="getStatusClass()">

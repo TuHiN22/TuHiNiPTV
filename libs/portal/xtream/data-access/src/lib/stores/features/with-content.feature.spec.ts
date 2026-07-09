@@ -866,6 +866,54 @@ describe('withContent import state', () => {
         expect(dataSource.getContent).not.toHaveBeenCalled();
     });
 
+    it('only imports content types selected at add time when stored as a JSON string', async () => {
+        // Regression: the raw SQLite playlist row exposes importContentTypes as
+        // a JSON string, which previously failed the Array.isArray() gate and
+        // caused every content type to be imported.
+        dataSource.getCategories.mockResolvedValue([]);
+        dataSource.getContent.mockResolvedValue([]);
+        patchState(store, {
+            currentPlaylist: {
+                ...PLAYLIST,
+                importContentTypes: '["live"]',
+            } as XtreamPlaylistData,
+        });
+
+        await store.initializeContent();
+
+        const categoryTypes = dataSource.getCategories.mock.calls.map(
+            (call) => call[2]
+        );
+        const contentTypes = dataSource.getContent.mock.calls.map(
+            (call) => call[2]
+        );
+        expect(categoryTypes).toEqual(['live']);
+        expect(contentTypes).toEqual(['live']);
+    });
+
+    it('only imports content types selected at add time when stored as an array', async () => {
+        dataSource.getCategories.mockResolvedValue([]);
+        dataSource.getContent.mockResolvedValue([]);
+        patchState(store, {
+            currentPlaylist: {
+                ...PLAYLIST,
+                importContentTypes: ['live', 'series'],
+            } as XtreamPlaylistData,
+        });
+
+        await store.initializeContent();
+
+        const categoryTypes = dataSource.getCategories.mock.calls.map(
+            (call) => call[2]
+        );
+        const contentTypes = dataSource.getContent.mock.calls.map(
+            (call) => call[2]
+        );
+        expect(categoryTypes).toEqual(['live', 'series']);
+        // VOD maps to the 'movie' stream type; it must be absent here.
+        expect(contentTypes).toEqual(['live', 'series']);
+    });
+
     it('keeps the blocked state when retry finds a non-active portal status', async () => {
         checkPortalStatusMock.mockResolvedValue('expired');
         store.setContentInitBlockReason('cancelled');

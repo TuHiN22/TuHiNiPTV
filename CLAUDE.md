@@ -41,9 +41,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-IPTVnator is a cross-platform IPTV player application built with Angular and Electron, supporting M3U/M3U8 playlists, Xtream Codes API, and Stalker portals.
+TuHiN iPTV is a cross-platform **desktop** IPTV player application built with Angular and Electron, supporting M3U/M3U8 playlists, Xtream Codes API, and Stalker portals.
 
-**Dual Environment Support**: The application is designed to work in both Electron and as a Progressive Web App (PWA). The architecture uses a factory pattern to inject environment-specific services at runtime, ensuring the same codebase works in both contexts.
+**Desktop-only**: The app runs exclusively in Electron. The previous PWA / self-hosted web build (and the `web-backend` proxy) has been removed. The Angular frontend still lives in `apps/web` and is loaded by Electron; it talks to the main process over IPC via `ElectronService`.
 
 ## Development Commands
 
@@ -69,11 +69,6 @@ pnpm run serve:frontend
 # or
 nx serve web
 
-# Serve with PWA configuration (optimized, baseHref="/")
-pnpm run serve:frontend:pwa
-# or
-nx serve web --configuration=pwa
-
 # Serve the Electron app (starts both frontend and backend)
 pnpm run serve:backend
 # or
@@ -84,26 +79,25 @@ pnpm run build:frontend
 # or
 nx build web
 
-# Build frontend for PWA deployment (baseHref="/")
-pnpm run build:frontend:pwa
-# or
-nx build web --configuration=pwa
-
 # Build backend (Electron)
 pnpm run build:backend
 # or
 nx build electron-backend
 
-# Package the app (creates distributable without installers)
-pnpm run package:app
-# or
-nx run electron-backend:package
+# Build the desktop installer/app WITHOUT a global pnpm on PATH (recommended).
+# This wrapper prepends the committed pnpm shim (tools/pnpm-shim) to PATH.
+node tools/build/make.mjs            # installer  -> dist/executables/
+node tools/build/make.mjs --package  # unpacked app -> dist/packages/
 
-# Create installers/executables
-pnpm run make:app
-# or
-nx run electron-backend:make
+# Equivalent direct Nx targets (require pnpm on PATH):
+pnpm run make:app -- --publishPolicy=never
+pnpm run package:app
 ```
+
+> Building requires the native `better-sqlite3` module compiled for Electron. On
+> Windows this needs Visual Studio Build Tools 2022 with the "Desktop
+> development with C++" workload; `pnpm install`'s postinstall
+> (`electron-builder install-app-deps`) performs the rebuild.
 
 ### Electron CDP Debugging
 
@@ -216,15 +210,12 @@ Never add new files to the baseline.
 
 This is an Nx monorepo with the following structure:
 
-- **apps/web** - Angular application (frontend, shared by Electron and PWA)
+- **apps/web** - Angular application (the frontend, loaded by Electron)
 - **apps/electron-backend** - Electron main process
-- **apps/web-backend** - HTTP backend for the self-hosted PWA (`/parse`, `/parse-xml`, `/xtream`, `/stalker` CORS proxy endpoints)
 - **apps/remote-control-web** - Mobile remote-control web app served by the Electron backend
-- **apps/web-e2e** - Playwright E2E tests against the web app
 - **apps/electron-backend-e2e** - Playwright E2E tests against the Electron app
 - **apps/stalker-mock-server** - Mock Stalker/Ministra portal for dev and E2E
 - **apps/xtream-mock-server** - Mock Xtream Codes API for dev and E2E
-- **apps/website** - Astro + Tailwind landing page and blog
 - **libs/** - Shared libraries:
     - **epg/data-access** - EPG services, runtime bridge, program normalization
     - **m3u-state** - NgRx state management for M3U playlists
@@ -287,10 +278,9 @@ The Xtream Codes module uses NgRx Signal Store with a layered architecture:
 ┌─────────────────────────────────────────────────────────────────┐
 │                    DATA SOURCE LAYER                             │
 │                   IXtreamDataSource                              │
-│         ┌───────────────────┬───────────────────┐               │
-│         ▼                   ▼                                    │
-│  ElectronDataSource    PwaDataSource                            │
-│  (DB-first + API)      (API-only)                               │
+│                          ▼                                       │
+│               ElectronXtreamDataSource                          │
+│                  (DB-first + API)                               │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -321,7 +311,6 @@ libs/portal/xtream/
 │   ├── data-sources/
 │   │   ├── xtream-data-source.interface.ts        # Abstract interface + types
 │   │   ├── electron-xtream-data-source.ts         # DB-first implementation
-│   │   ├── pwa-xtream-data-source.ts              # API-only implementation
 │   │   └── index.ts                               # provideXtreamDataSource() factory
 │   ├── with-favorites.feature.ts                  # Favorites feature
 │   └── with-recent-items.ts                       # Recently viewed feature
@@ -335,14 +324,10 @@ Key patterns:
 
 - **Feature stores**: Each `with*.feature.ts` uses `signalStoreFeature()` for focused functionality
 - **Facade pattern**: `XtreamStore` composes all features, maintaining backward compatibility
-- **Data source abstraction**: `IXtreamDataSource` interface with environment-specific implementations
-- **Factory injection**: `provideXtreamDataSource()` selects Electron or PWA implementation at runtime
+- **Data source abstraction**: `IXtreamDataSource` interface with a single `ElectronXtreamDataSource` implementation
+- **Factory injection**: `provideXtreamDataSource()` always provides the Electron (SQLite DB-first) implementation
 
-Data strategies by environment:
-| Environment | Strategy |
-|-------------|----------|
-| **Electron** | DB-first: Check DB → fetch API if missing → cache to DB |
-| **PWA** | API-only: Always fetch from API, store in memory |
+Data strategy: DB-first — check SQLite → fetch API if missing → cache to DB.
 
 **M3U Playlist Module Architecture**:
 
@@ -429,34 +414,23 @@ See `docs/architecture/m3u-playlist-module.md` for complete documentation.
 - Xtream Codes: `/workspace/xtreams/:id` (children: `live`, `vod`, `series`, `search`, `actor/:personId`, `recently-added`, `favorites`, `recent`, `downloads`) — `libs/portal/xtream/feature/src/lib/xtream-feature.routes.ts`
 - Stalker portal: `/workspace/stalker/:id` (children: `itv`, `vod`, `radio`, `series`, `favorites`, `recent`, `search`, `actor/:personId`, `downloads`) — `libs/portal/stalker/feature/src/lib/stalker-feature.routes.ts`
 - Global collections: `/workspace/global-favorites`, `/workspace/global-recent`
-- Global search: `/workspace/search` (Electron-only; a guard redirects the PWA to `/workspace/sources`)
+- Global search: `/workspace/search`
 - Downloads: `/workspace/downloads`
 - Settings: `/workspace/settings` (`/settings` redirects there)
 
 **Service Architecture** (Factory Pattern):
 
 - Abstract `DataService` class in `libs/services/src/lib/data.service.ts` defines the contract
-- Two environment-specific implementations:
-    - `ElectronService` (`apps/web/src/app/services/electron.service.ts`) - Uses IPC to communicate with Electron backend
-    - `PwaService` (`apps/web/src/app/services/pwa.service.ts`) - Uses HTTP API and IndexedDB for standalone web version
-- Factory function `DataFactory()` in `apps/web/src/app/app.config.ts` determines which implementation to inject:
-    ```typescript
-    if (window.electron) {
-        return inject(ElectronService);
-    }
-    return inject(PwaService);
-    ```
+- One implementation: `ElectronService` (`apps/web/src/app/services/electron.service.ts`) — uses IPC to communicate with the Electron backend
+- Factory function `DataFactory()` in `apps/web/src/app/app.config.ts` always injects `ElectronService` (desktop-only)
 
-**Data Storage (Environment-Specific)**:
+**Data Storage**:
 
-- **Electron**: SQLite database via Drizzle ORM (`better-sqlite3` driver)
-    - Location: `~/.iptvnator/databases/iptvnator.db`
+- **SQLite database** via Drizzle ORM (`better-sqlite3` driver) — the primary store for Xtream/Stalker content, EPG, favorites, downloads, etc.
+    - Location: `~/.tiptv/databases/tiptv.db`
     - Full-featured relational database with foreign keys and indexes
     - Canonical schema and connection live in `libs/shared/database`
-- **PWA (Web)**: IndexedDB via `ngx-indexed-db`
-    - Browser-based NoSQL storage
-    - Same schema structure but implemented in IndexedDB
-    - Limited by browser storage quotas
+- **IndexedDB** via `ngx-indexed-db` — still used by the shared M3U `PlaylistsService` (`libs/services`) for M3U playlist metadata/state
 
 **TypeScript File Size Rule**:
 
@@ -565,7 +539,7 @@ This project uses modern Angular signal-based APIs and patterns. **ALWAYS** use 
 **Database**:
 
 - **ORM**: Drizzle ORM with `better-sqlite3` (local SQLite file)
-- **Location**: `~/.iptvnator/databases/iptvnator.db` (avoids spaces in path)
+- **Location**: `~/.tiptv/databases/tiptv.db` (avoids spaces in path)
 - **Schema** (`libs/shared/database/src/lib/schema.ts` — canonical; `apps/electron-backend/src/app/database/schema.ts` is a backwards-compat re-export shim):
     - `playlists` - Playlist metadata (M3U, Xtream, Stalker)
     - `categories` - Content categories (live, movies, series)
@@ -615,6 +589,11 @@ This project uses modern Angular signal-based APIs and patterns. **ALWAYS** use 
 **Video Players**:
 
 - Built-in HTML5 player with HLS.js or Video.js
+- Inline player controls (web players): stream quality, audio track, and a toggleable FPS counter.
+    - ArtPlayer: the settings (gear) menu exposes **Video Quality** and **Audio Track** items (`art-player-settings-menu.ts`) that replace ArtPlayer's default Play Speed / Aspect Ratio entries (both disabled in the player config). Video Quality lists "Auto" + every hls.js level as `W × H, N.NN Mbps`; Audio Track lists alternate hls.js audio renditions. They are passed as `option.settings` (top of the menu) and repopulated via `setting.update()` on hls.js `MANIFEST_PARSED` / `AUDIO_TRACKS_UPDATED`. FPS toggle is added below them (`art-player-fps-counter.ts`). Non-HLS (mpegts) streams keep the "Auto" placeholder since no level/track metadata is available.
+    - Video.js: quality via `videojs-quality-selector-hls`, audio via the Video.js `audioTracks()` menu, FPS via a control-bar toggle button (`libs/ui/playback/src/lib/vjs-player/vjs-fps-button.ts`).
+    - FPS accuracy: `libs/ui/playback/src/lib/shared/fps-sampler.ts` computes the true media frame rate from `requestVideoFrameCallback` metadata (`presentedFrames / mediaTime` deltas) rather than counting callbacks against the wall clock, which undercounts because the compositor throttles callbacks. Falls back to a `requestAnimationFrame` counter when `requestVideoFrameCallback` is unavailable. `shared/video-fps-overlay.ts` wraps it for the Video.js overlay.
+    - Embedded MPV and external MPV/VLC expose quality/audio/track selection through the player's own OSD/menus.
 - External players: MPV, VLC (via IPC to Electron backend)
 - Embedded MPV (experimental, macOS/Windows/Linux): renders mpv video inside the Electron window through a native addon. macOS uses the libmpv render API in an `NSOpenGLView`; Windows uses in-process libmpv with `--wid` against an app-owned child `HWND`; Linux spawns an out-of-process `mpv --wid=<x11-window>` controlled over a JSON IPC socket (X11/XWayland only, requires system `mpv` on PATH; subtitles/speed/aspect/recording are not exported there). mpv's own screensaver inhibition does not apply to any of these paths, so `EmbeddedMpvNativeService` holds an Electron `powerSaveBlocker` (`prevent-display-sleep`) whenever any session's status is `playing`, and releases it on pause, dispose, or shutdown. Service: `apps/electron-backend/src/app/services/embedded-mpv-native.service.ts`; full architecture: `docs/architecture/embedded-mpv-native.md`.
 
@@ -653,7 +632,7 @@ This project uses modern Angular signal-based APIs and patterns. **ALWAYS** use 
 - Opt-in via `Settings > Metadata (TMDB)` (sends titles to TMDB); optional user API key overrides the embedded default (`DEFAULT_TMDB_API_KEY` in `libs/services/src/lib/tmdb/tmdb-config.ts` — an empty placeholder in the repo by design; the real key lives in the `TMDB_API_KEY` GitHub Actions secret and is injected at CI build time by `tools/tmdb/inject-tmdb-key.mjs`)
 - Match confidence: provider `tmdb_id` trusted fully; otherwise normalized-title + year (±1) search with a strict gate — no confident match means no enrichment
 - Detail views render provider data immediately; enrichment patches the selection asynchronously (staleness-guarded)
-- Cached in SQLite `tmdb_metadata` (Electron, via DB worker ops `DB_GET/SET_TMDB_METADATA`) or in-memory (PWA); localized via the app language setting
+- Cached in SQLite `tmdb_metadata` (via DB worker ops `DB_GET/SET_TMDB_METADATA`); localized via the app language setting
 - Service layer: `libs/services/src/lib/tmdb/`; store glue: `libs/portal/xtream/data-access/src/lib/stores/xtream-tmdb-enrichment.ts` and `libs/portal/stalker/data-access/src/lib/stores/stalker-tmdb-enrichment.ts` (hooked in `withStalkerSelection().setSelectedItem`)
 - TMDB attribution (logo + disclaimer) is required and shown in the settings TMDB section and About
 - See `docs/architecture/tmdb-metadata-enrichment.md`
@@ -669,53 +648,32 @@ This project uses modern Angular signal-based APIs and patterns. **ALWAYS** use 
 
 ## Development Notes
 
-### Environment Detection and Dual-Mode Architecture
+### Runtime Architecture (Electron)
 
-The app determines whether it's running in Electron or as a PWA by checking:
+The app runs exclusively in Electron. `window.electron` (exposed by the preload
+bridge) is always present at runtime, and `RuntimeCapabilitiesService.isElectron`
+is always true. The remaining `window.electron` / `isElectron` guards in the code
+are historical and are effectively always-on for the desktop build.
 
-```typescript
-window.electron; // truthy in Electron, undefined in browser
-```
+**Key behaviors**:
 
-**Why Dual Mode?**
-IPTVnator supports both Electron (desktop app) and PWA (web browser) to provide flexibility:
-
-- **Electron**: Full-featured desktop experience with local database, external player support (MPV/VLC), and native file system access
-- **PWA**: Lightweight web version that runs in any browser without installation
-
-**Environment-Specific Behavior**:
-
-- `app.config.ts` - `DataFactory()` selects DataService implementation based on environment
-- `app.routes.ts` - Same `/workspace/...` route tree in both environments; guards keep Electron-only routes (e.g. global search) out of the PWA
-- Storage layer switches automatically:
-    - Electron → SQLite/Drizzle ORM → `~/.iptvnator/databases/iptvnator.db`
-    - PWA → IndexedDB → Browser storage
-- External player support (MPV/VLC) only available in Electron
-- File system operations only available in Electron (uploading playlists from disk)
+- `app.config.ts` - `DataFactory()` always injects `ElectronService`
+- `app.routes.ts` - the `/workspace/...` route tree; some routes (e.g. global search) are still guarded but always available on desktop
+- Storage: SQLite/Drizzle ORM at `~/.tiptv/databases/tiptv.db`, plus IndexedDB (`ngx-indexed-db`) for the shared M3U `PlaylistsService`
+- External players (MPV/VLC), embedded MPV, native file access, and the remote-control server are all available
 
 **Base Href Configuration**:
-The app uses different base href values depending on the build target:
+The Electron build overrides `baseHref` to `./` (required for the `file://`
+protocol). Build configurations in `apps/web/project.json`:
 
-- **Development & PWA**: `baseHref="/"` (from `index.html`)
-    - Used by: `pnpm run serve:frontend`, `pnpm run build:frontend:pwa`
-    - For web servers with proper routing
-- **Electron Production**: `baseHref="./"` (overridden in build config)
-    - Used by: `pnpm run build:backend`, `pnpm run make:app`
-    - Required for `file://` protocol in Electron
-
-Build configurations in `apps/web/project.json`:
-
-- `production`: Electron build with `baseHref="./"`
-- `pwa`: Web deployment with `baseHref="/"`
+- `production`: Electron build with `baseHref="./"` (used by `build:backend` / the build wrapper)
 - `development`: Dev mode with `baseHref="/"` from index.html
-
-**Factory Pattern Implementation**:
-The factory pattern ensures a single codebase works in both environments without conditional checks scattered throughout the application. All environment-specific logic is encapsulated in the service implementations.
+- `electron-e2e`: E2E build with `baseHref="./"`
 
 ### Testing Strategy
 
 - **Unit tests**: Jest with `jest-preset-angular` and `ng-mocks`
-- **E2E tests**: Playwright testing the web app and Electron app
+- **E2E tests**: Playwright testing the Electron app (`electron-backend-e2e`)
 - Backend tests use standard Jest
 - Bug fixes should add focused regression coverage unless there is a documented reason not to.
 - Use the impact-based validation policy in `Regression Prevention And Test Updates` to choose targeted unit tests, atomized E2E targets, broad suites, or CDP/manual verification.

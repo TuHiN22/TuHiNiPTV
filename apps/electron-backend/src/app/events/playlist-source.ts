@@ -18,6 +18,27 @@ export interface PlaylistFetchOptions {
     trustedInsecureTlsHosts?: readonly string[];
 }
 
+/**
+ * Normalizes raw playlist text so it parses reliably.
+ *
+ * Some providers prepend decorative banners/comment lines (e.g. `#====`,
+ * `# Developed by ...`) before the `#EXTM3U` header. `iptv-playlist-parser`
+ * expects `#EXTM3U` to be the first meaningful line, so those leading lines
+ * make it treat the file as empty/invalid. Strip a leading UTF-8 BOM and any
+ * lines before the first `#EXTM3U` header. If no header is present the content
+ * is returned unchanged so the caller's own error handling still applies.
+ */
+export function sanitizePlaylistContent(content: string): string {
+    const withoutBom = content.replace(/^\uFEFF/, '');
+    // Match the header token itself (ignoring any leading indentation) so the
+    // returned content always begins exactly at `#EXTM3U`.
+    const headerMatch = /#EXTM3U\b/i.exec(withoutBom);
+    if (!headerMatch || headerMatch.index === 0) {
+        return withoutBom;
+    }
+    return withoutBom.slice(headerMatch.index);
+}
+
 export async function fetchPlaylistFromUrl(
     url: string,
     title?: string,
@@ -44,7 +65,7 @@ export async function fetchPlaylistFromUrl(
         throw error;
     }
 
-    const parsedPlaylist = parse(result.data);
+    const parsedPlaylist = parse(sanitizePlaylistContent(result.data));
     const extractedName = url && url.length > 1 ? getFilenameFromUrl(url) : '';
     const playlistName =
         !extractedName || extractedName === 'Untitled playlist'
@@ -64,7 +85,12 @@ export async function fetchPlaylistFromFile(
     title: string
 ): Promise<Playlist> {
     const fileContent = await readFile(filePath, 'utf-8');
-    return createPlaylistObject(title, parse(fileContent), filePath, 'FILE');
+    return createPlaylistObject(
+        title,
+        parse(sanitizePlaylistContent(fileContent)),
+        filePath,
+        'FILE'
+    );
 }
 
 export function derivePlaylistTitleFromFilePath(filePath: string): string {

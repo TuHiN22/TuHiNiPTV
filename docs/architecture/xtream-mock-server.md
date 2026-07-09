@@ -277,23 +277,14 @@ This scenario is reserved for release screenshots and marketing materials:
   titles or real media metadata
 - posters and backdrops are served from committed PNG files in
   `apps/xtream-mock-server/public/marketing/{poster,backdrop}/`
-- `tools/release/generate-marketing-artwork.ts` generates the PNGs with
-  `gpt-image-2` only when `OPENAI_API_KEY` is present; it also writes the
-  prompt/asset manifest at `apps/xtream-mock-server/public/marketing/manifest.json`
-- the manifest assigns distinct genre and visual-medium profiles per title,
-  including documentary, noir, animated family, retro rescue drama, cyberpunk,
-  anime-inspired space school, and workplace dramedy styles
-- screenshot capture remains deterministic and offline because
-  `tools/release/capture-v020-screenshots.ts` consumes the local mock server
-  assets and never calls OpenAI
-- the SVG renderer in `marketing.generator.ts` remains the fallback for missing
+- the SVG renderer in `marketing.generator.ts` is the fallback for missing
   assets, live logos, season covers, and episode thumbnails
 
 ---
 
 ## Playwright Integration
 
-### Configuration (`apps/web-e2e/playwright.config.ts`)
+### Configuration (`apps/electron-backend-e2e/playwright.config.ts`)
 
 The mock server is listed as a third `webServer` entry:
 
@@ -326,8 +317,5 @@ await page.route('**/localhost:3000/xtream**', async (route) => {
 - **Add new actions**: Implement a handler function and add a `case` in `routes/dispatch.ts`
 - **Add new scenarios**: Add an entry to `SCENARIOS` in `scenarios.ts`
 - **Add deterministic EPG fixtures**: Extend `ScenarioConfig.epgFixture` and populate `epgListingsByStreamId` in `data-store.ts`
-- **Refresh release artwork**: Run `pnpm release:artwork:dry-run`, then
-  `OPENAI_API_KEY=... pnpm release:artwork:generate`, inspect the generated PNGs,
-  and finish with `pnpm release:artwork:validate`
 - **Adjust data volume**: Change `itemsPerCategory`, `seasonsPerSeries`, or `episodesPerSeason` per scenario
 - **Custom stream URLs**: Edit the HLS stub redirect in `main.ts`

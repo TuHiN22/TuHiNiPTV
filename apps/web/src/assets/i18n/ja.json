@@ -7,7 +7,7 @@
     "SHOW_LESS": "折りたたむ",
     "PLAYLISTS": "プレイリスト",
     "HOME": {
-        "TITLE": "IPTVnator",
+        "TITLE": "TuHiN iPTV",
         "SUBTITLE": "リストからプレイリストを選択するか、新しいプレイリストを追加してください",
         "TABS": {
             "RECENTLY_ADDED": "最近追加したプレイリスト",
@@ -20,7 +20,7 @@
         "PLAYLISTS": {
             "NO_PLAYLISTS": "プレイリストが追加されていません",
             "ADD_FIRST": "最初のプレイリストを追加してください",
-            "WELCOME_TITLE": "IPTVnatorへようこそ",
+            "WELCOME_TITLE": "TuHiN iPTVへようこそ",
             "WELCOME_DESCRIPTION": "最初のプレイリストを追加してストリーミングを始めましょう。お好みのIPTVサービスに接続して、ライブTV、映画、シリーズをお楽しみください。",
             "ADD_YOUR_FIRST": "最初のプレイリストを追加",
             "FEATURE_M3U": "M3U/M3U8ファイル",
@@ -161,7 +161,7 @@
             "ERROR_TLS_HOST_UNKNOWN": "Could not determine the playlist host. Please retry manually.",
             "TRUST_TLS_HOST": "Trust host",
             "TRUST_TLS_HOST_TITLE": "Trust invalid certificate?",
-            "TRUST_TLS_HOST_WARNING": "Only continue if you trust this playlist host. IPTVnator will allow invalid TLS certificates for this host, but other hosts still require valid certificates."
+            "TRUST_TLS_HOST_WARNING": "Only continue if you trust this playlist host. TuHiN iPTV will allow invalid TLS certificates for this host, but other hosts still require valid certificates."
         },
         "TEXT_IMPORT": {
             "LABEL": "m3u(8)プレイリストをテキストとして挿入",
@@ -251,7 +251,7 @@
         "TMDB_ATTRIBUTION": "本製品は TMDB API を使用していますが、TMDB による承認または認証を受けたものではありません。",
         "APP_PREFERENCES": "アプリ設定",
         "HERO_EYEBROW": "ワークスペース設定",
-        "HERO_TITLE": "IPTVnatorをカスタマイズ",
+        "HERO_TITLE": "TuHiN iPTVをカスタマイズ",
         "HERO_DESCRIPTION": "現在のワークスペースの見た目を保ったまま、再生、番組表、リモートアクセス、データ管理を一カ所で調整できます。",
         "SUBTITLE": "アプリケーションの設定を変更",
         "DESCRIPTION": "以下のオプションを調整し、変更を保存ボタンで確定してください",
@@ -309,14 +309,14 @@
         "EPG_VIEW_MODE_TIMELINE": "タイムライン",
         "EPG_VIEW_MODE_LIST": "リスト",
         "STARTUP_BEHAVIOR": "起動時の表示",
-        "STARTUP_BEHAVIOR_DESCRIPTION": "IPTVnatorを起動したときに最初に利用可能なワークスペースビューを開くか、最後に表示していたセクションを復元するかを選択します。「最初のビュー」は、ダッシュボードが有効な場合はダッシュボード、無効な場合はソースを意味します。",
+        "STARTUP_BEHAVIOR_DESCRIPTION": "TuHiN iPTVを起動したときに最初に利用可能なワークスペースビューを開くか、最後に表示していたセクションを復元するかを選択します。「最初のビュー」は、ダッシュボードが有効な場合はダッシュボード、無効な場合はソースを意味します。",
         "STARTUP_BEHAVIOR_FIRST_VIEW": "最初に利用可能なビュー",
         "STARTUP_BEHAVIOR_RESTORE_LAST_VIEW": "最後のビューを復元",
         "SHOW_CAPTIONS_DESCRIPTION": "デフォルトで字幕を表示/非表示",
         "SHOW_EXTERNAL_PLAYBACK_BAR": "再生中フッターを表示",
         "SHOW_EXTERNAL_PLAYBACK_BAR_DESCRIPTION": "デスクトップでワークスペース下部に外部プレーヤーのステータスバーを表示し続けます。",
         "VERSION_DESCRIPTION": "アプリケーションの現在のバージョン",
-        "ABOUT_SUBTITLE": "バージョン、プロジェクトのリンク、IPTVnatorをサポートする方法。",
+        "ABOUT_SUBTITLE": "バージョン、プロジェクトのリンク、TuHiN iPTVをサポートする方法。",
         "EMBEDDED_MPV_NOTICE_TITLE": "組み込みMPVランタイム",
         "EMBEDDED_MPV_NOTICE_DESCRIPTION": "デスクトップ版のビルドには、実験的な組み込みMPVプレーヤー用のlibmpvおよびFFmpegライブラリを同梱できます。MPVアプリを別途インストールする必要はありません。フォールバックとして外部MPVおよびVLCも引き続き利用できます。",
         "COMMUNITY": "プロジェクトとコミュニティ",
@@ -326,10 +326,10 @@
         "LINK_BLOG_DESCRIPTION": "リリースノート、ヒント、プロジェクトの最新情報",
         "LINK_TELEGRAM_DESCRIPTION": "お知らせ、コミュニティ、サポート",
         "SUPPORT_TITLE": "プロジェクトをサポート",
-        "SUPPORT_DESCRIPTION": "IPTVnatorはオープンに開発されている無料のオープンソースソフトウェアです。日々の利用に役立っているなら、わずかなご支援がプロジェクトの継続と今後の方向性を後押しします。ありがとうございます。",
+        "SUPPORT_DESCRIPTION": "TuHiN iPTVはオープンに開発されている無料のオープンソースソフトウェアです。日々の利用に役立っているなら、わずかなご支援がプロジェクトの継続と今後の方向性を後押しします。ありがとうございます。",
         "SUPPORT_SPONSORS_HINT": "定期または1回限り",
         "SUPPORT_KOFI_HINT": "コーヒーを奢る",
-        "EPG_NOTE": "現在、EPGはIPTVnatorのelectronベース版でのみ利用可能です。",
+        "EPG_NOTE": "現在、EPGはTuHiN iPTVのelectronベース版でのみ利用可能です。",
         "EPG_NOTE_URL_TEXT": "こちらをチェック",
         "IMPORT_EXPORT_DATA": "プレイリストのインポート/エクスポート",
         "IMPORT_EXPORT_DATA_DESCRIPTION": "アプリケーション内で使用されているJSONフォーマットでプレイリストをエクスポートまたはインポート。",
@@ -356,10 +356,10 @@
         "PLAYLISTS_REMOVED": "All playlists and playlist data were removed.",
         "MPV_PLAYER_PATH_LABEL": "mpvのパス",
         "MPV_PLAYER_PATH_DESCRIPTION": "MPV へのパスを設定します。macOS では /Applications/mpv.app のような MPV アプリバンドル、または実行ファイルのパスを使用できます。",
-        "MPV_COMPATIBLE_PLAYER_TIP": "IINA は macOS で MPV 互換プレーヤーとして起動できますが、/Applications/IINA.app/Contents/MacOS/iina-cli または /Applications/IINA.app/Contents/MacOS/IINA のような実行ファイルのパスを指定してください。IPTVnator の操作、位置ポーリング、インスタンス再利用は MPV IPC でのみ保証されます。",
+        "MPV_COMPATIBLE_PLAYER_TIP": "IINA は macOS で MPV 互換プレーヤーとして起動できますが、/Applications/IINA.app/Contents/MacOS/iina-cli または /Applications/IINA.app/Contents/MacOS/IINA のような実行ファイルのパスを指定してください。TuHiN iPTV の操作、位置ポーリング、インスタンス再利用は MPV IPC でのみ保証されます。",
         "MPV_PLAYER_PATH": "mpvプレーヤーのパス",
         "MPV_PLAYER_ARGUMENTS_LABEL": "mpv command-line arguments",
-        "MPV_PLAYER_ARGUMENTS_DESCRIPTION": "Optional arguments passed to mpv when IPTVnator starts a new external player process.",
+        "MPV_PLAYER_ARGUMENTS_DESCRIPTION": "Optional arguments passed to mpv when TuHiN iPTV starts a new external player process.",
         "MPV_PLAYER_ARGUMENTS": "mpv arguments",
         "MPV_REUSE_INSTANCE_LABEL": "MPVインスタンスを再利用",
         "MPV_REUSE_INSTANCE_DESCRIPTION": "有効にすると、異なるストリームの再生に同じMPVウィンドウが再利用されます。無効にすると、各ストリームが新しいMPVウィンドウで開きます。",
@@ -371,9 +371,9 @@
         "VLC_PLAYER_PATH_DESCRIPTION": "VLC へのパスを設定します。macOS では /Applications/VLC.app のような VLC アプリバンドル、または実行ファイルのパスを使用できます。",
         "VLC_PLAYER_PATH": "VLCプレーヤーのパス",
         "VLC_PLAYER_ARGUMENTS_LABEL": "VLC command-line arguments",
-        "VLC_PLAYER_ARGUMENTS_DESCRIPTION": "Optional arguments passed to VLC when IPTVnator starts a new external player process.",
+        "VLC_PLAYER_ARGUMENTS_DESCRIPTION": "Optional arguments passed to VLC when TuHiN iPTV starts a new external player process.",
         "VLC_PLAYER_ARGUMENTS": "VLC arguments",
-        "EXTERNAL_PLAYER_ARGUMENTS_HINT": "Use one argument per line. These values are applied before stream-specific IPTVnator options.",
+        "EXTERNAL_PLAYER_ARGUMENTS_HINT": "Use one argument per line. These values are applied before stream-specific TuHiN iPTV options.",
         "VLC_REUSE_INSTANCE_LABEL": "VLCインスタンスを再利用",
         "VLC_REUSE_INSTANCE_DESCRIPTION": "有効にすると、異なるストリームの再生に同じVLCウィンドウが再利用されます。無効にすると、各ストリームが新しいVLCウィンドウで開きます。",
         "REMOTE_CONTROL": "リモートコントロール",
@@ -659,10 +659,10 @@
         "RETRY": "再試行",
         "ALLOW_PRIVATE_SOURCE": "Allow source",
         "ALLOW_PRIVATE_SOURCE_TITLE": "Allow private-network EPG source?",
-        "ALLOW_PRIVATE_SOURCE_WARNING": "Only allow this if you trust the EPG source. IPTVnator will let this exact EPG URL connect to private or local network addresses.",
+        "ALLOW_PRIVATE_SOURCE_WARNING": "Only allow this if you trust the EPG source. TuHiN iPTV will let this exact EPG URL connect to private or local network addresses.",
         "TRUST_TLS_HOST": "Trust host",
         "TRUST_TLS_HOST_TITLE": "Trust invalid certificate?",
-        "TRUST_TLS_HOST_WARNING": "Only continue if you trust this host. IPTVnator will allow invalid TLS certificates for this host, but other hosts still require valid certificates.",
+        "TRUST_TLS_HOST_WARNING": "Only continue if you trust this host. TuHiN iPTV will allow invalid TLS certificates for this host, but other hosts still require valid certificates.",
         "CURRENT_PROGRAM": "Current program",
         "ARCHIVE_PLAYBACK": "アーカイブ再生",
         "COLLAPSE_PANEL": "Collapse EPG panel",
@@ -728,7 +728,7 @@
     "NO": "いいえ",
     "MENU": {
         "OPEN": "メニューを開く",
-        "SUPPORT_ARIA": "GitHubでIPTVnatorをサポート",
+        "SUPPORT_ARIA": "GitHubでTuHiN iPTVをサポート",
         "SETTINGS_ARIA": "設定を開く",
         "BUG_REPORT": "バグを報告",
         "WHAT_IS_NEW": "新着情報",
@@ -737,7 +737,7 @@
         "SUPPORT_PROJECT": "プロジェクトをサポート"
     },
     "ABOUT": {
-        "TITLE": "IPTVnatorについて",
+        "TITLE": "TuHiN iPTVについて",
         "DESCRIPTION": "m3uやm3u8プレイリストのサポート、お気に入り、TV番組表、TVアーカイブ/キャッチアップなど、複数の機能を備えたクロスプラットフォームのIPTVプレーヤーアプリケーション。",
         "VERSION": "バージョン",
         "GITHUB_TOOLTIP": "GitHub上のITPVnatorリポジトリ",
@@ -988,8 +988,8 @@
         "SUBTITLE": "IPTVプレーヤーをリモートで操作",
         "UP_CHANNEL": "チャンネルアップ",
         "DOWN_CHANNEL": "チャンネルダウン",
-        "HEADER": "IPTVNatorリモートコントロール",
-        "FOOTER": "IPTVNatorリモートコントロール"
+        "HEADER": "TuHiN iPTVリモートコントロール",
+        "FOOTER": "TuHiN iPTVリモートコントロール"
     },
     "WORKSPACE": {
         "FAVORITES_ONLY": "お気に入りのみ",
@@ -1045,7 +1045,7 @@
             "FAVORITE_MOVIES_AND_SERIES": "Favorite movies & series"
         },
         "SHELL": {
-            "BRAND_ALT": "IPTVnator",
+            "BRAND_ALT": "TuHiN iPTV",
             "RAIL_DASHBOARD": "ダッシュボード",
             "OPEN_DASHBOARD": "ダッシュボードを開く",
             "RAIL_SOURCES": "ソース",
@@ -1225,7 +1225,7 @@
         },
         "SHORTCUTS": {
             "TITLE": "Keyboard shortcuts",
-            "SUBTITLE": "Workspace, navigation, playback, and dialog shortcuts available in IPTVnator.",
+            "SUBTITLE": "Workspace, navigation, playback, and dialog shortcuts available in TuHiN iPTV.",
             "OPEN_TOOLTIP": "Keyboard shortcuts (?)",
             "OPEN_ARIA": "Open keyboard shortcuts",
             "PLATFORM": {

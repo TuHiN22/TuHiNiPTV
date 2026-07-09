@@ -136,6 +136,33 @@ const initialContentState: ContentState = {
     contentInitBlockReason: null,
 };
 
+const ALL_CONTENT_TYPES: readonly ContentType[] = ['live', 'vod', 'series'];
+
+/**
+ * Normalizes the persisted `importContentTypes` value into a clean
+ * {@link ContentType} array. Accepts an already-parsed array or a JSON string
+ * (the raw SQLite column value), tolerating whichever shape the current
+ * playlist source provides.
+ */
+function normalizeImportContentTypes(
+    value: ContentType[] | string | null | undefined
+): ContentType[] {
+    let parsed: unknown = value;
+    if (typeof value === 'string') {
+        try {
+            parsed = JSON.parse(value);
+        } catch {
+            return [];
+        }
+    }
+    if (!Array.isArray(parsed)) {
+        return [];
+    }
+    return parsed.filter((type): type is ContentType =>
+        (ALL_CONTENT_TYPES as readonly string[]).includes(type as string)
+    );
+}
+
 /**
  * Content feature store for managing Xtream categories and streams.
  * Handles:
@@ -375,6 +402,25 @@ export function withContent() {
                         password: playlist.password,
                     },
                 };
+            };
+
+            /**
+             * Content types the user chose to import for the current playlist
+             * (from the add-playlist dialog). Defaults to all types when unset,
+             * keeping older playlists fully imported.
+             */
+            const getEnabledContentTypes = (): Set<ContentType> => {
+                const playlist = getPortalStore().currentPlaylist?.() as
+                    | { importContentTypes?: ContentType[] | string }
+                    | null
+                    | undefined;
+                const selected = normalizeImportContentTypes(
+                    playlist?.importContentTypes
+                );
+                if (selected.length > 0) {
+                    return new Set(selected);
+                }
+                return new Set<ContentType>(['live', 'vod', 'series']);
             };
 
             const hasCachedContentForType = async (
@@ -919,47 +965,31 @@ export function withContent() {
 
                     patchState(store, { isLoadingCategories: true });
 
+                    // Only fetch categories for content types the user opted to
+                    // import; disabled types resolve to an empty list.
+                    const enabledTypes = getEnabledContentTypes();
+                    const fetchCategoriesForType = (type: ContentType) =>
+                        enabledTypes.has(type)
+                            ? dataSource.getCategories(
+                                  ctx.playlistId,
+                                  ctx.credentials,
+                                  type,
+                                  {
+                                      sessionId: options?.sessionId,
+                                      onPhaseChange: (phase) =>
+                                          patchState(store, {
+                                              isImporting: true,
+                                              importPhase: phase,
+                                          }),
+                                  }
+                              )
+                            : Promise.resolve([]);
+
                     try {
                         const [live, vod, series] = await Promise.all([
-                            dataSource.getCategories(
-                                ctx.playlistId,
-                                ctx.credentials,
-                                'live',
-                                {
-                                    sessionId: options?.sessionId,
-                                    onPhaseChange: (phase) =>
-                                        patchState(store, {
-                                            isImporting: true,
-                                            importPhase: phase,
-                                        }),
-                                }
-                            ),
-                            dataSource.getCategories(
-                                ctx.playlistId,
-                                ctx.credentials,
-                                'vod',
-                                {
-                                    sessionId: options?.sessionId,
-                                    onPhaseChange: (phase) =>
-                                        patchState(store, {
-                                            isImporting: true,
-                                            importPhase: phase,
-                                        }),
-                                }
-                            ),
-                            dataSource.getCategories(
-                                ctx.playlistId,
-                                ctx.credentials,
-                                'series',
-                                {
-                                    sessionId: options?.sessionId,
-                                    onPhaseChange: (phase) =>
-                                        patchState(store, {
-                                            isImporting: true,
-                                            importPhase: phase,
-                                        }),
-                                }
-                            ),
+                            fetchCategoriesForType('live'),
+                            fetchCategoriesForType('vod'),
+                            fetchCategoriesForType('series'),
                         ]);
 
                         patchState(store, {
@@ -989,6 +1019,10 @@ export function withContent() {
                     if (!ctx) return;
 
                     patchState(store, { isLoadingContent: true });
+
+                    // Only fetch/store streams for content types the user chose
+                    // to import; disabled types are marked ready with no data.
+                    const enabledTypes = getEnabledContentTypes();
 
                     // Track combined progress across all content types
                     let totalItems = 0;
@@ -1020,23 +1054,25 @@ export function withContent() {
                             );
                         registerImportOperation(liveOperationId);
 
-                        const live = (await dataSource.getContent(
-                            ctx.playlistId,
-                            ctx.credentials,
-                            'live',
-                            onProgress,
-                            onTotal,
-                            {
-                                operationId: liveOperationId,
-                                sessionId: options?.sessionId,
-                                onEvent: trackImportEvent,
-                                onPhaseChange: (phase) =>
-                                    patchState(store, {
-                                        isImporting: true,
-                                        importPhase: phase,
-                                    }),
-                            }
-                        )) as XtreamLiveStream[];
+                        const live = (enabledTypes.has('live')
+                            ? await dataSource.getContent(
+                                  ctx.playlistId,
+                                  ctx.credentials,
+                                  'live',
+                                  onProgress,
+                                  onTotal,
+                                  {
+                                      operationId: liveOperationId,
+                                      sessionId: options?.sessionId,
+                                      onEvent: trackImportEvent,
+                                      onPhaseChange: (phase) =>
+                                          patchState(store, {
+                                              isImporting: true,
+                                              importPhase: phase,
+                                          }),
+                                  }
+                              )
+                            : []) as XtreamLiveStream[];
                         throwIfImportCancelled(options?.importSessionId);
                         await setImportStatus(
                             ctx.playlistId,
@@ -1056,23 +1092,25 @@ export function withContent() {
                                 'db-save-content'
                             );
                         registerImportOperation(vodOperationId);
-                        const vod = (await dataSource.getContent(
-                            ctx.playlistId,
-                            ctx.credentials,
-                            'movie',
-                            onProgress,
-                            onTotal,
-                            {
-                                operationId: vodOperationId,
-                                sessionId: options?.sessionId,
-                                onEvent: trackImportEvent,
-                                onPhaseChange: (phase) =>
-                                    patchState(store, {
-                                        isImporting: true,
-                                        importPhase: phase,
-                                    }),
-                            }
-                        )) as XtreamVodStream[];
+                        const vod = (enabledTypes.has('vod')
+                            ? await dataSource.getContent(
+                                  ctx.playlistId,
+                                  ctx.credentials,
+                                  'movie',
+                                  onProgress,
+                                  onTotal,
+                                  {
+                                      operationId: vodOperationId,
+                                      sessionId: options?.sessionId,
+                                      onEvent: trackImportEvent,
+                                      onPhaseChange: (phase) =>
+                                          patchState(store, {
+                                              isImporting: true,
+                                              importPhase: phase,
+                                          }),
+                                  }
+                              )
+                            : []) as XtreamVodStream[];
                         throwIfImportCancelled(options?.importSessionId);
                         await setImportStatus(
                             ctx.playlistId,
@@ -1092,23 +1130,25 @@ export function withContent() {
                                 'db-save-content'
                             );
                         registerImportOperation(seriesOperationId);
-                        const series = (await dataSource.getContent(
-                            ctx.playlistId,
-                            ctx.credentials,
-                            'series',
-                            onProgress,
-                            onTotal,
-                            {
-                                operationId: seriesOperationId,
-                                sessionId: options?.sessionId,
-                                onEvent: trackImportEvent,
-                                onPhaseChange: (phase) =>
-                                    patchState(store, {
-                                        isImporting: true,
-                                        importPhase: phase,
-                                    }),
-                            }
-                        )) as XtreamSerieItem[];
+                        const series = (enabledTypes.has('series')
+                            ? await dataSource.getContent(
+                                  ctx.playlistId,
+                                  ctx.credentials,
+                                  'series',
+                                  onProgress,
+                                  onTotal,
+                                  {
+                                      operationId: seriesOperationId,
+                                      sessionId: options?.sessionId,
+                                      onEvent: trackImportEvent,
+                                      onPhaseChange: (phase) =>
+                                          patchState(store, {
+                                              isImporting: true,
+                                              importPhase: phase,
+                                          }),
+                                  }
+                              )
+                            : []) as XtreamSerieItem[];
                         throwIfImportCancelled(options?.importSessionId);
                         await setImportStatus(
                             ctx.playlistId,

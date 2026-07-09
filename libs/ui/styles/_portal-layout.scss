@@ -104,13 +104,22 @@
     }
 
     .video-player {
-        flex: 1 1 0;
+        // Size to the video's 16:9 box so the now-playing/EPG bar sits directly
+        // beneath the player instead of below a tall black letterbox band on
+        // narrow/tall content columns (option a). On wide/landscape windows the
+        // 16:9 height can exceed the available space, so the box is allowed to
+        // shrink (flex-shrink: 1) and the player letterboxes as before.
+        flex: 0 1 auto;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        max-height: 100%;
         min-height: 0;
         overflow: hidden;
         display: flex;
 
         > app-web-player-view {
             flex: 1;
+            min-width: 0;
             min-height: 0;
         }
     }

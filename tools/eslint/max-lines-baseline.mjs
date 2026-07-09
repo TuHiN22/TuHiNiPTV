@@ -36,10 +36,6 @@ export const maxLinesBaseline = [
     'apps/electron-backend/src/app/workers/database.worker.ts',
     'apps/electron-backend/src/app/workers/epg-parser.worker.ts',
     'apps/stalker-mock-server/src/app/data-generator.ts',
-    'apps/web-backend/src/app/web-backend-app.spec.ts',
-    'apps/web-backend/src/app/web-backend-app.ts',
-    'apps/web-e2e/src/stalker.e2e.ts',
-    'apps/web-e2e/src/xtream.e2e.ts',
     'apps/web/src/app/services/electron.service.ts',
     'apps/web/src/app/services/pwa.service.ts',
     'apps/web/src/app/settings/settings.component.spec.ts',
@@ -134,6 +130,4 @@ export const maxLinesBaseline = [
     'libs/workspace/shell/feature/src/lib/workspace-shell/services/helpers/workspace-shell-command-builders.ts',
     'libs/workspace/shell/feature/src/lib/workspace-shell/services/workspace-shell.facade.spec.ts',
     'libs/workspace/shell/feature/src/lib/workspace-shell/workspace-shell.component.spec.ts',
-    'tools/release/capture-v020-screenshots.ts',
-    'tools/release/generate-marketing-artwork.ts',
 ];

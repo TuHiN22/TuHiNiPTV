@@ -193,6 +193,9 @@ function buildPlaylistRow(
                 : undefined,
         payload: JSON.stringify(playlist),
         lastUsage: getStringValue(playlist.lastUsage) ?? nowIso,
+        importContentTypes: Array.isArray(playlist.importContentTypes)
+            ? JSON.stringify(playlist.importContentTypes)
+            : undefined,
     };
 }
 
@@ -266,6 +269,12 @@ export function parseAppPlaylist(
         password: row.password ?? getStringValue(base.password),
         macAddress: row.macAddress ?? getStringValue(base.macAddress),
         portalUrl: portalUrl ?? getStringValue(base.portalUrl),
+        importContentTypes: row.importContentTypes
+            ? parseJsonValue<string[] | undefined>(
+                  row.importContentTypes,
+                  undefined
+              )
+            : (base.importContentTypes as string[] | undefined),
     };
 }
 
@@ -381,6 +390,7 @@ export async function getAppPlaylistMetas(db: AppDatabase) {
             favorites: schema.playlists.favorites,
             recentlyViewed: schema.playlists.recentlyViewed,
             lastUsage: schema.playlists.lastUsage,
+            importContentTypes: schema.playlists.importContentTypes,
         })
         .from(schema.playlists);
 
@@ -473,7 +483,23 @@ export async function getPlaylist(db: AppDatabase, playlistId: string) {
         .where(eq(schema.playlists.id, playlistId))
         .limit(1);
 
-    return result[0] || null;
+    const row = result[0];
+    if (!row) {
+        return null;
+    }
+
+    // `import_content_types` is persisted as a JSON string; parse it to an
+    // array so consumers (e.g. Xtream content-type import gating) can rely on
+    // `Array.isArray(importContentTypes)`, consistent with parseAppPlaylist.
+    return {
+        ...row,
+        importContentTypes: row.importContentTypes
+            ? parseJsonValue<string[] | undefined>(
+                  row.importContentTypes,
+                  undefined
+              )
+            : undefined,
+    };
 }
 
 export async function updatePlaylist(

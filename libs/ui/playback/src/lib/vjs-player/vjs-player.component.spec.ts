@@ -469,6 +469,7 @@ function createVideoJsPlayerMock(): VjsPlayerComponentInstance['player'] {
         audioTracks: jest.fn(() => null),
         currentTime: jest.fn(() => 0),
         duration: jest.fn(() => 0),
+        el: jest.fn(() => null),
         error: jest.fn(() => null),
         getChild: jest.fn(() => null),
         on: jest.fn(),

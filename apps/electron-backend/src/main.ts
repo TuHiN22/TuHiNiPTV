@@ -32,7 +32,7 @@ import WindowEvents from './app/events/window.events';
 import XtreamEvents from './app/events/xtream.events';
 import { environment } from './environments/environment';
 
-app.setName('iptvnator');
+app.setName('tiptv');
 
 // Packaged Linux launchers force X11 via the .desktop entry
 // (electron-builder `executableArgs`), but direct binary/AppImage launches

@@ -2,15 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import {
     PLAYLIST_DELETE_CLEANUP,
     PlaylistDeleteCleanup,
-    PlaylistsService,
-    RuntimeCapabilitiesService,
 } from '@iptvnator/services';
-import { XtreamApiService } from '../services/xtream-api.service';
-import {
-    ElectronXtreamDataSource,
-    PwaXtreamDataSource,
-    provideXtreamDataSource,
-} from './index';
+import { ElectronXtreamDataSource, provideXtreamDataSource } from './index';
 import {
     IXtreamDataSource,
     XTREAM_DATA_SOURCE,
@@ -18,36 +11,18 @@ import {
 
 describe('provideXtreamDataSource', () => {
     let electronSource: IXtreamDataSource;
-    let pwaSource: IXtreamDataSource;
-    let runtime: {
-        supportsXtreamSqliteDataSource: boolean;
-    };
 
-    function configure(supportsXtreamSqliteDataSource: boolean): void {
+    function configure(): void {
         electronSource = {
             deletePlaylist: jest.fn().mockResolvedValue(undefined),
         } as Partial<IXtreamDataSource> as IXtreamDataSource;
-        pwaSource = {
-            deletePlaylist: jest.fn().mockResolvedValue(undefined),
-        } as Partial<IXtreamDataSource> as IXtreamDataSource;
-        runtime = {
-            supportsXtreamSqliteDataSource,
-        };
 
         TestBed.configureTestingModule({
             providers: [
                 ...provideXtreamDataSource(),
                 {
-                    provide: RuntimeCapabilitiesService,
-                    useValue: runtime,
-                },
-                {
                     provide: ElectronXtreamDataSource,
                     useValue: electronSource,
-                },
-                {
-                    provide: PwaXtreamDataSource,
-                    useValue: pwaSource,
                 },
             ],
         });
@@ -55,67 +30,20 @@ describe('provideXtreamDataSource', () => {
 
     afterEach(() => TestBed.resetTestingModule());
 
-    it('uses the Electron data source only when the Xtream SQLite capability is available', () => {
-        configure(true);
+    it('uses the Electron (SQLite) data source', () => {
+        configure();
 
         expect(TestBed.inject(XTREAM_DATA_SOURCE)).toBe(electronSource);
     });
 
-    it('falls back to the PWA data source when the Electron bridge lacks Xtream SQLite methods', () => {
-        configure(false);
-
-        expect(TestBed.inject(XTREAM_DATA_SOURCE)).toBe(pwaSource);
-    });
-
-    it('does not resolve playlist metadata services while constructing the PWA data source', () => {
-        runtime = {
-            supportsXtreamSqliteDataSource: false,
-        };
-
-        TestBed.configureTestingModule({
-            providers: [
-                ...provideXtreamDataSource(),
-                {
-                    provide: RuntimeCapabilitiesService,
-                    useValue: runtime,
-                },
-                {
-                    provide: XtreamApiService,
-                    useValue: {},
-                },
-                {
-                    provide: PlaylistsService,
-                    useFactory: () => {
-                        throw new Error('PlaylistsService should be lazy');
-                    },
-                },
-            ],
-        });
-
-        expect(() => TestBed.inject(XTREAM_DATA_SOURCE)).not.toThrow();
-    });
-
-    it('skips browser sidecar cleanup for SQLite-backed Xtream storage', async () => {
-        configure(true);
+    it('skips playlist sidecar cleanup because SQLite content is removed via DatabaseService', async () => {
+        configure();
         const [cleanup] = TestBed.inject(
             PLAYLIST_DELETE_CLEANUP
         ) as PlaylistDeleteCleanup[];
 
         await cleanup('playlist-1');
 
-        expect(electronSource.deletePlaylist).not.toHaveBeenCalled();
-        expect(pwaSource.deletePlaylist).not.toHaveBeenCalled();
-    });
-
-    it('runs browser sidecar cleanup when SQLite-backed Xtream storage is unavailable', async () => {
-        configure(false);
-        const [cleanup] = TestBed.inject(
-            PLAYLIST_DELETE_CLEANUP
-        ) as PlaylistDeleteCleanup[];
-
-        await cleanup('playlist-1');
-
-        expect(pwaSource.deletePlaylist).toHaveBeenCalledWith('playlist-1');
         expect(electronSource.deletePlaylist).not.toHaveBeenCalled();
     });
 });

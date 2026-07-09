@@ -7,7 +7,7 @@
     "SHOW_LESS": "وري قل",
     "PLAYLISTS": "قوائم التشغيل",
     "HOME": {
-        "TITLE": "IPTVnator",
+        "TITLE": "TuHiN iPTV",
         "SUBTITLE": "عفاك اختار شي قائمة تشغيل من الليستا ولا زيد قائمة جديدة",
         "TABS": {
             "RECENTLY_ADDED": "قوائم التشغيل اللي تزادو مؤخراً",
@@ -20,7 +20,7 @@
         "PLAYLISTS": {
             "NO_PLAYLISTS": "ما تزادت حتى شي قائمة تشغيل",
             "ADD_FIRST": "عفاك زيد قائمة التشغيل الأولى ديالك",
-            "WELCOME_TITLE": "مرحبا بيك في IPTVnator",
+            "WELCOME_TITLE": "مرحبا بيك في TuHiN iPTV",
             "WELCOME_DESCRIPTION": "بدا رحلة البث ديالك بزيادة قائمة التشغيل الأولى ديالك. ربط مع خدمة IPTV المفضلة عندك وتمتع ببث مباشر، أفلام، وسلاسل.",
             "ADD_YOUR_FIRST": "زيد قائمة التشغيل الأولى ديالك",
             "FEATURE_M3U": "ملفات M3U/M3U8",
@@ -161,7 +161,7 @@
             "ERROR_TLS_HOST_UNKNOWN": "Could not determine the playlist host. Please retry manually.",
             "TRUST_TLS_HOST": "Trust host",
             "TRUST_TLS_HOST_TITLE": "Trust invalid certificate?",
-            "TRUST_TLS_HOST_WARNING": "Only continue if you trust this playlist host. IPTVnator will allow invalid TLS certificates for this host, but other hosts still require valid certificates."
+            "TRUST_TLS_HOST_WARNING": "Only continue if you trust this playlist host. TuHiN iPTV will allow invalid TLS certificates for this host, but other hosts still require valid certificates."
         },
         "TEXT_IMPORT": {
             "LABEL": "دخل قائمة تشغيل m3u(8) على شكل نص",
@@ -251,7 +251,7 @@
         "TMDB_ATTRIBUTION": "هاد المنتج كيستعمل TMDB API ولكن ماشي معتمد ولا مصادق عليه من طرف TMDB.",
         "APP_PREFERENCES": "تفضيلات التطبيق",
         "HERO_EYEBROW": "إعدادات مساحة العمل",
-        "HERO_TITLE": "شكّل كيفاش كيتحس IPTVnator",
+        "HERO_TITLE": "شكّل كيفاش كيتحس TuHiN iPTV",
         "HERO_DESCRIPTION": "ضبط التشغيل، الأدلة، الوصول عن بعد، ومعالجة البيانات من بلاصة وحدة بدون ما تخسر ستايل مساحة العمل الحالية.",
         "SUBTITLE": "بدل إعدادات التطبيق",
         "DESCRIPTION": "عفاك بدل الخيارات من الليستا لتحت وأكد بضغط على زر حفظ التغييرات",
@@ -309,14 +309,14 @@
         "EPG_VIEW_MODE_TIMELINE": "الخط الزمني",
         "EPG_VIEW_MODE_LIST": "لائحة",
         "STARTUP_BEHAVIOR": "العرض عند البدء",
-        "STARTUP_BEHAVIOR_DESCRIPTION": "اختار واش IPTVnator يحل أول عرض متوفر في مساحة العمل ولا يسترجع آخر عرض على مستوى القسم. أول عرض كيعني لوحة التحكم إلى كانت مفعلة، إلا فالا فهي Sources.",
+        "STARTUP_BEHAVIOR_DESCRIPTION": "اختار واش TuHiN iPTV يحل أول عرض متوفر في مساحة العمل ولا يسترجع آخر عرض على مستوى القسم. أول عرض كيعني لوحة التحكم إلى كانت مفعلة، إلا فالا فهي Sources.",
         "STARTUP_BEHAVIOR_FIRST_VIEW": "أول عرض متوفر",
         "STARTUP_BEHAVIOR_RESTORE_LAST_VIEW": "استرجع آخر عرض",
         "SHOW_CAPTIONS_DESCRIPTION": "وري ولا خفي الترجمة افتراضياً",
         "SHOW_EXTERNAL_PLAYBACK_BAR": "وري شريط التشغيل الحالي",
         "SHOW_EXTERNAL_PLAYBACK_BAR_DESCRIPTION": "خلي شريط حالة المشغل الخارجي ظاهر في الأسفل ديال مساحة العمل على سطح المكتب.",
         "VERSION_DESCRIPTION": "الإصدار الحالي ديال التطبيق",
-        "ABOUT_SUBTITLE": "الإصدار، روابط المشروع، وطرق دعم IPTVnator.",
+        "ABOUT_SUBTITLE": "الإصدار، روابط المشروع، وطرق دعم TuHiN iPTV.",
         "EMBEDDED_MPV_NOTICE_TITLE": "وقت تشغيل MPV المدمج",
         "EMBEDDED_MPV_NOTICE_DESCRIPTION": "إصدارات سطح المكتب تقدر تتضمن مكتبات libmpv و FFmpeg المدمجة لمشغل MPV المدمج التجريبي. المستخدمين ما محتاجينش يثبتو تطبيق MPV بشكل منفصل؛ MPV الخارجي و VLC مازالو متوفرين كمشغلات احتياطية.",
         "COMMUNITY": "المشروع والمجتمع",
@@ -326,10 +326,10 @@
         "LINK_BLOG_DESCRIPTION": "ملاحظات الإصدار، نصائح، وتحديثات المشروع",
         "LINK_TELEGRAM_DESCRIPTION": "إعلانات، مجتمع، ودعم",
         "SUPPORT_TITLE": "دعم المشروع",
-        "SUPPORT_DESCRIPTION": "IPTVnator مجاني ومفتوح المصدر، مبني بشكل مفتوح. إلى كان جزء من روتينك اليومي، مساهمة صغيرة كتعاون باش يبقى المشروع حي وتشكل اللي غادي يجي — شكرا.",
+        "SUPPORT_DESCRIPTION": "TuHiN iPTV مجاني ومفتوح المصدر، مبني بشكل مفتوح. إلى كان جزء من روتينك اليومي، مساهمة صغيرة كتعاون باش يبقى المشروع حي وتشكل اللي غادي يجي — شكرا.",
         "SUPPORT_SPONSORS_HINT": "متكرر ولا مرة وحدة",
         "SUPPORT_KOFI_HINT": "شري ليا قهوة",
-        "EPG_NOTE": "EPG متوفر حالياً غير في الإصدار اللي مبني على electron ديال IPTVnator.",
+        "EPG_NOTE": "EPG متوفر حالياً غير في الإصدار اللي مبني على electron ديال TuHiN iPTV.",
         "EPG_NOTE_URL_TEXT": "شوف هنا",
         "IMPORT_EXPORT_DATA": "استورد/صدّر قوائم التشغيل",
         "IMPORT_EXPORT_DATA_DESCRIPTION": "صدّر ولا استورد قوائم التشغيل بصيغة JSON اللي كيستعملها التطبيق.",
@@ -356,10 +356,10 @@
         "PLAYLISTS_REMOVED": "All playlists and playlist data were removed.",
         "MPV_PLAYER_PATH_LABEL": "مسار mpv",
         "MPV_PLAYER_PATH_DESCRIPTION": "حدد مسار MPV. فـ macOS تقدر تستعمل باقة تطبيق MPV بحال /Applications/mpv.app أو مسار الملف التنفيذي.",
-        "MPV_COMPATIBLE_PLAYER_TIP": "IINA يقدر يتفتح كمشغل متوافق مع MPV فـ macOS، ولكن استعمل مسار الملف التنفيذي بحال /Applications/IINA.app/Contents/MacOS/iina-cli أو /Applications/IINA.app/Contents/MacOS/IINA. تحكم IPTVnator وتتبع الموضع وإعادة استعمال النافذة مضمونين غير مع MPV IPC.",
+        "MPV_COMPATIBLE_PLAYER_TIP": "IINA يقدر يتفتح كمشغل متوافق مع MPV فـ macOS، ولكن استعمل مسار الملف التنفيذي بحال /Applications/IINA.app/Contents/MacOS/iina-cli أو /Applications/IINA.app/Contents/MacOS/IINA. تحكم TuHiN iPTV وتتبع الموضع وإعادة استعمال النافذة مضمونين غير مع MPV IPC.",
         "MPV_PLAYER_PATH": "مسار مشغل mpv",
         "MPV_PLAYER_ARGUMENTS_LABEL": "mpv command-line arguments",
-        "MPV_PLAYER_ARGUMENTS_DESCRIPTION": "Optional arguments passed to mpv when IPTVnator starts a new external player process.",
+        "MPV_PLAYER_ARGUMENTS_DESCRIPTION": "Optional arguments passed to mpv when TuHiN iPTV starts a new external player process.",
         "MPV_PLAYER_ARGUMENTS": "mpv arguments",
         "MPV_REUSE_INSTANCE_LABEL": "إعادة استخدام نسخة MPV",
         "MPV_REUSE_INSTANCE_DESCRIPTION": "إلى كانت مفعلة، نفس نافذة MPV غادي تستعمل لتشغيل بثوث مختلفة. إلى كانت معطلة، كل بث كيتحل في نافذة MPV جديدة.",
@@ -371,9 +371,9 @@
         "VLC_PLAYER_PATH_DESCRIPTION": "حدد مسار VLC. فـ macOS تقدر تستعمل باقة تطبيق VLC بحال /Applications/VLC.app أو مسار الملف التنفيذي.",
         "VLC_PLAYER_PATH": "مسار مشغل VLC",
         "VLC_PLAYER_ARGUMENTS_LABEL": "VLC command-line arguments",
-        "VLC_PLAYER_ARGUMENTS_DESCRIPTION": "Optional arguments passed to VLC when IPTVnator starts a new external player process.",
+        "VLC_PLAYER_ARGUMENTS_DESCRIPTION": "Optional arguments passed to VLC when TuHiN iPTV starts a new external player process.",
         "VLC_PLAYER_ARGUMENTS": "VLC arguments",
-        "EXTERNAL_PLAYER_ARGUMENTS_HINT": "Use one argument per line. These values are applied before stream-specific IPTVnator options.",
+        "EXTERNAL_PLAYER_ARGUMENTS_HINT": "Use one argument per line. These values are applied before stream-specific TuHiN iPTV options.",
         "VLC_REUSE_INSTANCE_LABEL": "إعادة استخدام نسخة VLC",
         "VLC_REUSE_INSTANCE_DESCRIPTION": "إلى كانت مفعلة، نفس نافذة VLC غادي تستعمل لتشغيل بثوث مختلفة. إلى كانت معطلة، كل بث كيتحل في نافذة VLC جديدة.",
         "REMOTE_CONTROL": "التحكم عن بعد",
@@ -659,10 +659,10 @@
         "RETRY": "حاول مرة أخرى",
         "ALLOW_PRIVATE_SOURCE": "Allow source",
         "ALLOW_PRIVATE_SOURCE_TITLE": "Allow private-network EPG source?",
-        "ALLOW_PRIVATE_SOURCE_WARNING": "Only allow this if you trust the EPG source. IPTVnator will let this exact EPG URL connect to private or local network addresses.",
+        "ALLOW_PRIVATE_SOURCE_WARNING": "Only allow this if you trust the EPG source. TuHiN iPTV will let this exact EPG URL connect to private or local network addresses.",
         "TRUST_TLS_HOST": "Trust host",
         "TRUST_TLS_HOST_TITLE": "Trust invalid certificate?",
-        "TRUST_TLS_HOST_WARNING": "Only continue if you trust this host. IPTVnator will allow invalid TLS certificates for this host, but other hosts still require valid certificates.",
+        "TRUST_TLS_HOST_WARNING": "Only continue if you trust this host. TuHiN iPTV will allow invalid TLS certificates for this host, but other hosts still require valid certificates.",
         "CURRENT_PROGRAM": "Current program",
         "ARCHIVE_PLAYBACK": "تشغيل الأرشيف",
         "COLLAPSE_PANEL": "Collapse EPG panel",
@@ -728,7 +728,7 @@
     "NO": "لا",
     "MENU": {
         "OPEN": "حل القائمة",
-        "SUPPORT_ARIA": "دعم IPTVnator على GitHub",
+        "SUPPORT_ARIA": "دعم TuHiN iPTV على GitHub",
         "SETTINGS_ARIA": "حل الإعدادات",
         "BUG_REPORT": "بلغ على شي مشكل",
         "WHAT_IS_NEW": "شنو الجديد",
@@ -737,10 +737,10 @@
         "SUPPORT_PROJECT": "دعم المشروع"
     },
     "ABOUT": {
-        "TITLE": "حول IPTVnator",
+        "TITLE": "حول TuHiN iPTV",
         "DESCRIPTION": "تطبيق مشغل IPTV متعدد المنصات فيه بزاف ديال الميزات، بحال دعم قوائم تشغيل m3u و m3u8، المفضلة، دليل التلفزيون، الأرشيف التلفزيوني/الإعادة والمزيد.",
         "VERSION": "الإصدار",
-        "GITHUB_TOOLTIP": "مستودع IPTVnator على GitHub",
+        "GITHUB_TOOLTIP": "مستودع TuHiN iPTV على GitHub",
         "BUY_ME_A_COFFEE_TOOLTIP": "شري ليا قهوة",
         "TWITTER_TOOLTIP": "شارك على تويتر"
     },
@@ -988,8 +988,8 @@
         "SUBTITLE": "تحكم في مشغل IPTV ديالك عن بعد",
         "UP_CHANNEL": "القناة الفوق",
         "DOWN_CHANNEL": "القناة لتحت",
-        "HEADER": "التحكم عن بعد IPTVNator",
-        "FOOTER": "التحكم عن بعد IPTVNator"
+        "HEADER": "التحكم عن بعد TuHiN iPTV",
+        "FOOTER": "التحكم عن بعد TuHiN iPTV"
     },
     "WORKSPACE": {
         "FAVORITES_ONLY": "المفضلة فقط",
@@ -1045,7 +1045,7 @@
             "FAVORITE_MOVIES_AND_SERIES": "Favorite movies & series"
         },
         "SHELL": {
-            "BRAND_ALT": "IPTVnator",
+            "BRAND_ALT": "TuHiN iPTV",
             "RAIL_DASHBOARD": "لوحة التحكم",
             "OPEN_DASHBOARD": "حل لوحة التحكم",
             "RAIL_SOURCES": "المصادر",
@@ -1225,7 +1225,7 @@
         },
         "SHORTCUTS": {
             "TITLE": "Keyboard shortcuts",
-            "SUBTITLE": "Workspace, navigation, playback, and dialog shortcuts available in IPTVnator.",
+            "SUBTITLE": "Workspace, navigation, playback, and dialog shortcuts available in TuHiN iPTV.",
             "OPEN_TOOLTIP": "Keyboard shortcuts (?)",
             "OPEN_ARIA": "Open keyboard shortcuts",
             "PLATFORM": {

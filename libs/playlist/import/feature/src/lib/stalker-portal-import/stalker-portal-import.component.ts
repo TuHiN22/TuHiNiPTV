@@ -1,11 +1,14 @@
 import { Component, inject, output, signal } from '@angular/core';
 import {
+    AbstractControl,
     FormControl,
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
+    ValidationErrors,
     Validators,
 } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,9 +23,21 @@ import {
 import { Playlist } from '@iptvnator/shared/interfaces';
 import { v4 as uuid } from 'uuid';
 
+function atLeastOneContentTypeValidator(
+    control: AbstractControl
+): ValidationErrors | null {
+    const group = control as FormGroup;
+    const anySelected =
+        group.get('importLive')?.value ||
+        group.get('importVod')?.value ||
+        group.get('importSeries')?.value;
+    return anySelected ? null : { noContentType: true };
+}
+
 @Component({
     imports: [
         FormsModule,
+        MatCheckboxModule,
         MatFormFieldModule,
         MatInputModule,
         ReactiveFormsModule,
@@ -46,6 +61,30 @@ import { v4 as uuid } from 'uuid';
                 display: flex;
                 align-items: center;
                 gap: 8px;
+            }
+
+            .content-type-select {
+                margin: 6px 0 4px;
+            }
+
+            .content-type-select__label {
+                display: block;
+                font-size: 0.8rem;
+                opacity: 0.75;
+                margin-bottom: 4px;
+            }
+
+            .content-type-select__options {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px 20px;
+            }
+
+            .content-type-select__error {
+                display: block;
+                margin-top: 4px;
+                font-size: 0.75rem;
+                color: var(--mat-sys-error, #f44336);
             }
         `,
     ],
@@ -71,7 +110,10 @@ export class StalkerPortalImportComponent {
         ]),
         importDate: new FormControl(new Date().toISOString()),
         userAgent: new FormControl(''),
-    });
+        importLive: new FormControl(true),
+        importVod: new FormControl(true),
+        importSeries: new FormControl(true),
+    }, { validators: atLeastOneContentTypeValidator });
 
     private readonly stalkerSessionService = inject(StalkerSessionService);
     private readonly store = inject(Store);
@@ -95,6 +137,9 @@ export class StalkerPortalImportComponent {
             portalUrl: '',
             importDate: new Date().toISOString(),
             userAgent: '',
+            importLive: true,
+            importVod: true,
+            importSeries: true,
         });
     }
 
@@ -176,8 +221,19 @@ export class StalkerPortalImportComponent {
                 deviceId2: _deviceId2,
                 signature1: _signature1,
                 signature2: _signature2,
+                importLive,
+                importVod,
+                importSeries,
                 ...playlistFormValue
             } = formValue;
+
+            const importContentTypes = [
+                importLive ? 'live' : null,
+                importVod ? 'vod' : null,
+                importSeries ? 'series' : null,
+            ].filter(
+                (type): type is 'live' | 'vod' | 'series' => type !== null
+            );
 
             const playlist: Playlist = {
                 ...playlistFormValue,
@@ -185,6 +241,7 @@ export class StalkerPortalImportComponent {
                 isFullStalkerPortal,
                 stalkerToken,
                 stalkerAccountInfo,
+                importContentTypes,
                 ...this.toPlaylistIdentityFields(stalkerIdentity),
             } as Playlist;
 

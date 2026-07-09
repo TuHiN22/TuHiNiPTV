@@ -8,6 +8,7 @@ import {
     ValidationErrors,
     Validators,
 } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -21,6 +22,17 @@ import {
     Playlist,
 } from '@iptvnator/shared/interfaces';
 import { v4 as uuid } from 'uuid';
+
+function atLeastOneContentTypeValidator(
+    control: AbstractControl
+): ValidationErrors | null {
+    const group = control as FormGroup;
+    const anySelected =
+        group.get('importLive')?.value ||
+        group.get('importVod')?.value ||
+        group.get('importSeries')?.value;
+    return anySelected ? null : { noContentType: true };
+}
 
 function xtreamServerUrlValidator(
     control: AbstractControl
@@ -41,6 +53,7 @@ function xtreamServerUrlValidator(
 @Component({
     imports: [
         FormsModule,
+        MatCheckboxModule,
         MatFormFieldModule,
         MatIcon,
         MatInputModule,
@@ -83,6 +96,30 @@ function xtreamServerUrlValidator(
                 align-items: center;
                 gap: 8px;
             }
+
+            .content-type-select {
+                margin: 6px 0 4px;
+            }
+
+            .content-type-select__label {
+                display: block;
+                font-size: 0.8rem;
+                opacity: 0.75;
+                margin-bottom: 4px;
+            }
+
+            .content-type-select__options {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px 20px;
+            }
+
+            .content-type-select__error {
+                display: block;
+                margin-top: 4px;
+                font-size: 0.75rem;
+                color: var(--mat-sys-error, #f44336);
+            }
         `,
     ],
 })
@@ -101,7 +138,10 @@ export class XtreamCodeImportComponent {
             xtreamServerUrlValidator,
         ]),
         importDate: new FormControl(new Date().toISOString()),
-    });
+        importLive: new FormControl(true),
+        importVod: new FormControl(true),
+        importSeries: new FormControl(true),
+    }, { validators: atLeastOneContentTypeValidator });
 
     readonly store = inject(Store);
     readonly portalStatusService = inject(PortalStatusService);
@@ -155,6 +195,9 @@ export class XtreamCodeImportComponent {
             username: '',
             serverUrl: '',
             importDate: new Date().toISOString(),
+            importLive: true,
+            importVod: true,
+            importSeries: true,
         });
         this.connectionStatus = null;
     }
@@ -167,13 +210,27 @@ export class XtreamCodeImportComponent {
             return;
         }
 
+        const {
+            importLive,
+            importVod,
+            importSeries,
+            ...playlistFields
+        } = this.form.value;
+
+        const importContentTypes = [
+            importLive ? 'live' : null,
+            importVod ? 'vod' : null,
+            importSeries ? 'series' : null,
+        ].filter((type): type is 'live' | 'vod' | 'series' => type !== null);
+
         this.store.dispatch(
             PlaylistActions.addPlaylist({
                 playlist: {
-                    ...this.form.value,
+                    ...playlistFields,
                     password: connection.password,
                     serverUrl: connection.serverUrl,
                     username: connection.username,
+                    importContentTypes,
                 } as Playlist,
             })
         );

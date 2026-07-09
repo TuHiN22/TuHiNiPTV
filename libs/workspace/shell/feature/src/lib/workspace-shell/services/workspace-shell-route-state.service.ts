@@ -198,6 +198,9 @@ export class WorkspaceShellRouteStateService {
                 playlistId: context.playlistId,
                 supportsDownloads: this.runtime.supportsDownloads,
                 workspace: true,
+                enabledContentTypes: this.enabledContentTypesFor(
+                    context.playlistId
+                ),
             }).primary,
             context.provider,
             (key, params) => this.translateText(key, params)
@@ -227,6 +230,20 @@ export class WorkspaceShellRouteStateService {
             this.currentSection() === 'downloads' ||
             this.isGlobalDownloadsRoute()
     );
+
+    /**
+     * Content types the playlist was imported with, used to hide rail sections
+     * for types the user chose not to import. Undefined means show all.
+     */
+    private enabledContentTypesFor(
+        playlistId: string
+    ): ('live' | 'vod' | 'series')[] | undefined {
+        const meta = this.playlists().find((p) => p._id === playlistId);
+        const types = meta?.importContentTypes;
+        return Array.isArray(types) && types.length > 0
+            ? (types as ('live' | 'vod' | 'series')[])
+            : undefined;
+    }
 
     constructor() {
         this.router.events

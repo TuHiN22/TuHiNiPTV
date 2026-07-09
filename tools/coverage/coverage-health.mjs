@@ -123,7 +123,6 @@ function hasSpecUnder(sourceRoot) {
 
 function scanE2ETags() {
     const e2eFiles = [
-        ...listFiles(path.join(workspaceRoot, 'apps/web-e2e/src'), (file) => file.endsWith('.e2e.ts')),
         ...listFiles(path.join(workspaceRoot, 'apps/electron-backend-e2e/src'), (file) =>
             file.endsWith('.e2e.ts')
         ),

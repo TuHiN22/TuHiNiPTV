@@ -34,4 +34,5 @@ export type PlaylistMeta = Pick<
     | 'stalkerDeviceId2'
     | 'stalkerSignature1'
     | 'stalkerSignature2'
+    | 'importContentTypes'
 >;

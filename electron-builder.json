@@ -1,12 +1,12 @@
 {
-    "appId": "com.fourgray.iptvnator",
-    "productName": "IPTVnator",
+    "appId": "com.tiptv.tuhin",
+    "productName": "TuHiN iPTV",
     "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
     "publish": [
         {
             "provider": "github",
-            "owner": "4gray",
-            "repo": "iptvnator"
+            "owner": "TuHiN22",
+            "repo": "TuHiNiPTV"
         }
     ],
     "directories": {
@@ -35,8 +35,8 @@
         "**/embedded-mpv-runtime.json"
     ],
     "extraMetadata": {
-        "name": "iptvnator",
-        "productName": "IPTVnator",
+        "name": "tiptv",
+        "productName": "TuHiN iPTV",
         "main": "electron-backend/main.js"
     },
     "extraResources": ["dist/apps/electron-backend/workers"],
@@ -62,11 +62,11 @@
     },
     "linux": {
         "category": "Video",
-        "executableName": "iptvnator",
+        "executableName": "tiptv",
         "executableArgs": ["--ozone-platform=x11"],
         "desktop": {
             "entry": {
-                "StartupWMClass": "iptvnator"
+                "StartupWMClass": "tiptv"
             }
         },
         "target": [
@@ -118,8 +118,8 @@
         ],
         "files": [
             [
-                "apps/electron-backend/linux/com.fourgray.iptvnator.metainfo.xml",
-                "/share/metainfo/com.fourgray.iptvnator.metainfo.xml"
+                "apps/electron-backend/linux/com.tiptv.tuhin.metainfo.xml",
+                "/share/metainfo/com.tiptv.tuhin.metainfo.xml"
             ]
         ]
     },
@@ -128,7 +128,7 @@
         "base": "core22",
         "confinement": "strict",
         "grade": "stable",
-        "summary": "IPTV application for M3U playlists, Xtream Codes API, and Stalker portals",
+        "summary": "TuHiN iPTV player for M3U playlists, Xtream Codes API, and Stalker portals",
         "executableArgs": ["--ozone-platform=x11"],
         "environment": {
             "DISABLE_WAYLAND": "1"
@@ -139,11 +139,11 @@
         "target": [
             {
                 "target": "nsis",
-                "arch": ["x64", "ia32"]
+                "arch": ["x64"]
             }
         ],
         "artifactName": "${name}-${version}-windows-${arch}-setup.${ext}",
-        "icon": "apps/web/src/assets/icons/icon.png"
+        "icon": "apps/web/src/assets/icons/favicon.ico"
     },
     "nsis": {
         "artifactName": "${name}-${version}-windows-${arch}-setup.${ext}"

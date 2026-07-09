@@ -155,9 +155,11 @@ export class WebPlayerViewComponent {
         const mimeType =
             extension === 'm3u' || extension === 'm3u8'
                 ? 'application/x-mpegURL'
-                : extension === 'ts' || !extension
-                  ? 'video/mp2t'
-                  : 'video/mp4';
+                : extension === 'mpd'
+                  ? 'application/dash+xml'
+                  : extension === 'ts' || !extension
+                    ? 'video/mp2t'
+                    : 'video/mp4';
 
         this.vjsOptions = {
             isLive,

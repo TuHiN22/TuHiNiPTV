@@ -24,13 +24,6 @@
                 "e2eTags": ["@electron", "@critical", "@persistence"]
             },
             {
-                "name": "web-backend",
-                "root": "apps/web-backend",
-                "sourceRoot": "apps/web-backend/src",
-                "validationCommand": "pnpm nx test web-backend",
-                "e2eTags": ["@self-hosted", "@web"]
-            },
-            {
                 "name": "services",
                 "root": "libs/services",
                 "sourceRoot": "libs/services/src",
@@ -215,12 +208,6 @@
         ],
         "tierB": [
             {
-                "name": "website",
-                "root": "apps/website",
-                "validationCommand": "pnpm nx test website",
-                "reason": "Astro marketing site; build output and targeted static checks are more meaningful than source percentage coverage."
-            },
-            {
                 "name": "packaging",
                 "root": "tools/packaging",
                 "validationCommand": "pnpm nx test packaging",
@@ -231,12 +218,6 @@
                 "root": "apps/remote-control-web",
                 "validationCommand": "pnpm nx build remote-control-web",
                 "reason": "Product surface without unit specs today; validate build output and add focused tests when behavior changes."
-            },
-            {
-                "name": "web-e2e",
-                "root": "apps/web-e2e",
-                "validationCommand": "pnpm nx run web-e2e:e2e -- --project=chromium",
-                "reason": "Playwright semantic flow coverage is reported separately."
             },
             {
                 "name": "electron-backend-e2e",
@@ -301,17 +282,17 @@
             },
             {
                 "name": "Xtream portal import, browse, and cached access",
-                "projects": ["web-e2e", "electron-backend-e2e"],
+                "projects": ["electron-backend-e2e"],
                 "matchAnyTags": ["@xtream"]
             },
             {
                 "name": "Stalker portal import and browse",
-                "projects": ["web-e2e", "electron-backend-e2e"],
+                "projects": ["electron-backend-e2e"],
                 "matchAnyTags": ["@stalker"]
             },
             {
                 "name": "M3U import, playback, and playlist state",
-                "projects": ["web-e2e", "electron-backend-e2e"],
+                "projects": ["electron-backend-e2e"],
                 "matchAnyTags": ["@m3u"]
             },
             {
@@ -331,13 +312,8 @@
             },
             {
                 "name": "Settings persistence and playback options",
-                "projects": ["web-e2e", "electron-backend-e2e"],
+                "projects": ["electron-backend-e2e"],
                 "matchAnyTags": ["@settings"]
-            },
-            {
-                "name": "Self-hosted PWA/backend integration",
-                "projects": ["web-e2e"],
-                "matchAnyTags": ["@self-hosted", "@pwa"]
             }
         ]
     }

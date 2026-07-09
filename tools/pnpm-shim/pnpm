@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Committed pnpm shim (POSIX). Forwards to the Corepack-managed pnpm pinned in
+# package.json so tooling that shells out to `pnpm` works even when pnpm is not
+# globally installed. See pnpm.cmd for the Windows equivalent.
+exec corepack pnpm "$@"

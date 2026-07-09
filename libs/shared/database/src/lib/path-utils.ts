@@ -19,7 +19,7 @@ export function getIptvnatorDataRoot(): string {
         return ensureDirectory(e2eDataDir);
     }
 
-    return ensureDirectory(join(homedir(), '.iptvnator'));
+    return ensureDirectory(join(homedir(), '.tiptv'));
 }
 
 export function getIptvnatorDatabaseDirectory(): string {
@@ -27,7 +27,7 @@ export function getIptvnatorDatabaseDirectory(): string {
 }
 
 export function getIptvnatorDatabasePath(): string {
-    return join(getIptvnatorDatabaseDirectory(), 'iptvnator.db');
+    return join(getIptvnatorDatabaseDirectory(), 'tiptv.db');
 }
 
 export function getElectronUserDataPath(): string | null {

@@ -8,9 +8,9 @@ import {
 } from '@iptvnator/shared/interfaces';
 
 export const APP_UPDATE_MANUAL_DOWNLOAD_URL =
-    'https://github.com/4gray/iptvnator/releases/latest';
+    'https://github.com/TuHiN22/TuHiNiPTV/releases/latest';
 const GITHUB_RELEASES_API_URL =
-    'https://api.github.com/repos/4gray/iptvnator/releases';
+    'https://api.github.com/repos/TuHiN22/TuHiNiPTV/releases';
 const GITHUB_RELEASES_PER_PAGE = 10;
 
 interface AppUpdateAppAdapter {
@@ -552,7 +552,7 @@ export class AppUpdateService {
         const response = await this.releaseFetcher(url, {
             headers: {
                 Accept: 'application/vnd.github+json',
-                'User-Agent': `iptvnator/${this.currentVersion}`,
+                'User-Agent': `TuHiNiPTV/${this.currentVersion}`,
             },
         });
 

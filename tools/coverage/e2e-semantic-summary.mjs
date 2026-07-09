@@ -215,7 +215,7 @@ ${journeys || '| _none_ | _n/a_ | 0 | missing |'}
 `;
 }
 
-const projects = projectArg ? [projectArg] : ['web-e2e', 'electron-backend-e2e'];
+const projects = projectArg ? [projectArg] : ['electron-backend-e2e'];
 const allTests = projects.flatMap((projectName) => collectTests(projectName));
 
 mkdirSync(outputDir, { recursive: true });

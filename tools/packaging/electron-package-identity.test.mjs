@@ -99,13 +99,13 @@ const embeddedMpvWin32Source = fs.readFileSync(
 const { validatePackagedEmbeddedMpv } = require('./embedded-mpv-packaging.cjs');
 
 test('Linux package identity does not expose the internal Electron backend project name', () => {
-    assert.equal(electronBuilderConfig.productName, 'IPTVnator');
-    assert.equal(electronBuilderConfig.extraMetadata?.name, 'iptvnator');
-    assert.equal(electronBuilderConfig.extraMetadata?.productName, 'IPTVnator');
-    assert.equal(electronBuilderConfig.linux?.executableName, 'iptvnator');
+    assert.equal(electronBuilderConfig.productName, 'TuHiN iPTV');
+    assert.equal(electronBuilderConfig.extraMetadata?.name, 'tiptv');
+    assert.equal(electronBuilderConfig.extraMetadata?.productName, 'TuHiN iPTV');
+    assert.equal(electronBuilderConfig.linux?.executableName, 'tiptv');
     assert.equal(
         electronBuilderConfig.linux?.desktop?.entry?.StartupWMClass,
-        'iptvnator'
+        'tiptv'
     );
     assert.ok(
         electronBuilderConfig.linux?.executableArgs?.includes(
@@ -127,8 +127,8 @@ test('GitHub Releases auto-update metadata is generated and uploaded', () => {
     assert.deepEqual(electronBuilderConfig.publish, [
         {
             provider: 'github',
-            owner: '4gray',
-            repo: 'iptvnator',
+            owner: 'REPLACE_WITH_OWNER',
+            repo: 'tiptv',
         },
     ]);
     assert.deepEqual(electronBuilderConfig.mac?.target, [

@@ -27,6 +27,12 @@ interface BuildPortalRailLinksOptions {
     playlistId: string;
     supportsDownloads: boolean;
     workspace: boolean;
+    /**
+     * Content types the playlist was imported with. When provided (non-empty),
+     * primary section links for content types not in this list are hidden.
+     * Undefined/empty means show all (backward compatible).
+     */
+    enabledContentTypes?: ReadonlyArray<'live' | 'vod' | 'series'>;
 }
 
 interface PortalRailLinkGroups {
@@ -34,10 +40,42 @@ interface PortalRailLinkGroups {
     secondary: PortalRailLink[];
 }
 
+/** Maps a rail section to the import content type that governs its visibility. */
+const SECTION_CONTENT_TYPE: Partial<
+    Record<PortalRailSection, 'live' | 'vod' | 'series'>
+> = {
+    live: 'live',
+    itv: 'live',
+    vod: 'vod',
+    series: 'series',
+};
+
+function filterRailLinksByContentTypes(
+    links: PortalRailLink[],
+    enabledContentTypes: ReadonlyArray<'live' | 'vod' | 'series'> | undefined
+): PortalRailLink[] {
+    if (!enabledContentTypes || enabledContentTypes.length === 0) {
+        return links;
+    }
+    const enabled = new Set(enabledContentTypes);
+    return links.filter((link) => {
+        const governingType = link.section
+            ? SECTION_CONTENT_TYPE[link.section]
+            : undefined;
+        return governingType === undefined || enabled.has(governingType);
+    });
+}
+
 export function buildPortalRailLinks(
     options: BuildPortalRailLinksOptions
 ): PortalRailLinkGroups {
-    const { provider, playlistId, supportsDownloads, workspace } = options;
+    const {
+        provider,
+        playlistId,
+        supportsDownloads,
+        workspace,
+        enabledContentTypes,
+    } = options;
     const root = workspace
         ? ['/workspace', provider, playlistId]
         : [`/${provider}`, playlistId];
@@ -91,7 +129,13 @@ export function buildPortalRailLinks(
             });
         }
 
-        return { primary, secondary };
+        return {
+            primary: filterRailLinksByContentTypes(
+                primary,
+                enabledContentTypes
+            ),
+            secondary,
+        };
     }
 
     if (provider === 'stalker') {
@@ -140,7 +184,13 @@ export function buildPortalRailLinks(
             });
         }
 
-        return { primary, secondary };
+        return {
+            primary: filterRailLinksByContentTypes(
+                primary,
+                enabledContentTypes
+            ),
+            secondary,
+        };
     }
 
     if (provider === 'playlists') {

@@ -88,6 +88,21 @@ describe('playback diagnostics', () => {
         expect(issue.container).toBe('x-msvideo');
     });
 
+    it('classifies MPEG-DASH (.mpd) manifests as unsupported container fallbacks', () => {
+        const issue = classifyNativePlaybackIssue(
+            { code: 4, message: 'MPEG-DASH (.mpd) manifest' },
+            createPlaybackSourceMetadata({
+                url: 'https://example.com/live/manifest.mpd',
+                mimeType: 'application/dash+xml',
+                player: 'artplayer',
+            })
+        );
+
+        expect(issue.code).toBe(PlaybackDiagnosticCode.UnsupportedContainer);
+        expect(issue.container).toBe('mpd');
+        expect(issue.externalFallbackRecommended).toBe(true);
+    });
+
     it('does not classify MPEG-TS MIME-only failures as unsupported containers', () => {
         const issue = classifyNativePlaybackIssue(
             { code: 4, message: 'source not supported' },

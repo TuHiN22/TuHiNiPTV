@@ -1,7 +1,7 @@
 /**
- * Database connection and initialization for IPTVnator
+ * Database connection and initialization for TuHiN iPTV
  * Uses Drizzle ORM with better-sqlite3
- * Stores database file under ~/.iptvnator/databases/ by default.
+ * Stores database file under ~/.tiptv/databases/ by default.
  * E2E tests can override the root with IPTVNATOR_E2E_DATA_DIR.
  *
  * Provides two connection modes:
@@ -54,12 +54,12 @@ function compactSqlForTrace(sql: string): string {
 
 function traceSql(scope: string, message: string, payload?: unknown): void {
     if (payload === undefined) {
-        console.log(`[IPTVnator Trace][${scope}] ${message}`);
+        console.log(`[TuHiN iPTV Trace][${scope}] ${message}`);
         return;
     }
 
     console.log(
-        `[IPTVnator Trace][${scope}] ${message} ${JSON.stringify(payload)}`
+        `[TuHiN iPTV Trace][${scope}] ${message} ${JSON.stringify(payload)}`
     );
 }
 
@@ -113,7 +113,8 @@ const CREATE_TABLE_STATEMENTS = [
       favorites TEXT,
       recently_viewed TEXT,
       payload TEXT,
-      last_usage TEXT
+      last_usage TEXT,
+      import_content_types TEXT
   )`,
     `CREATE TABLE IF NOT EXISTS app_state (
       key TEXT PRIMARY KEY,
@@ -342,6 +343,9 @@ const COLUMN_MIGRATION_STATEMENTS = [
     `ALTER TABLE content ADD COLUMN backdrop_url TEXT`,
     // v1.7.1: Scope XMLTV programs to their source URL for playlist-local EPG lookup
     `ALTER TABLE epg_programs ADD COLUMN source_url TEXT`,
+
+    // Persist the content types (live/vod/series) the user chose to import
+    `ALTER TABLE playlists ADD COLUMN import_content_types TEXT`,
 ];
 
 const INDEX_MIGRATION_STATEMENTS = [

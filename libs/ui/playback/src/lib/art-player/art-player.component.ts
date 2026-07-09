@@ -14,7 +14,8 @@ import Artplayer from 'artplayer';
 import Hls, { type ErrorData, type ManifestParsedData } from 'hls.js';
 import mpegts from 'mpegts.js';
 import { Channel } from '@iptvnator/shared/interfaces';
-import { addHlsAudioTrackSettings } from './art-player-audio-tracks';
+import { addFpsCounter } from './art-player-fps-counter';
+import { ArtPlayerSettingsMenu } from './art-player-settings-menu';
 import {
     InlinePlaybackPlayer,
     PlaybackDiagnostic,
@@ -27,6 +28,7 @@ import {
 } from '../playback-diagnostics/playback-diagnostics.util';
 import { SeriesPlaybackNavigationControlsComponent } from '../portal-inline-player/series-playback-navigation-controls.component';
 import type { SeriesPlaybackNavigation } from '../portal-inline-player/series-playback-navigation';
+import { isCodecFailure } from '../playback-diagnostics/playback-error-patterns.util';
 
 Artplayer.AUTO_PLAYBACK_TIMEOUT = 10000;
 
@@ -54,6 +56,18 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
     private player!: Artplayer;
     private hls: Hls | null = null;
     private mpegtsPlayer: mpegts.Player | null = null;
+    private settingsMenu: ArtPlayerSettingsMenu | null = null;
+
+    /**
+     * Bounded counters for hls.js self-recovery. hls.js can transparently
+     * recover from many transient network stalls (via `startLoad()`) and media
+     * decode hiccups (via `recoverMediaError()`), so we retry a few times
+     * before surfacing the "stream could not be loaded" diagnostic overlay.
+     */
+    private hlsNetworkRecoveryAttempts = 0;
+    private hlsMediaRecoveryAttempts = 0;
+    private static readonly MAX_HLS_NETWORK_RECOVERY_ATTEMPTS = 3;
+    private static readonly MAX_HLS_MEDIA_RECOVERY_ATTEMPTS = 2;
 
     private readonly elementRef = inject(ElementRef);
 
@@ -95,6 +109,7 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     private destroyPlayer(): void {
+        this.settingsMenu = null;
         if (this.mpegtsPlayer) {
             this.mpegtsPlayer.pause();
             this.mpegtsPlayer.unload();
@@ -137,6 +152,10 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
         );
         const isLive = extension === 'm3u8' || extension === 'ts' || !extension;
 
+        // Provides the "Video Quality" and "Audio Track" settings-menu items
+        // (replacing ArtPlayer's default Play Speed / Aspect Ratio entries).
+        this.settingsMenu = new ArtPlayerSettingsMenu();
+
         this.player = new Artplayer({
             container: el,
             url: this.channel.url + (this.channel.epgParams || ''),
@@ -150,8 +169,9 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
             autoMini: true,
             screenshot: true,
             setting: true,
-            playbackRate: true,
-            aspectRatio: true,
+            playbackRate: false,
+            aspectRatio: false,
+            settings: this.settingsMenu.settings,
             fullscreen: true,
             fullscreenWeb: true,
             playsInline: true,
@@ -165,6 +185,8 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
                         if (this.hls) {
                             this.hls.destroy();
                         }
+                        this.hlsNetworkRecoveryAttempts = 0;
+                        this.hlsMediaRecoveryAttempts = 0;
                         this.hls = new Hls();
                         this.hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
                             this.handleHlsManifestParsed(url, data);
@@ -174,7 +196,7 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
                         });
                         this.hls.loadSource(url);
                         this.hls.attachMedia(video);
-                        addHlsAudioTrackSettings(this.player, this.hls);
+                        this.settingsMenu?.attachHls(this.hls);
                     } else if (
                         video.canPlayType('application/vnd.apple.mpegurl')
                     ) {
@@ -221,6 +243,22 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
                 mkv: (video: HTMLVideoElement, url: string) => {
                     video.src = url;
                 },
+                mpd: (_video: HTMLVideoElement, url: string) => {
+                    // MPEG-DASH is not decodable by the browser players. Rather
+                    // than letting the native element retry-loop on an
+                    // unplayable source, surface the unsupported-container
+                    // diagnostic immediately so the external-player fallback
+                    // (MPV/VLC) is offered right away.
+                    this.playbackIssue.emit(
+                        classifyNativePlaybackIssue(
+                            { code: 4, message: 'MPEG-DASH (.mpd) manifest' },
+                            this.createSourceMetadata(
+                                url,
+                                'application/dash+xml'
+                            )
+                        )
+                    );
+                },
             },
         });
 
@@ -234,6 +272,13 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
         );
         this.player.video.addEventListener('playing', this.clearPlaybackIssue);
         this.player.video.addEventListener('ended', this.handlePlaybackEnded);
+
+        // Bind the quality/audio settings items to this player instance; they
+        // populate from hls.js once the manifest and audio tracks are parsed.
+        this.settingsMenu?.setPlayer(this.player);
+
+        // Toggleable FPS overlay available for any source type (settings menu).
+        addFpsCounter(this.player);
 
         if (this.startTime > 0) {
             this.player.on('ready', () => {
@@ -287,6 +332,15 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
             return;
         }
 
+        // Attempt hls.js's built-in recovery before giving up. Many "stream
+        // could not be loaded" cases are transient network stalls or recoverable
+        // media errors that clear once loading is restarted, so we retry a
+        // bounded number of times and only surface the diagnostic overlay when
+        // recovery is exhausted or the error is unrecoverable.
+        if (this.hls && this.tryRecoverHls(data)) {
+            return;
+        }
+
         this.playbackIssue.emit(
             classifyHlsPlaybackIssue(
                 {
@@ -301,6 +355,58 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
         );
     }
 
+    /**
+     * Runs hls.js self-recovery for recoverable fatal errors. Returns `true`
+     * when a recovery step was triggered (so the caller should suppress the
+     * diagnostic overlay), or `false` when the error is unrecoverable or the
+     * retry budget is spent.
+     */
+    private tryRecoverHls(data: ErrorData): boolean {
+        if (!this.hls) {
+            return false;
+        }
+
+        // `Hls.ErrorTypes` may be absent when hls.js is mocked (unit tests) or
+        // built without the enum; guard so recovery degrades to "no recovery"
+        // instead of throwing.
+        const errorTypes = Hls.ErrorTypes;
+        if (!errorTypes) {
+            return false;
+        }
+
+        if (data.type === errorTypes.NETWORK_ERROR) {
+            if (
+                this.hlsNetworkRecoveryAttempts >=
+                ArtPlayerComponent.MAX_HLS_NETWORK_RECOVERY_ATTEMPTS
+            ) {
+                return false;
+            }
+            this.hlsNetworkRecoveryAttempts += 1;
+            this.hls.startLoad();
+            return true;
+        }
+
+        if (data.type === errorTypes.MEDIA_ERROR) {
+            // Codec failures are typed as MEDIA_ERROR but are not fixed by
+            // `recoverMediaError()` retries — surface them immediately so the
+            // external-player fallback is offered without a delay.
+            if (isCodecFailure((data.details ?? '').toLowerCase())) {
+                return false;
+            }
+            if (
+                this.hlsMediaRecoveryAttempts >=
+                ArtPlayerComponent.MAX_HLS_MEDIA_RECOVERY_ATTEMPTS
+            ) {
+                return false;
+            }
+            this.hlsMediaRecoveryAttempts += 1;
+            this.hls.recoverMediaError();
+            return true;
+        }
+
+        return false;
+    }
+
     private getVideoType(url: string): string {
         const extension = getPlaybackMediaExtensionFromUrl(url);
         switch (extension) {
@@ -312,6 +418,8 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
                 return 'mp4';
             case 'ts':
                 return 'ts';
+            case 'mpd':
+                return 'mpd';
             default:
                 // No recognized extension (e.g. IPTV proxy URL) → default to
                 // MPEG-TS which is the most common format for live IPTV streams.

@@ -1,9 +1,18 @@
 import {
     getAppPlaylistFavoriteChannels,
     getAppPlaylistMetas,
+    getPlaylist,
     parseAppPlaylist,
 } from './playlist.operations';
 import type { AppDatabase } from '../database.types';
+
+function createGetPlaylistDbMock(row: unknown | null) {
+    const limit = jest.fn().mockResolvedValue(row ? [row] : []);
+    const where = jest.fn().mockReturnValue({ limit });
+    const from = jest.fn().mockReturnValue({ where });
+    const select = jest.fn().mockReturnValue({ from });
+    return { db: { select } as unknown as AppDatabase };
+}
 
 function createPlaylistFavoriteChannelsDbMock(row: unknown | null) {
     const limit = jest.fn().mockResolvedValue(row ? [row] : []);
@@ -108,6 +117,38 @@ describe('playlist.operations', () => {
         expect(select).toHaveBeenCalledWith(
             expect.not.objectContaining({
                 payload: expect.anything(),
+            })
+        );
+    });
+
+    it('parses importContentTypes JSON into an array when loading a single playlist', async () => {
+        const { db } = createGetPlaylistDbMock({
+            id: 'playlist-1',
+            name: 'Xtream Source',
+            type: 'xtream',
+            importContentTypes: '["live"]',
+        });
+
+        await expect(getPlaylist(db, 'playlist-1')).resolves.toEqual(
+            expect.objectContaining({
+                id: 'playlist-1',
+                importContentTypes: ['live'],
+            })
+        );
+    });
+
+    it('returns undefined importContentTypes when the column is empty', async () => {
+        const { db } = createGetPlaylistDbMock({
+            id: 'playlist-2',
+            name: 'Legacy Source',
+            type: 'xtream',
+            importContentTypes: null,
+        });
+
+        await expect(getPlaylist(db, 'playlist-2')).resolves.toEqual(
+            expect.objectContaining({
+                id: 'playlist-2',
+                importContentTypes: undefined,
             })
         );
     });

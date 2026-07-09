@@ -1,4 +1,4 @@
-import { resolveBackendUrl, shouldEnableServiceWorker } from './runtime-config';
+import { resolveBackendUrl } from './runtime-config';
 
 describe('runtime config helpers', () => {
     it('uses runtime BACKEND_URL when provided', () => {
@@ -23,55 +23,5 @@ describe('runtime config helpers', () => {
                 'https://fallback.example'
             )
         ).toBe('https://fallback.example');
-    });
-
-    it('enables service worker only for production builds with browser support', () => {
-        expect(
-            shouldEnableServiceWorker(true, {
-                serviceWorker: {},
-            } as Navigator)
-        ).toBe(true);
-        expect(
-            shouldEnableServiceWorker(false, { serviceWorker: {} } as Navigator)
-        ).toBe(false);
-        expect(shouldEnableServiceWorker(true, {} as Navigator)).toBe(false);
-    });
-
-    it('disables service worker for Electron runtime', () => {
-        expect(
-            shouldEnableServiceWorker(
-                true,
-                { serviceWorker: {} } as Navigator,
-                {
-                    electronBridge: {},
-                    protocol: 'file:',
-                }
-            )
-        ).toBe(false);
-    });
-
-    it('disables service worker for Electron runtime on non-file origins', () => {
-        expect(
-            shouldEnableServiceWorker(
-                true,
-                { serviceWorker: {} } as Navigator,
-                {
-                    electronBridge: {},
-                    protocol: 'https:',
-                }
-            )
-        ).toBe(false);
-    });
-
-    it('disables service worker for file origins without an Electron bridge', () => {
-        expect(
-            shouldEnableServiceWorker(
-                true,
-                { serviceWorker: {} } as Navigator,
-                {
-                    protocol: 'file:',
-                }
-            )
-        ).toBe(false);
     });
 });

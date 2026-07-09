@@ -75,4 +75,10 @@ export interface Playlist {
     };
     /** Hidden M3U group titles for the groups view */
     hiddenGroupTitles?: string[];
+    /**
+     * Xtream/Stalker content types the user chose to import and show, selected
+     * in the add-playlist dialog. Undefined or empty means "all types"
+     * (backward compatible with playlists created before this option existed).
+     */
+    importContentTypes?: ('live' | 'vod' | 'series')[];
 }

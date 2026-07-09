@@ -89,6 +89,11 @@ export class WorkspaceContextCategoryViewComponent {
     }
 
     getItemCount(item: WorkspaceCategoryViewItem): number {
+        // Synthetic entries (e.g. the Live TV "ALL" category) carry their own
+        // precomputed count; real categories look theirs up in the counts map.
+        if (typeof item.count === 'number') {
+            return item.count;
+        }
         const itemId = Number(item.id ?? item.category_id);
         return this.itemCounts().get(itemId) ?? 0;
     }

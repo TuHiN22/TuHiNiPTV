@@ -26,6 +26,7 @@ import {
 } from '../playback-diagnostics/playback-diagnostics.util';
 import { SeriesPlaybackNavigationControlsComponent } from '../portal-inline-player/series-playback-navigation-controls.component';
 import type { SeriesPlaybackNavigation } from '../portal-inline-player/series-playback-navigation';
+import { addVjsFpsCounter } from './vjs-fps-button';
 
 /**
  * This component contains the implementation of video player that is based on video.js library
@@ -112,6 +113,8 @@ export class VjsPlayerComponent implements OnInit, OnChanges, OnDestroy {
     player!: VideoJsPlayer;
     /** mpegts.js player for raw MPEG-TS streams */
     private mpegtsPlayer: mpegts.Player | null = null;
+    /** Tears down the FPS overlay/control-bar button on destroy. */
+    private disposeFpsCounter: (() => void) | null = null;
     private mpegTsVodDurationTarget: HTMLVideoElement | null = null;
     private readonly mpegTsVodDurationEvents = [
         'durationchange',
@@ -236,6 +239,13 @@ export class VjsPlayerComponent implements OnInit, OnChanges, OnDestroy {
         } catch (e) {
             console.warn('aspectRatioPanel plugin failed to initialize:', e);
         }
+        try {
+            this.disposeFpsCounter = addVjsFpsCounter(
+                this.player as unknown as Parameters<typeof addVjsFpsCounter>[0]
+            );
+        } catch (e) {
+            console.warn('FPS counter failed to initialize:', e);
+        }
     }
 
     /**
@@ -282,6 +292,10 @@ export class VjsPlayerComponent implements OnInit, OnChanges, OnDestroy {
     ngOnDestroy(): void {
         this.destroyMpegTs();
         this.removeNativePlaybackListeners();
+        if (this.disposeFpsCounter) {
+            this.disposeFpsCounter();
+            this.disposeFpsCounter = null;
+        }
         if (this.player) {
             this.player.dispose();
         }

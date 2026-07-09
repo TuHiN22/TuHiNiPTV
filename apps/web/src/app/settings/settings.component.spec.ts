@@ -111,7 +111,7 @@ const DEFAULT_SETTINGS = {
 
 const DEFAULT_APP_UPDATE_STATUS: ElectronBridgeAppUpdateStatus = {
     currentVersion: '0.22.0',
-    manualDownloadUrl: 'https://github.com/4gray/iptvnator/releases/latest',
+    manualDownloadUrl: 'https://github.com/TuHiN22/TuHiNiPTV/releases/latest',
     status: ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Idle,
     supportedSelfUpdate: true,
 };

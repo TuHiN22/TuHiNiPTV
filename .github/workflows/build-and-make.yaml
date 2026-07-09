@@ -341,24 +341,7 @@ jobs:
 
             - name: Validate AppStream metadata
               if: matrix.os == 'linux'
-              run: appstreamcli validate --pedantic --no-net apps/electron-backend/linux/com.fourgray.iptvnator.metainfo.xml
-
-            - name: Build website
-              if: matrix.os == 'linux'
-              run: pnpm nx build website --skip-nx-cache
-
-            - name: Verify AppStream website assets
-              if: matrix.os == 'linux'
-              shell: bash
-              run: |
-                  set -euo pipefail
-
-                  for screenshot in player playlists epg settings; do
-                      if ! find dist/apps/website -path "*/appstream/${screenshot}.png" -print -quit | grep -q .; then
-                          echo "::error::Missing AppStream website asset for ${screenshot}.png"
-                          exit 1
-                      fi
-                  done
+              run: appstreamcli validate --pedantic --no-net apps/electron-backend/linux/com.tiptv.tuhin.metainfo.xml
 
             - name: Override macOS arch in electron-builder.json
               if: matrix.os == 'macos'
@@ -493,10 +476,10 @@ jobs:
 
                   case "${{ matrix.arch }}" in
                       x64)
-                          APP_PATH="dist/executables/mac/IPTVnator.app"
+                          APP_PATH="dist/executables/mac/TuHiN iPTV.app"
                           ;;
                       arm64)
-                          APP_PATH="dist/executables/mac-arm64/IPTVnator.app"
+                          APP_PATH="dist/executables/mac-arm64/TuHiN iPTV.app"
                           ;;
                       *)
                           echo "::error::Unsupported macOS arch: ${{ matrix.arch }}"
@@ -579,17 +562,17 @@ jobs:
                   fi
 
                   flatpak install --user --noninteractive -y "${FLATPAK_BUNDLE}"
-                  flatpak run --command=sh com.fourgray.iptvnator -c '
+                  flatpak run --command=sh com.tiptv.tuhin -c '
                       set -euo pipefail
 
-                      test -f /app/share/metainfo/com.fourgray.iptvnator.metainfo.xml
-                      test -L /app/bin/iptvnator
+                      test -f /app/share/metainfo/com.tiptv.tuhin.metainfo.xml
+                      test -L /app/bin/tiptv
 
-                      LAUNCHER_PATH="$(readlink -f /app/bin/iptvnator)"
+                      LAUNCHER_PATH="$(readlink -f /app/bin/tiptv)"
                       test -f "${LAUNCHER_PATH}"
                       test -f "${LAUNCHER_PATH}.bin"
                       grep -q '\''readlink -f "$SCRIPT_PATH"'\'' "${LAUNCHER_PATH}"
-                      grep -q '\''exec "$SCRIPT_DIR/iptvnator.bin"'\'' "${LAUNCHER_PATH}"
+                      grep -q '\''exec "$SCRIPT_DIR/tiptv.bin"'\'' "${LAUNCHER_PATH}"
                   '
 
             - name: Upload artifacts (macOS)

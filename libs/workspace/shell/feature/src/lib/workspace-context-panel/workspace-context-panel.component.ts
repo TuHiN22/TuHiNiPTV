@@ -193,14 +193,52 @@ export class WorkspaceContextPanelComponent {
             (this.isStalkerCategories() && this.stalkerCategories().length > 0)
     );
 
+    /** Total live channel count across all categories (for the ALL entry). */
+    readonly totalLiveChannelCount = computed(() => {
+        let total = 0;
+        for (const count of this.xtreamCategoryItemCounts().values()) {
+            total += count;
+        }
+        return total;
+    });
+
+    /**
+     * Selected-category id for highlighting. On Live TV, the "no category"
+     * (null) selection maps to the synthetic ALL entry so it reads as selected
+     * by default.
+     */
+    readonly xtreamDisplaySelectedCategoryId = computed<string | number | null>(
+        () => {
+            const selected = this.xtreamSelectedCategoryId();
+            if (this.section() === 'live' && selected == null) {
+                return '*';
+            }
+            return selected;
+        }
+    );
+
     readonly filteredXtreamCategories = computed(() => {
         const cats = this.xtreamCategories();
+        // On Live TV, surface a synthetic "ALL" category (mirrors the Stalker
+        // "*" pattern). It maps to the no-category selection — which already
+        // renders every live channel — and is pinned first by the sort below.
+        const withAll =
+            this.section() === 'live'
+                ? [
+                      {
+                          category_id: '*',
+                          category_name: 'ALL',
+                          count: this.totalLiveChannelCount(),
+                      } as (typeof cats)[number],
+                      ...cats,
+                  ]
+                : cats;
         const term = this.categorySearchTerm().trim().toLowerCase();
         const filtered = term
-            ? cats.filter((category) =>
+            ? withAll.filter((category) =>
                   this.getCategoryLabel(category).toLowerCase().includes(term)
               )
-            : cats;
+            : withAll;
 
         return sortPortalCategoryItems(
             filtered,
@@ -350,6 +388,27 @@ export class WorkspaceContextPanelComponent {
         if (rawCategoryId === undefined || rawCategoryId === null) {
             return;
         }
+
+        // Synthetic "ALL" entry (Live TV): clear the category selection so the
+        // view renders every live channel, and drop back to the live root URL.
+        if (section === 'live' && String(rawCategoryId) === '*') {
+            this.xtreamStore.setSelectedCategory(null);
+            if (
+                hasActiveLiveCategoryRoute(
+                    this.router.routerState.snapshot.root
+                )
+            ) {
+                void this.router.navigate(
+                    ['/workspace', 'xtreams', context.playlistId, 'live'],
+                    {
+                        queryParamsHandling: 'preserve',
+                        replaceUrl: true,
+                    }
+                );
+            }
+            return;
+        }
+
         const numericCategoryId = Number(rawCategoryId);
         if (Number.isNaN(numericCategoryId)) {
             return;

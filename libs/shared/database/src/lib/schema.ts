@@ -1,5 +1,5 @@
 /**
- * Drizzle ORM schema for IPTVnator database
+ * Drizzle ORM schema for TuHiN iPTV database
  * This schema defines the structure for Xtream Codes API data storage
  *
  * Single source of truth for database schema - used by:
@@ -48,6 +48,8 @@ export const playlists = sqliteTable('playlists', {
     recentlyViewed: text('recently_viewed'),
     payload: text('payload'),
     lastUsage: text('last_usage'),
+    /** JSON array of Xtream/Stalker content types the user chose to import. */
+    importContentTypes: text('import_content_types'),
 });
 
 // App key-value state table (e.g. one-time migration flags)
