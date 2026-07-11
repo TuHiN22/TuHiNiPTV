@@ -6,9 +6,10 @@ the ordering. Notes are user-facing: write for people installing the app, not fo
 maintainers. Keep entries in the imperative/past tense and link issues/PRs where
 possible.
 
-> The CI workflow (`.github/workflows/build-and-make.yaml`) publishes a **draft**
-> release with auto-generated notes when a `v*.*.*` tag is pushed. Use this
-> template to replace or augment those auto-generated notes before publishing.
+> The release workflow (`.github/workflows/release.yml`) publishes the GitHub
+> Release with auto-generated notes when a `v*.*.*` tag is pushed. Use this
+> template to prepare the user-facing highlights before tagging, or refine the
+> generated notes after publication.
 
 ---
 

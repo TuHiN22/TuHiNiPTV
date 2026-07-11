@@ -9,8 +9,8 @@ This project is an Nx + Angular + Electron monorepo. Releases are **tag-driven**
 pushing a `v*.*.*` tag runs `.github/workflows/release.yml`, which builds
 Windows, macOS (x64 + arm64), and Linux (x64 AppImage + deb) artifacts, merges
 the macOS updater metadata, validates required assets, and publishes the GitHub
-Release automatically. `.github/workflows/build-and-make.yaml` remains a
-branch/PR packaging workflow and no longer publishes tags.
+Release automatically. The legacy `.github/workflows/build-and-make.yaml` is
+manual-only; it no longer runs on branches, pull requests, or release tags.
 
 - **Repository:** `TuHiN22/TuHiNiPTV` (`origin`)
 - **Release branch:** `main`

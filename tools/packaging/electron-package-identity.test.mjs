@@ -180,6 +180,9 @@ test('GitHub Releases auto-update metadata is generated and uploaded', () => {
         buildAndMakeWorkflow,
         /tags:\s*\n\s*- ['"]v\*\.\*\.\*['"]/
     );
+    assert.doesNotMatch(buildAndMakeWorkflow, /^\s+push:/m);
+    assert.doesNotMatch(buildAndMakeWorkflow, /^\s+pull_request:/m);
+    assert.match(buildAndMakeWorkflow, /^\s+workflow_dispatch:/m);
 });
 
 test('generated Electron package metadata mirrors the root package identity', async () => {
