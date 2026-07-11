@@ -39,6 +39,7 @@ import {
 } from '@iptvnator/portal/shared/util';
 import {
     getVodSeriesSeasonKey,
+    classifyStalkerPlaybackFailure,
     isVodSeriesItem,
     mapRegularSeriesEpisodes,
     mapRegularSeriesSeasons,
@@ -139,8 +140,7 @@ export class StalkerSeriesViewComponent implements OnDestroy {
      */
     readonly similarInPortals = signal<CrossPortalSimilarItem[]>([]);
     private readonly loadSimilarInPortals = effect(() => {
-        const recommendations =
-            this.displayItem()?.info?.tmdb_recommendations;
+        const recommendations = this.displayItem()?.info?.tmdb_recommendations;
         untracked(() => {
             this.similarInPortals.set([]);
             if (
@@ -207,12 +207,13 @@ export class StalkerSeriesViewComponent implements OnDestroy {
             const tmdbId = this.displayItem()?.info?.tmdb_id;
             const seasonKey = this.selectedSeasonKey();
             if (tmdbId && seasonKey) {
-                untracked(() =>
-                    void this.tmdbSeasons.fetchSeason(
-                        tmdbId,
-                        seasonKey,
-                        this.mappedSeasons()[seasonKey]
-                    )
+                untracked(
+                    () =>
+                        void this.tmdbSeasons.fetchSeason(
+                            tmdbId,
+                            seasonKey,
+                            this.mappedSeasons()[seasonKey]
+                        )
                 );
             }
         });
@@ -698,12 +699,14 @@ export class StalkerSeriesViewComponent implements OnDestroy {
             void this.portalPlayer.openResolvedPlayback(playback, true);
         } catch (error) {
             this.logger.error('Failed to start inline series playback', error);
-            const errorMessage =
-                error instanceof Error && error.message === 'nothing_to_play'
-                    ? this.translateService.instant(
-                          'PORTALS.CONTENT_NOT_AVAILABLE'
-                      )
-                    : this.translateService.instant('PORTALS.PLAYBACK_ERROR');
+            const failure = classifyStalkerPlaybackFailure(error);
+            const errorMessage = this.translateService.instant(
+                failure === 'content-unavailable'
+                    ? 'PORTALS.CONTENT_NOT_AVAILABLE'
+                    : failure === 'stream-offline'
+                      ? 'PORTALS.STREAM_OFFLINE'
+                      : 'PORTALS.PLAYBACK_ERROR'
+            );
             this.snackBar.open(errorMessage, undefined, {
                 duration: 3000,
             });

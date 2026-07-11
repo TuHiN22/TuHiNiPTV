@@ -1,0 +1,417 @@
+name: Release
+
+# Tag-driven desktop release pipeline. Signing and notarization are enabled
+# when their complete secret sets are present; missing credentials fall back
+# to unsigned/ad-hoc packages instead of blocking a release build.
+on:
+    push:
+        tags:
+            - 'v*.*.*'
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+jobs:
+    build:
+        name: Build ${{ matrix.os }} ${{ matrix.arch }}
+        runs-on: ${{ matrix.runner }}
+        timeout-minutes: 120
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - os: windows
+                      arch: x64
+                      runner: windows-2022
+                    - os: macos
+                      arch: x64
+                      runner: macos-15-intel
+                    - os: macos
+                      arch: arm64
+                      runner: macos-latest
+                    - os: linux
+                      arch: x64
+                      runner: ubuntu-22.04
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+                  cache: 'pnpm'
+
+            - name: Install Linux packaging dependencies
+              if: matrix.os == 'linux'
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install --no-install-recommends -y libarchive-tools
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Inject optional TMDB API key
+              env:
+                  TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+              run: node tools/tmdb/inject-tmdb-key.mjs
+
+            - name: Select platform packaging and signing policy
+              shell: bash
+              env:
+                  MAC_CSC_LINK: ${{ secrets.CSC_LINK }}
+                  APPLE_API_KEY_CONTENT: ${{ secrets.APPLE_API_KEY }}
+                  APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+                  APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+                  APPLE_ID: ${{ secrets.APPLE_ID }}
+                  APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+                  APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+                  WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+              run: |
+                  node - "${{ matrix.os }}" "${{ matrix.arch }}" <<'NODE'
+                  const fs = require('fs');
+                  const [os, arch] = process.argv.slice(2);
+                  const configPath = 'electron-builder.json';
+                  const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
+                  if (os === 'linux') {
+                      config.linux.target = [
+                          { target: 'AppImage', arch: [arch] },
+                          { target: 'deb', arch: [arch] },
+                      ];
+                  } else if (os === 'macos') {
+                      const targets = Array.isArray(config.mac?.target)
+                          ? config.mac.target
+                          : [config.mac?.target].filter(Boolean);
+                      for (const target of targets) {
+                          if (target && typeof target === 'object') {
+                              target.arch = [arch];
+                          }
+                      }
+                      config.mac.target = targets;
+
+                      const hasSigningCertificate = Boolean(
+                          process.env.MAC_CSC_LINK
+                      );
+                      const hasApiNotarization =
+                          hasSigningCertificate &&
+                          Boolean(process.env.APPLE_API_KEY_CONTENT) &&
+                          Boolean(process.env.APPLE_API_KEY_ID) &&
+                          Boolean(process.env.APPLE_API_ISSUER);
+                      const hasAppleIdNotarization =
+                          hasSigningCertificate &&
+                          Boolean(process.env.APPLE_ID) &&
+                          Boolean(process.env.APPLE_APP_SPECIFIC_PASSWORD) &&
+                          Boolean(process.env.APPLE_TEAM_ID);
+
+                      if (!hasSigningCertificate) {
+                          config.mac.identity = null;
+                          config.mac.forceCodeSigning = false;
+                      }
+                      config.mac.notarize =
+                          hasApiNotarization || hasAppleIdNotarization;
+
+                      console.log(
+                          'macOS signing:',
+                          hasSigningCertificate
+                              ? 'enabled'
+                              : 'disabled (no CSC_LINK)'
+                      );
+                      console.log(
+                          'macOS notarization:',
+                          config.mac.notarize
+                              ? hasApiNotarization
+                                  ? 'App Store Connect API key'
+                                  : 'Apple ID'
+                              : 'disabled (incomplete credentials)'
+                      );
+                  } else if (os === 'windows') {
+                      const targets = Array.isArray(config.win?.target)
+                          ? config.win.target
+                          : [config.win?.target].filter(Boolean);
+                      for (const target of targets) {
+                          if (target && typeof target === 'object') {
+                              target.arch = [arch];
+                          }
+                      }
+                      config.win.target = targets;
+                      console.log(
+                          'Windows signing:',
+                          process.env.WIN_CSC_LINK
+                              ? 'enabled'
+                              : 'disabled (no WIN_CSC_LINK)'
+                      );
+                  } else {
+                      throw new Error(`Unsupported release matrix OS: ${os}`);
+                  }
+
+                  fs.writeFileSync(
+                      configPath,
+                      JSON.stringify(config, null, 4) + '\n'
+                  );
+                  const configKey =
+                      os === 'windows' ? 'win' : os === 'macos' ? 'mac' : 'linux';
+                  console.log(
+                      `Configured ${os} ${arch} targets:`,
+                      JSON.stringify(config[configKey].target)
+                  );
+                  NODE
+
+            - name: Prepare macOS notarization credentials
+              if: matrix.os == 'macos'
+              shell: bash
+              env:
+                  MAC_CSC_LINK: ${{ secrets.CSC_LINK }}
+                  APPLE_API_KEY_CONTENT: ${{ secrets.APPLE_API_KEY }}
+                  APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+                  APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+                  APPLE_ID: ${{ secrets.APPLE_ID }}
+                  APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+                  APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+              run: |
+                  if [ -z "${MAC_CSC_LINK}" ]; then
+                      echo "No macOS signing certificate; skipping notarization setup."
+                      exit 0
+                  fi
+
+                  if [ -n "${APPLE_API_KEY_CONTENT}" ] &&
+                     [ -n "${APPLE_API_KEY_ID}" ] &&
+                     [ -n "${APPLE_API_ISSUER}" ]; then
+                      APPLE_API_KEY_PATH="${RUNNER_TEMP}/AuthKey_${APPLE_API_KEY_ID}.p8"
+                      printf '%s' "${APPLE_API_KEY_CONTENT}" > "${APPLE_API_KEY_PATH}"
+                      chmod 600 "${APPLE_API_KEY_PATH}"
+                      echo "APPLE_API_KEY=${APPLE_API_KEY_PATH}" >> "${GITHUB_ENV}"
+                      echo "APPLE_API_KEY_ID=${APPLE_API_KEY_ID}" >> "${GITHUB_ENV}"
+                      echo "APPLE_API_ISSUER=${APPLE_API_ISSUER}" >> "${GITHUB_ENV}"
+                      echo "Prepared App Store Connect API key."
+                  elif [ -n "${APPLE_ID}" ] &&
+                       [ -n "${APPLE_APP_SPECIFIC_PASSWORD}" ] &&
+                       [ -n "${APPLE_TEAM_ID}" ]; then
+                      echo "APPLE_ID=${APPLE_ID}" >> "${GITHUB_ENV}"
+                      echo "APPLE_APP_SPECIFIC_PASSWORD=${APPLE_APP_SPECIFIC_PASSWORD}" >> "${GITHUB_ENV}"
+                      echo "APPLE_TEAM_ID=${APPLE_TEAM_ID}" >> "${GITHUB_ENV}"
+                      echo "Prepared Apple ID notarization credentials."
+                  else
+                      echo "No complete notarization credential set; notarization is disabled."
+                  fi
+
+            - name: Build installer
+              env:
+                  IPTVNATOR_REQUIRE_EMBEDDED_MPV: '0'
+                  CSC_LINK: ${{ secrets.CSC_LINK }}
+                  CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+                  WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+                  WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+              run: node tools/build/make.mjs
+
+            - name: Upload platform artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ${{ matrix.os }}-${{ matrix.arch }}-artifacts
+                  if-no-files-found: error
+                  retention-days: 7
+                  path: |
+                      dist/executables/**/*.exe
+                      dist/executables/**/*.dmg
+                      dist/executables/**/*.zip
+                      dist/executables/**/*.AppImage
+                      dist/executables/**/*.deb
+                      dist/executables/**/*.blockmap
+                      dist/executables/**/latest*.yml
+
+    release:
+        name: Publish GitHub Release
+        needs: build
+        if: startsWith(github.ref, 'refs/tags/v')
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+
+        steps:
+            - name: Download all build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  path: artifacts
+
+            - name: Merge macOS updater metadata
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  node <<'NODE'
+                  const fs = require('fs');
+                  const candidates = [
+                      'artifacts/macos-x64-artifacts/latest-mac.yml',
+                      'artifacts/macos-arm64-artifacts/latest-mac.yml',
+                  ].filter((filePath) => fs.existsSync(filePath));
+
+                  if (candidates.length !== 2) {
+                      throw new Error(
+                          `Expected two macOS update metadata files, found ${candidates.length}`
+                      );
+                  }
+
+                  function extractFilesBlock(text, filePath) {
+                      const lines = text.split(/\r?\n/);
+                      const start = lines.findIndex((line) => line === 'files:');
+                      if (start === -1) {
+                          throw new Error(`Missing files block in ${filePath}`);
+                      }
+                      const block = [];
+                      for (let index = start + 1; index < lines.length; index += 1) {
+                          const line = lines[index];
+                          if (/^\S/.test(line) && line.trim() !== '') {
+                              break;
+                          }
+                          if (line.trim() !== '') {
+                              block.push(line);
+                          }
+                      }
+                      return block;
+                  }
+
+                  function splitFileEntries(block) {
+                      const entries = [];
+                      let current = [];
+                      for (const line of block) {
+                          if (/^\s*-\s+url:/.test(line) && current.length > 0) {
+                              entries.push(current);
+                              current = [];
+                          }
+                          current.push(line);
+                      }
+                      if (current.length > 0) {
+                          entries.push(current);
+                      }
+                      return entries;
+                  }
+
+                  function replaceFilesBlock(text, mergedBlock) {
+                      const lines = text.split(/\r?\n/);
+                      const start = lines.findIndex((line) => line === 'files:');
+                      let end = lines.length;
+                      for (let index = start + 1; index < lines.length; index += 1) {
+                          const line = lines[index];
+                          if (/^\S/.test(line) && line.trim() !== '') {
+                              end = index;
+                              break;
+                          }
+                      }
+                      return [
+                          ...lines.slice(0, start + 1),
+                          ...mergedBlock,
+                          ...lines.slice(end),
+                      ].join('\n').replace(/\n*$/, '\n');
+                  }
+
+                  const mergedEntries = [];
+                  const seenUrls = new Set();
+                  for (const filePath of candidates) {
+                      const text = fs.readFileSync(filePath, 'utf8');
+                      const entries = splitFileEntries(
+                          extractFilesBlock(text, filePath)
+                      );
+                      for (const entry of entries) {
+                          const urlLine = entry.find((line) =>
+                              /^\s*-\s+url:/.test(line)
+                          );
+                          const url = urlLine
+                              ?.replace(/^\s*-\s+url:\s*/, '')
+                              .trim();
+                          if (!url || seenUrls.has(url)) {
+                              continue;
+                          }
+                          seenUrls.add(url);
+                          mergedEntries.push(...entry);
+                      }
+                  }
+
+                  const merged = replaceFilesBlock(
+                      fs.readFileSync(candidates[0], 'utf8'),
+                      mergedEntries
+                  );
+                  fs.writeFileSync('artifacts/latest-mac.yml', merged);
+                  console.log(
+                      `Merged macOS update metadata for: ${[...seenUrls].join(', ')}`
+                  );
+                  NODE
+
+            - name: Validate release assets
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  node <<'NODE'
+                  const fs = require('fs');
+                  const path = require('path');
+
+                  function walk(root) {
+                      return fs.readdirSync(root, { withFileTypes: true }).flatMap((entry) => {
+                          const fullPath = path.join(root, entry.name);
+                          return entry.isDirectory() ? walk(fullPath) : [fullPath];
+                      });
+                  }
+
+                  const files = walk('artifacts').map((filePath) =>
+                      filePath.replaceAll('\\', '/')
+                  );
+                  const required = [
+                      ['Windows installer', (file) => /windows-x64-artifacts\/.*\.exe$/i.test(file)],
+                      ['Windows updater metadata', (file) => /windows-x64-artifacts\/latest\.yml$/i.test(file)],
+                      ['macOS x64 DMG', (file) => /macos-x64-artifacts\/.*-x64\.dmg$/i.test(file)],
+                      ['macOS arm64 DMG', (file) => /macos-arm64-artifacts\/.*-arm64\.dmg$/i.test(file)],
+                      ['Linux AppImage', (file) => /linux-x64-artifacts\/.*\.AppImage$/i.test(file)],
+                      ['Linux deb', (file) => /linux-x64-artifacts\/.*\.deb$/i.test(file)],
+                      ['Linux updater metadata', (file) => /linux-x64-artifacts\/latest-linux.*\.yml$/i.test(file)],
+                      ['merged macOS updater metadata', (file) => file === 'artifacts/latest-mac.yml'],
+                  ];
+
+                  for (const [label, predicate] of required) {
+                      if (!files.some(predicate)) {
+                          throw new Error(`Missing ${label}`);
+                      }
+                  }
+
+                  const macMetadata = fs.readFileSync(
+                      'artifacts/latest-mac.yml',
+                      'utf8'
+                  );
+                  if (!/-x64\.zip/i.test(macMetadata) || !/-arm64\.zip/i.test(macMetadata)) {
+                      throw new Error(
+                          'Merged latest-mac.yml must contain x64 and arm64 ZIP entries'
+                      );
+                  }
+                  console.log(`Validated ${files.length} collected release files.`);
+                  NODE
+
+            - name: Publish GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: ${{ github.ref_name }}
+                  name: TuHiN iPTV ${{ github.ref_name }}
+                  draft: false
+                  prerelease: false
+                  generate_release_notes: true
+                  fail_on_unmatched_files: false
+                  files: |
+                      artifacts/windows-x64-artifacts/**/*.exe
+                      artifacts/windows-x64-artifacts/**/*.blockmap
+                      artifacts/windows-x64-artifacts/latest.yml
+                      artifacts/macos-x64-artifacts/**/*.dmg
+                      artifacts/macos-x64-artifacts/**/*.zip
+                      artifacts/macos-x64-artifacts/**/*.blockmap
+                      artifacts/macos-arm64-artifacts/**/*.dmg
+                      artifacts/macos-arm64-artifacts/**/*.zip
+                      artifacts/macos-arm64-artifacts/**/*.blockmap
+                      artifacts/latest-mac.yml
+                      artifacts/linux-x64-artifacts/**/*.AppImage
+                      artifacts/linux-x64-artifacts/**/*.deb
+                      artifacts/linux-x64-artifacts/**/*.blockmap
+                      artifacts/linux-x64-artifacts/latest-linux*.yml
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

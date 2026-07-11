@@ -1,0 +1,56 @@
+:host {
+    display: flex;
+    margin: 10px;
+    justify-content: center;
+}
+
+form {
+    width: 100%;
+}
+
+.loading-container,
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.content-type-select {
+    margin: 6px 0 4px;
+}
+
+.content-type-select__label {
+    display: block;
+    font-size: 0.8rem;
+    opacity: 0.75;
+    margin-bottom: 4px;
+}
+
+.content-type-select__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+}
+
+.content-type-select__error {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.75rem;
+    color: var(--mat-sys-error, #f44336);
+}
+
+.connection-status {
+    margin: 10px 0;
+}
+
+.connection-status--online {
+    color: #4caf50;
+}
+
+.connection-status--offline {
+    color: #f44336;
+}
+
+.connection-status--unavailable {
+    color: #9e9e9e;
+}

@@ -23,6 +23,7 @@ class StubWebPlayerViewComponent {
     readonly playback = input<unknown>(null);
     readonly startTime = input(0);
     readonly seriesNavigation = input<unknown>(null);
+    readonly streamOfflineOnNetworkError = input(false);
     readonly timeUpdate = output<{ currentTime: number; duration: number }>();
     readonly externalFallbackRequested = output<unknown>();
     readonly playbackEnded = output<void>();
@@ -37,12 +38,10 @@ describe('PortalInlinePlayerComponent', () => {
     let component: PortalInlinePlayerComponentInstance;
 
     beforeAll(async () => {
-        ({ PortalInlinePlayerComponent } = await import(
-            './portal-inline-player.component'
-        ));
-        ({ WebPlayerViewComponent } = await import(
-            '../web-player-view/web-player-view.component'
-        ));
+        ({ PortalInlinePlayerComponent } =
+            await import('./portal-inline-player.component'));
+        ({ WebPlayerViewComponent } =
+            await import('../web-player-view/web-player-view.component'));
     });
 
     beforeEach(async () => {
@@ -86,16 +85,21 @@ describe('PortalInlinePlayerComponent', () => {
             episodeNumber: 2,
         });
         fixture.componentRef.setInput('seriesNavigation', seriesNavigation);
+        fixture.componentRef.setInput('streamOfflineOnNetworkError', true);
         (
             component as unknown as {
                 playbackEnded: { subscribe: (fn: () => void) => void };
-                previousEpisodeRequested: { subscribe: (fn: () => void) => void };
+                previousEpisodeRequested: {
+                    subscribe: (fn: () => void) => void;
+                };
                 nextEpisodeRequested: { subscribe: (fn: () => void) => void };
             }
         ).playbackEnded.subscribe(() => events.push('ended'));
         (
             component as unknown as {
-                previousEpisodeRequested: { subscribe: (fn: () => void) => void };
+                previousEpisodeRequested: {
+                    subscribe: (fn: () => void) => void;
+                };
             }
         ).previousEpisodeRequested.subscribe(() => events.push('previous'));
         (
@@ -114,6 +118,7 @@ describe('PortalInlinePlayerComponent', () => {
             By.directive(StubWebPlayerViewComponent)
         ).componentInstance as StubWebPlayerViewComponent;
         expect(webPlayer.seriesNavigation()).toBe(seriesNavigation);
+        expect(webPlayer.streamOfflineOnNetworkError()).toBe(true);
 
         webPlayer.playbackEnded.emit();
         webPlayer.previousEpisodeRequested.emit();

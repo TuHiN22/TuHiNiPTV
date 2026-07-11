@@ -82,6 +82,7 @@ function createController() {
         controller,
         playbackPositions,
         selectedVodPosition,
+        snackBar,
     };
 }
 
@@ -114,5 +115,21 @@ describe('StalkerVodPlaybackController', () => {
         await olderLoadPromise;
         expect(selectedVodPosition()?.contentXtreamId).toBe(202);
         expect(selectedVodPosition()?.positionSeconds).toBe(20);
+    });
+
+    it('shows the offline diagnostic for provider loading failures', async () => {
+        const { controller, snackBar } = createController();
+
+        await controller.startVodPlayback(() =>
+            Promise.reject(
+                new Error('HTTP Error: Service Unavailable (status: 503)')
+            )
+        );
+
+        expect(snackBar.open).toHaveBeenCalledWith(
+            'PORTALS.STREAM_OFFLINE',
+            undefined,
+            { duration: 3000 }
+        );
     });
 });

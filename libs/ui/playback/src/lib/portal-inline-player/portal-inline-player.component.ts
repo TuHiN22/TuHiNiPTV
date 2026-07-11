@@ -43,6 +43,7 @@ export class PortalInlinePlayerComponent {
     readonly playback = input<ResolvedPortalPlayback | null>(null);
     readonly episodeMetadata = input<SeriesEpisodeMetadata | null>(null);
     readonly seriesNavigation = input<SeriesPlaybackNavigation | null>(null);
+    readonly streamOfflineOnNetworkError = input(false);
     readonly title = computed(() => this.playback()?.title ?? '');
     readonly streamUrl = computed(() => this.playback()?.streamUrl ?? '');
     readonly startTime = computed(() => this.playback()?.startTime ?? 0);

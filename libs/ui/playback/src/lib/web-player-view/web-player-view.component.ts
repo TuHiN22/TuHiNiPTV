@@ -76,6 +76,7 @@ export class WebPlayerViewComponent {
     showCaptions = input<boolean>(false);
     playerOverride = input<VideoPlayer | null>(null);
     seriesNavigation = input<SeriesPlaybackNavigation | null>(null);
+    streamOfflineOnNetworkError = input(false);
     readonly timeUpdate = output<{
         currentTime: number;
         duration: number;
@@ -84,11 +85,9 @@ export class WebPlayerViewComponent {
     readonly playbackEnded = output<void>();
     readonly previousEpisodeRequested = output<void>();
     readonly nextEpisodeRequested = output<void>();
-
     settings = toSignal(this.storage.get(STORE_KEY.Settings)) as Signal<
         Settings | undefined
     >;
-
     channel!: Channel;
     vjsOptions!: {
         isLive: boolean;
@@ -239,10 +238,24 @@ export class WebPlayerViewComponent {
     }
 
     getDiagnosticTitleKey(issue: PlaybackDiagnostic): string {
+        if (
+            this.streamOfflineOnNetworkError() &&
+            issue.code === PlaybackDiagnosticCode.NetworkError
+        ) {
+            return 'PLAYBACK_DIAGNOSTICS.STREAM_OFFLINE.TITLE';
+        }
+
         return `${this.getDiagnosticTranslationBase(issue)}.TITLE`;
     }
 
     getDiagnosticDescriptionKey(issue: PlaybackDiagnostic): string {
+        if (
+            this.streamOfflineOnNetworkError() &&
+            issue.code === PlaybackDiagnosticCode.NetworkError
+        ) {
+            return 'PLAYBACK_DIAGNOSTICS.STREAM_OFFLINE.DESCRIPTION';
+        }
+
         if (
             issue.code === PlaybackDiagnosticCode.BrowserAccessError &&
             !this.runtime.supportsManagedExternalPlayers

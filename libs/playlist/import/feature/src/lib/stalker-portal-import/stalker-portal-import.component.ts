@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
@@ -39,81 +40,43 @@ function atLeastOneContentTypeValidator(
         FormsModule,
         MatCheckboxModule,
         MatFormFieldModule,
+        MatIconModule,
         MatInputModule,
         ReactiveFormsModule,
         TranslatePipe,
     ],
     selector: 'app-stalker-portal-import',
     templateUrl: './stalker-portal-import.component.html',
-    styles: [
-        `
-            :host {
-                display: flex;
-                margin: 10px;
-                justify-content: center;
-            }
-
-            form {
-                width: 100%;
-            }
-
-            .loading-container {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .content-type-select {
-                margin: 6px 0 4px;
-            }
-
-            .content-type-select__label {
-                display: block;
-                font-size: 0.8rem;
-                opacity: 0.75;
-                margin-bottom: 4px;
-            }
-
-            .content-type-select__options {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px 20px;
-            }
-
-            .content-type-select__error {
-                display: block;
-                margin-top: 4px;
-                font-size: 0.75rem;
-                color: var(--mat-sys-error, #f44336);
-            }
-        `,
-    ],
+    styleUrl: './stalker-portal-import.component.scss',
 })
 export class StalkerPortalImportComponent {
     readonly addClicked = output<void>();
     readonly URL_REGEX = /^(http|https|file):\/\/[^ "]+$/;
 
-    readonly form = new FormGroup({
-        _id: new FormControl(uuid()),
-        title: new FormControl('', [Validators.required]),
-        macAddress: new FormControl('', [Validators.required]),
-        serialNumber: new FormControl(''),
-        deviceId1: new FormControl(''),
-        deviceId2: new FormControl(''),
-        signature1: new FormControl(''),
-        signature2: new FormControl(''),
-        password: new FormControl(''),
-        username: new FormControl(''),
-        portalUrl: new FormControl('', [
-            Validators.required,
-            Validators.pattern(this.URL_REGEX),
-        ]),
-        importDate: new FormControl(new Date().toISOString()),
-        userAgent: new FormControl(''),
-        importLive: new FormControl(true),
-        importVod: new FormControl(true),
-        importSeries: new FormControl(true),
-    }, { validators: atLeastOneContentTypeValidator });
+    readonly form = new FormGroup(
+        {
+            _id: new FormControl(uuid()),
+            title: new FormControl('', [Validators.required]),
+            macAddress: new FormControl('', [Validators.required]),
+            serialNumber: new FormControl(''),
+            deviceId1: new FormControl(''),
+            deviceId2: new FormControl(''),
+            signature1: new FormControl(''),
+            signature2: new FormControl(''),
+            password: new FormControl(''),
+            username: new FormControl(''),
+            portalUrl: new FormControl('', [
+                Validators.required,
+                Validators.pattern(this.URL_REGEX),
+            ]),
+            importDate: new FormControl(new Date().toISOString()),
+            userAgent: new FormControl(''),
+            importLive: new FormControl(true),
+            importVod: new FormControl(true),
+            importSeries: new FormControl(true),
+        },
+        { validators: atLeastOneContentTypeValidator }
+    );
 
     private readonly stalkerSessionService = inject(StalkerSessionService);
     private readonly store = inject(Store);
@@ -121,6 +84,107 @@ export class StalkerPortalImportComponent {
     readonly translate = inject(TranslateService);
 
     readonly isLoading = signal(false);
+
+    readonly isTestingConnection = signal(false);
+    readonly connectionStatus = signal<
+        'online' | 'offline' | 'unavailable' | null
+    >(null);
+
+    async testConnection(): Promise<void> {
+        if (!this.form.valid || this.isTestingConnection()) {
+            return;
+        }
+
+        const formValue = this.form.getRawValue();
+        const originalUrl = formValue.portalUrl ?? '';
+        const transformedUrl = this.transformPortalUrl(originalUrl);
+        const macAddress = formValue.macAddress ?? '';
+
+        if (!transformedUrl || !macAddress) {
+            this.connectionStatus.set('unavailable');
+            return;
+        }
+
+        const stalkerIdentity = normalizeStalkerPortalIdentity({
+            serialNumber: formValue.serialNumber ?? undefined,
+            deviceId1: formValue.deviceId1 ?? undefined,
+            deviceId2: formValue.deviceId2 ?? undefined,
+            signature1: formValue.signature1 ?? undefined,
+            signature2: formValue.signature2 ?? undefined,
+        });
+
+        this.isTestingConnection.set(true);
+        this.connectionStatus.set(null);
+
+        try {
+            const authResult = await this.stalkerSessionService.authenticate(
+                transformedUrl,
+                macAddress,
+                stalkerIdentity
+            );
+
+            this.connectionStatus.set(authResult.token ? 'online' : 'offline');
+        } catch (error) {
+            this.connectionStatus.set(
+                this.isUnreachableError(error) ? 'unavailable' : 'offline'
+            );
+        } finally {
+            this.isTestingConnection.set(false);
+        }
+    }
+
+    getStatusMessage(): string {
+        switch (this.connectionStatus()) {
+            case 'online':
+                return this.translate.instant(
+                    'HOME.STALKER_PORTAL.CONNECTION_ONLINE'
+                );
+            case 'offline':
+                return this.translate.instant(
+                    'HOME.STALKER_PORTAL.CONNECTION_OFFLINE'
+                );
+            case 'unavailable':
+                return this.translate.instant(
+                    'HOME.STALKER_PORTAL.CONNECTION_UNAVAILABLE'
+                );
+            default:
+                return '';
+        }
+    }
+
+    getStatusClass(): string {
+        const status = this.connectionStatus();
+        return status ? `connection-status--${status}` : '';
+    }
+
+    getStatusIcon(): string {
+        switch (this.connectionStatus()) {
+            case 'online':
+                return 'check_circle';
+            case 'offline':
+                return 'error';
+            case 'unavailable':
+                return 'cloud_off';
+            default:
+                return '';
+        }
+    }
+
+    /** True when the error indicates the portal host was not reachable. */
+    private isUnreachableError(error: unknown): boolean {
+        const message = (
+            error instanceof Error ? error.message : String(error ?? '')
+        ).toLowerCase();
+        return (
+            message.includes('network') ||
+            message.includes('timeout') ||
+            message.includes('enotfound') ||
+            message.includes('econnrefused') ||
+            message.includes('econnreset') ||
+            message.includes('getaddrinfo') ||
+            message.includes('unreachable')
+        );
+    }
 
     clearForm(): void {
         this.form.reset({
@@ -141,6 +205,7 @@ export class StalkerPortalImportComponent {
             importVod: true,
             importSeries: true,
         });
+        this.connectionStatus.set(null);
     }
 
     async addPlaylist() {

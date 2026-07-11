@@ -15,6 +15,10 @@ const buildAndMakeWorkflow = fs.readFileSync(
     join(currentDir, '..', '..', '.github', 'workflows', 'build-and-make.yaml'),
     'utf8'
 );
+const releaseWorkflow = fs.readFileSync(
+    join(currentDir, '..', '..', '.github', 'workflows', 'release.yml'),
+    'utf8'
+);
 const electronBuilderConfig = JSON.parse(
     fs.readFileSync(
         join(currentDir, '..', '..', 'electron-builder.json'),
@@ -101,7 +105,10 @@ const { validatePackagedEmbeddedMpv } = require('./embedded-mpv-packaging.cjs');
 test('Linux package identity does not expose the internal Electron backend project name', () => {
     assert.equal(electronBuilderConfig.productName, 'TuHiN iPTV');
     assert.equal(electronBuilderConfig.extraMetadata?.name, 'tiptv');
-    assert.equal(electronBuilderConfig.extraMetadata?.productName, 'TuHiN iPTV');
+    assert.equal(
+        electronBuilderConfig.extraMetadata?.productName,
+        'TuHiN iPTV'
+    );
     assert.equal(electronBuilderConfig.linux?.executableName, 'tiptv');
     assert.equal(
         electronBuilderConfig.linux?.desktop?.entry?.StartupWMClass,
@@ -115,7 +122,7 @@ test('Linux package identity does not expose the internal Electron backend proje
 });
 
 test('GitHub Releases auto-update metadata is generated and uploaded', () => {
-    const releaseFiles = buildAndMakeWorkflow.match(
+    const releaseFiles = releaseWorkflow.match(
         /files: \|\n([\s\S]*?)\n\s+env:/
     )?.[1];
 
@@ -127,8 +134,8 @@ test('GitHub Releases auto-update metadata is generated and uploaded', () => {
     assert.deepEqual(electronBuilderConfig.publish, [
         {
             provider: 'github',
-            owner: 'REPLACE_WITH_OWNER',
-            repo: 'tiptv',
+            owner: 'TuHiN22',
+            repo: 'TuHiNiPTV',
         },
     ]);
     assert.deepEqual(electronBuilderConfig.mac?.target, [
@@ -141,38 +148,37 @@ test('GitHub Releases auto-update metadata is generated and uploaded', () => {
             arch: ['x64', 'arm64'],
         },
     ]);
-    assert.match(buildAndMakeWorkflow, /dist\/executables\/\*\*\/latest\.yml/);
+    assert.match(releaseWorkflow, /dist\/executables\/\*\*\/latest\*\.yml/);
     assert.match(
-        buildAndMakeWorkflow,
-        /dist\/executables\/\*\*\/latest-mac\.yml/
+        releaseWorkflow,
+        /artifacts\/macos-x64-artifacts\/latest-mac\.yml/
     );
     assert.match(
-        buildAndMakeWorkflow,
-        /dist\/executables\/\*\*\/latest-linux\*\.yml/
+        releaseWorkflow,
+        /artifacts\/linux-x64-artifacts\/latest-linux\*\.yml/
     );
-    assert.match(buildAndMakeWorkflow, /dist\/executables\/\*\*\/\*\.blockmap/);
-    assert.match(buildAndMakeWorkflow, /Merge macOS updater metadata/);
-    assert.match(buildAndMakeWorkflow, /artifacts\/latest-mac\.yml/);
+    assert.match(releaseWorkflow, /dist\/executables\/\*\*\/\*\.blockmap/);
+    assert.match(releaseWorkflow, /Merge macOS updater metadata/);
+    assert.match(releaseWorkflow, /artifacts\/latest-mac\.yml/);
     assert.doesNotMatch(
         releaseFiles,
         /artifacts\/macos-(?:x64|arm64)-artifacts\/latest-mac\.yml/
     );
     assert.match(
-        buildAndMakeWorkflow,
-        /artifacts\/linux-artifacts\/latest-linux\*\.yml/
+        releaseWorkflow,
+        /artifacts\/linux-x64-artifacts\/latest-linux\*\.yml/
     );
     assert.match(
-        buildAndMakeWorkflow,
-        /artifacts\/windows-artifacts\/latest\.yml/
+        releaseWorkflow,
+        /artifacts\/windows-x64-artifacts\/latest\.yml/
     );
-
-    const makeCommands = [
-        ...buildAndMakeWorkflow.matchAll(/run: (pnpm run make:app[^\n]*)/g),
-    ].map((match) => match[1].trim());
-    assert.ok(makeCommands.length >= 2, 'workflow must package Electron apps');
-    assert.deepEqual(
-        [...new Set(makeCommands)],
-        ['pnpm run make:app -- --publishPolicy=never']
+    assert.match(releaseWorkflow, /run: node tools\/build\/make\.mjs/);
+    assert.match(releaseWorkflow, /config\.mac\.forceCodeSigning = false/);
+    assert.match(releaseWorkflow, /config\.mac\.notarize =/);
+    assert.doesNotMatch(releaseWorkflow, /CSC_IDENTITY_AUTO_DISCOVERY/);
+    assert.doesNotMatch(
+        buildAndMakeWorkflow,
+        /tags:\s*\n\s*- ['"]v\*\.\*\.\*['"]/
     );
 });
 

@@ -30,6 +30,55 @@ export interface StalkerPlayableItemLike extends StalkerPortalItem {
     has_files?: unknown;
 }
 
+export type StalkerPlaybackFailure =
+    | 'content-unavailable'
+    | 'stream-offline'
+    | 'unknown';
+
+/**
+ * Converts provider and IPC failure shapes into stable Stalker playback states.
+ * Electron may preserve `status` on the Error or flatten it into the message,
+ * so both representations are intentionally supported.
+ */
+export function classifyStalkerPlaybackFailure(
+    error: unknown
+): StalkerPlaybackFailure {
+    const candidate =
+        error && typeof error === 'object'
+            ? (error as { message?: unknown; status?: unknown })
+            : undefined;
+    const message = String(
+        candidate?.message ?? (typeof error === 'string' ? error : '')
+    )
+        .trim()
+        .toLowerCase();
+
+    if (message === 'nothing_to_play') {
+        return 'content-unavailable';
+    }
+
+    const structuredStatus =
+        typeof candidate?.status === 'number' ? candidate.status : undefined;
+    const serializedStatusMatch = message.match(/\(status:\s*(\d{3})\)/i);
+    const status =
+        structuredStatus ??
+        (serializedStatusMatch ? Number(serializedStatusMatch[1]) : undefined);
+
+    if (
+        (status !== undefined && status >= 400) ||
+        /\b(network|timeout|timed out|enotfound|econnrefused|econnreset|ehostunreach|getaddrinfo|fetch failed|load failed|http error)\b/i.test(
+            message
+        ) ||
+        /\b(stream|server|provider)\b.*\b(offline|unavailable|failed|error)\b/i.test(
+            message
+        )
+    ) {
+        return 'stream-offline';
+    }
+
+    return 'unknown';
+}
+
 export function normalizeStalkerPlaybackCommand(value: string): string {
     const trimmed = String(value ?? '').trim();
     if (!trimmed) {

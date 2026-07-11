@@ -168,6 +168,11 @@
             "BUTTON_LABEL": "Import"
         },
         "XTREAM_PLAYLIST": {
+            "CONTENT_TO_IMPORT": "Content to import",
+            "CONTENT_TO_IMPORT_ERROR": "Select at least one content type",
+            "LIVE_TV": "Live TV",
+            "MOVIES": "Movies",
+            "SERIES": "Series",
             "TITLE": "재생목록 제목",
             "SERVER_URL": "서버 URL",
             "USERNAME": "사용자 이름",
@@ -177,6 +182,11 @@
             "URL_VALIDATION_ERROR": "프로토콜이 포함된 유효한 URL이어야 합니다(예: http://example.com 또는 https://example.com:4324)."
         },
         "STALKER_PORTAL": {
+            "TEST_CONNECTION": "Test Connection",
+            "TESTING": "Testing...",
+            "CONNECTION_ONLINE": "Connection successful — portal is online",
+            "CONNECTION_OFFLINE": "Portal reachable but rejected the connection. Check the MAC address or credentials.",
+            "CONNECTION_UNAVAILABLE": "Could not reach the portal. Check the URL and your network.",
             "TITLE": "제목",
             "MAC_ADDRESS": "MAC 주소",
             "SERIAL_NUMBER": "시리얼 번호 (선택 사항)",
@@ -503,6 +513,10 @@
         "NETWORK_ERROR": {
             "TITLE": "The stream could not be loaded",
             "DESCRIPTION": "The player reported a network or provider loading error. Check the stream URL, headers, or provider availability."
+        },
+        "STREAM_OFFLINE": {
+            "TITLE": "STREAM is OFFLINE",
+            "DESCRIPTION": "The Stalker provider could not deliver this stream. Retry the stream or choose another channel."
         },
         "BROWSER_ACCESS_ERROR": {
             "TITLE": "The browser player could not access this stream",
@@ -833,6 +847,7 @@
         }
     },
     "PORTALS": {
+        "STREAM_OFFLINE": "STREAM is OFFLINE",
         "ALL_CATEGORIES": "모든 카테고리",
         "MY_FAVORITES": "내가 좋아하는 것들",
         "ADD_TO_FAVORITES": "즐겨 찾기에 추가",

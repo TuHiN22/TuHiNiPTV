@@ -12,6 +12,7 @@ import {
 import { rememberStalkerPlaybackContext } from '../services/stalker-playback-context.service';
 import { emitPortalDebugEvent } from './portal-debug.events';
 import { buildStalkerIdentityRequestContext } from './stalker-identity';
+import { StalkerRequestError } from './stalker-request-error';
 import { assertRemoteUrlAllowed } from './url-safety';
 import { requestWithValidatedRedirects } from '../util/validated-axios';
 
@@ -129,10 +130,10 @@ ipcMain.handle(
                     response.status,
                     response.statusText
                 );
-                throw {
-                    message: `HTTP Error: ${response.statusText}`,
-                    status: response.status,
-                };
+                throw new StalkerRequestError(
+                    `HTTP Error: ${response.statusText || 'Request failed'}`,
+                    response.status
+                );
             }
 
             // Return the response data
@@ -188,29 +189,33 @@ ipcMain.handle(
 
             console.error('[StalkerEvents] Request error:', error);
 
-            // Format error response
-            if (axios.isAxiosError(error)) {
-                const errorResponse = {
-                    type: 'ERROR',
-                    message:
-                        error.response?.data?.message ||
-                        error.message ||
-                        'Failed to fetch data from Stalker portal',
-                    status: error.response?.status || 500,
-                };
-                throw errorResponse;
+            // Re-throw as a real Error so the renderer receives a usable
+            // `.message` instead of the `[object Object]` produced when Electron
+            // serializes a plain thrown object across IPC.
+            if (error instanceof StalkerRequestError) {
+                throw error;
+            } else if (axios.isAxiosError(error)) {
+                const status = error.response?.status || 500;
+                const message =
+                    error.response?.data?.message ||
+                    error.message ||
+                    'Failed to fetch data from Stalker portal';
+                throw new StalkerRequestError(message, status);
             } else if (
                 error &&
                 typeof error === 'object' &&
                 'message' in error
             ) {
-                throw error;
+                const status =
+                    typeof (error as { status?: unknown }).status === 'number'
+                        ? (error as { status: number }).status
+                        : 500;
+                throw new StalkerRequestError(
+                    String((error as { message: unknown }).message),
+                    status
+                );
             } else {
-                throw {
-                    type: 'ERROR',
-                    message: 'An unknown error occurred',
-                    status: 500,
-                };
+                throw new StalkerRequestError('An unknown error occurred', 500);
             }
         }
     }

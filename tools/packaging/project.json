@@ -12,6 +12,7 @@
                 "{workspaceRoot}/package.json",
                 "{workspaceRoot}/electron-builder.json",
                 "{workspaceRoot}/.github/workflows/build-and-make.yaml",
+                "{workspaceRoot}/.github/workflows/release.yml",
                 "{workspaceRoot}/apps/electron-backend/build-embedded-mpv.js",
                 "{workspaceRoot}/apps/electron-backend/project.json",
                 "{workspaceRoot}/apps/electron-backend/native/src/embedded_mpv_win32.cc",

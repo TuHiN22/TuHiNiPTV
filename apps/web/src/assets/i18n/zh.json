@@ -168,6 +168,11 @@
             "BUTTON_LABEL": "导入"
         },
         "XTREAM_PLAYLIST": {
+            "CONTENT_TO_IMPORT": "Content to import",
+            "CONTENT_TO_IMPORT_ERROR": "Select at least one content type",
+            "LIVE_TV": "Live TV",
+            "MOVIES": "Movies",
+            "SERIES": "Series",
             "TITLE": "播放列表标题",
             "SERVER_URL": "服务器 URL",
             "USERNAME": "用户名",
@@ -177,6 +182,11 @@
             "URL_VALIDATION_ERROR": "应该是带有协议的有效 url（例如 http://example.com 或 https://example.com:4324）"
         },
         "STALKER_PORTAL": {
+            "TEST_CONNECTION": "Test Connection",
+            "TESTING": "Testing...",
+            "CONNECTION_ONLINE": "Connection successful — portal is online",
+            "CONNECTION_OFFLINE": "Portal reachable but rejected the connection. Check the MAC address or credentials.",
+            "CONNECTION_UNAVAILABLE": "Could not reach the portal. Check the URL and your network.",
             "TITLE": "标题",
             "MAC_ADDRESS": "MAC 地址",
             "SERIAL_NUMBER": "序列号（可选）",
@@ -503,6 +513,10 @@
         "NETWORK_ERROR": {
             "TITLE": "The stream could not be loaded",
             "DESCRIPTION": "The player reported a network or provider loading error. Check the stream URL, headers, or provider availability."
+        },
+        "STREAM_OFFLINE": {
+            "TITLE": "STREAM is OFFLINE",
+            "DESCRIPTION": "The Stalker provider could not deliver this stream. Retry the stream or choose another channel."
         },
         "BROWSER_ACCESS_ERROR": {
             "TITLE": "The browser player could not access this stream",
@@ -833,6 +847,7 @@
         }
     },
     "PORTALS": {
+        "STREAM_OFFLINE": "STREAM is OFFLINE",
         "ALL_CATEGORIES": "所有类别",
         "MY_FAVORITES": "我最喜欢的",
         "ADD_TO_FAVORITES": "添加到收藏夹",

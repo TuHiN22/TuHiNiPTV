@@ -27,6 +27,7 @@ import {
 } from '../stalker-store.contracts';
 import {
     buildStalkerRecentlyViewedPayload,
+    classifyStalkerPlaybackFailure,
     dispatchStalkerPlaylistMetaUpdate,
     fetchStalkerExpireDate,
     fetchStalkerMovieFileId,
@@ -428,15 +429,15 @@ export function withStalkerPlayer() {
                             );
                         } catch (error) {
                             logger.error('Failed to get playback URL', error);
-                            const errorMessage =
-                                error instanceof Error &&
-                                error.message === 'nothing_to_play'
-                                    ? translate.instant(
-                                          'PORTALS.CONTENT_NOT_AVAILABLE'
-                                      )
-                                    : translate.instant(
-                                          'PORTALS.PLAYBACK_ERROR'
-                                      );
+                            const failure =
+                                classifyStalkerPlaybackFailure(error);
+                            const errorMessage = translate.instant(
+                                failure === 'content-unavailable'
+                                    ? 'PORTALS.CONTENT_NOT_AVAILABLE'
+                                    : failure === 'stream-offline'
+                                      ? 'PORTALS.STREAM_OFFLINE'
+                                      : 'PORTALS.PLAYBACK_ERROR'
+                            );
 
                             snackBar.open(errorMessage, undefined, {
                                 duration: 3000,

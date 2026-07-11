@@ -129,6 +129,7 @@
                         [streamUrl]="streamUrl()"
                         [title]="activePlayback()?.title ?? ''"
                         [playback]="activePlayback()"
+                        [streamOfflineOnNetworkError]="true"
                         (externalFallbackRequested)="
                             handleExternalFallbackRequest($event)
                         "

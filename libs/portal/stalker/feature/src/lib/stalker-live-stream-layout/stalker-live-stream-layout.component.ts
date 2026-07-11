@@ -66,6 +66,7 @@ import {
     StalkerFavoriteItem,
     StalkerItvChannel,
     StalkerStore,
+    classifyStalkerPlaybackFailure,
     normalizeStalkerEntityId,
 } from '@iptvnator/portal/stalker/data-access';
 
@@ -446,10 +447,14 @@ export class StalkerLiveStreamLayoutComponent implements OnDestroy {
             }
 
             this.logger.error('Playback failed', error);
-            const errorMessage =
-                error instanceof Error && error.message === 'nothing_to_play'
-                    ? this.translate.instant('PORTALS.CONTENT_NOT_AVAILABLE')
-                    : this.translate.instant('PORTALS.PLAYBACK_ERROR');
+            const failure = classifyStalkerPlaybackFailure(error);
+            const errorMessage = this.translate.instant(
+                failure === 'content-unavailable'
+                    ? 'PORTALS.CONTENT_NOT_AVAILABLE'
+                    : failure === 'stream-offline'
+                      ? 'PORTALS.STREAM_OFFLINE'
+                      : 'PORTALS.PLAYBACK_ERROR'
+            );
             this.snackBar.open(errorMessage, undefined, { duration: 3000 });
         }
     }

@@ -122,4 +122,13 @@
             }}</span>
         }
     </div>
+
+    @if (connectionStatus()) {
+        <div class="connection-status">
+            <mat-icon [class]="getStatusClass()">
+                {{ getStatusIcon() }}
+            </mat-icon>
+            <span [class]="getStatusClass()">{{ getStatusMessage() }}</span>
+        </div>
+    }
 </form>

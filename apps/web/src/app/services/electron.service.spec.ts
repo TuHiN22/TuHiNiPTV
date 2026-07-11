@@ -9,6 +9,8 @@ import {
     ELECTRON_BRIDGE_SECURITY_ERROR_CODES,
     PLAYLIST_PARSE_BY_URL,
     SECURITY_ERROR_PREFIX,
+    STALKER_REQUEST,
+    StalkerPortalActions,
 } from '@iptvnator/shared/interfaces';
 import { ElectronService } from './electron.service';
 
@@ -18,17 +20,20 @@ describe('ElectronService', () => {
         fetchPlaylistByUrl: jest.Mock;
         openInMpv: jest.Mock;
         openInVlc: jest.Mock;
+        stalkerRequest: jest.Mock;
     };
     let snackBar: { open: jest.Mock };
     let service: ElectronService;
 
     beforeEach(() => {
         jest.spyOn(console, 'log').mockImplementation(() => undefined);
+        jest.spyOn(console, 'error').mockImplementation(() => undefined);
 
         electronBridge = {
             fetchPlaylistByUrl: jest.fn(),
             openInMpv: jest.fn().mockResolvedValue(session),
             openInVlc: jest.fn().mockResolvedValue(session),
+            stalkerRequest: jest.fn(),
         };
         snackBar = {
             open: jest.fn(() => ({
@@ -169,5 +174,43 @@ describe('ElectronService', () => {
                 'User-Agent': 'FallbackAgent/1.0',
             }
         );
+    });
+
+    it('parses status and cleans Electron wrappers from Stalker IPC errors', async () => {
+        const ipcError = new Error(
+            "Error invoking remote method 'STALKER_REQUEST': StalkerRequestError: HTTP Error: Not Found (status: 404)"
+        );
+        electronBridge.stalkerRequest.mockRejectedValue(ipcError);
+
+        await expect(
+            service.sendIpcEvent(STALKER_REQUEST, {
+                url: 'https://example.test/portal.php',
+                macAddress: '00:1A:79:00:00:01',
+                params: { action: 'handshake' },
+            })
+        ).rejects.toBe(ipcError);
+
+        expect(snackBar.open).toHaveBeenCalledWith(
+            'Error: HTTP Error: Not Found, status: 404',
+            'Close',
+            { duration: 5000 }
+        );
+    });
+
+    it('leaves create_link failures to the Stalker playback diagnostic', async () => {
+        const ipcError = new Error(
+            "Error invoking remote method 'STALKER_REQUEST': StalkerRequestError: HTTP Error: Service Unavailable (status: 503)"
+        );
+        electronBridge.stalkerRequest.mockRejectedValue(ipcError);
+
+        await expect(
+            service.sendIpcEvent(STALKER_REQUEST, {
+                url: 'https://example.test/portal.php',
+                macAddress: '00:1A:79:00:00:01',
+                params: { action: StalkerPortalActions.CreateLink },
+            })
+        ).rejects.toBe(ipcError);
+
+        expect(snackBar.open).not.toHaveBeenCalled();
     });
 });

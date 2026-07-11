@@ -10,10 +10,7 @@ import {
     ResizableDirective,
 } from '@iptvnator/portal/shared/util';
 import { StalkerStore } from '@iptvnator/portal/stalker/data-access';
-import {
-    EpgListViewComponent,
-    EpgTimelineComponent,
-} from '@iptvnator/ui/epg';
+import { EpgListViewComponent, EpgTimelineComponent } from '@iptvnator/ui/epg';
 import { AudioPlayerComponent } from '@iptvnator/ui/playback';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChannelListItemComponent } from '@iptvnator/ui/components';
@@ -56,6 +53,7 @@ class StubWebPlayerViewComponent {
     readonly streamUrl = input('');
     readonly title = input('');
     readonly playback = input<unknown>(null);
+    readonly streamOfflineOnNetworkError = input(false);
     readonly externalFallbackRequested = output<unknown>();
 }
 
@@ -434,7 +432,9 @@ describe('StalkerLiveStreamLayoutComponent', () => {
             fixture.nativeElement.querySelector('app-web-player-view')
         ).not.toBeNull();
         expect(fixture.nativeElement.querySelector('.epg')).toBeNull();
-        expect(fixture.nativeElement.querySelector('app-epg-timeline')).toBeNull();
+        expect(
+            fixture.nativeElement.querySelector('app-epg-timeline')
+        ).toBeNull();
     });
 
     it('restores the collapsed live EPG panel state after embedded playback starts', async () => {
@@ -688,7 +688,9 @@ describe('StalkerLiveStreamLayoutComponent', () => {
         expect(ensureBulkItvEpg).not.toHaveBeenCalled();
         expect(fetchChannelEpg).not.toHaveBeenCalled();
         expect(portalPlayer.openResolvedPlayback).not.toHaveBeenCalled();
-        expect(fixture.nativeElement.querySelector('app-epg-timeline')).toBeNull();
+        expect(
+            fixture.nativeElement.querySelector('app-epg-timeline')
+        ).toBeNull();
         expect(
             fixture.nativeElement.querySelector('app-audio-player')
         ).not.toBeNull();

@@ -52,6 +52,7 @@ class StubSeasonContainerComponent {
 })
 class StubPortalInlinePlayerComponent {
     readonly playback = input<unknown>(null);
+    readonly streamOfflineOnNetworkError = input(false);
     readonly episodeMetadata = input<unknown>(null);
     readonly seriesNavigation = input<unknown>(null);
     readonly timeUpdate = output<unknown>();
@@ -117,7 +118,7 @@ describe('StalkerSeriesViewComponent', () => {
                 episodeId?: number,
                 startTime?: number
             ) => ({
-            streamUrl: 'http://stalker.example/episode.mpg',
+                streamUrl: 'http://stalker.example/episode.mpg',
                 title: title ?? 'Regular Series',
                 thumbnail: thumbnail ?? 'poster.jpg',
                 startTime,
@@ -528,10 +529,12 @@ describe('StalkerSeriesViewComponent', () => {
         ]);
         fetchVodSeriesEpisodes.mockClear();
 
-        const seasonOneEpisodes = fixture.componentInstance.mappedSeasons()['1'];
+        const seasonOneEpisodes =
+            fixture.componentInstance.mappedSeasons()['1'];
         const firstEpisode = seasonOneEpisodes[0];
         const secondEpisode = seasonOneEpisodes[1];
-        const seasonTwoEpisode = fixture.componentInstance.mappedSeasons()['2'][0];
+        const seasonTwoEpisode =
+            fixture.componentInstance.mappedSeasons()['2'][0];
 
         fixture.componentInstance.onEpisodeClicked(firstEpisode);
         await fixture.whenStable();

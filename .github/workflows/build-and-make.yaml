@@ -3,12 +3,10 @@ name: Build and Make Electron App
 on:
     push:
         branches:
-            - master
-        tags:
-            - 'v*.*.*'
+            - main
     pull_request:
         branches:
-            - master
+            - main
     workflow_dispatch:
 
 jobs:
@@ -628,7 +626,9 @@ jobs:
     create-release:
         name: Create Draft Release
         needs: build
-        if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+        # Tag publishing moved to release.yml. Keep this legacy job disabled for
+        # branch/PR builds so it cannot create duplicate test or draft releases.
+        if: startsWith(github.ref, 'refs/tags/v')
         runs-on: ubuntu-latest
         permissions:
             contents: write

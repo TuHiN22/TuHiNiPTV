@@ -16,6 +16,7 @@ import {
     Playlist,
     PLAYLIST_PARSE_BY_URL,
     PLAYLIST_UPDATE,
+    StalkerPortalActions,
     XTREAM_REQUEST,
     XTREAM_RESPONSE,
     XtreamCodeActions,
@@ -266,13 +267,18 @@ export class ElectronService extends DataService {
         } catch (err: unknown) {
             const errorInfo = this.getErrorDetails(err);
             console.error('Stalker request error:', err);
-            this.snackBar.open(
-                `Error: ${errorInfo?.message ?? ' Not found'}, status: ${errorInfo?.status ?? 404}`,
-                'Close',
-                {
-                    duration: 5000,
-                }
-            );
+            // Playback callers translate create_link failures into a focused
+            // STREAM OFFLINE diagnostic. Avoid showing the lower-level IPC
+            // error first, which otherwise produces two competing snackbars.
+            if (payload.params?.action !== StalkerPortalActions.CreateLink) {
+                this.snackBar.open(
+                    `Error: ${errorInfo?.message ?? ' Not found'}, status: ${errorInfo?.status ?? 404}`,
+                    'Close',
+                    {
+                        duration: 5000,
+                    }
+                );
+            }
             throw err;
         }
     }
@@ -662,10 +668,70 @@ export class ElectronService extends DataService {
     }
 
     private getErrorDetails(error: unknown): ErrorStatus | null {
-        if (error && typeof error === 'object') {
+        if (!error) {
+            return null;
+        }
+
+        // Prefer a structured object with message/status (e.g. from a thrown
+        // StalkerRequestError before serialization).
+        if (typeof error === 'object') {
+            const candidate = error as Partial<ErrorStatus> & {
+                message?: unknown;
+            };
+            const rawMessage =
+                typeof candidate.message === 'string'
+                    ? candidate.message
+                    : undefined;
+            const status =
+                typeof candidate.status === 'number'
+                    ? candidate.status
+                    : this.parseStatusFromMessage(rawMessage);
+
+            if (rawMessage !== undefined || status !== undefined) {
+                return {
+                    ...(error as ErrorStatus),
+                    message: this.cleanErrorMessage(rawMessage),
+                    status,
+                } as ErrorStatus;
+            }
             return error as ErrorStatus;
         }
+
+        // Electron flattens a rejected IPC Error to a string such as
+        // "Error invoking remote method 'STALKER_REQUEST': StalkerRequestError:
+        // HTTP Error: Not Found (status: 404)". Recover message + status from it.
+        if (typeof error === 'string') {
+            return {
+                message: this.cleanErrorMessage(error),
+                status: this.parseStatusFromMessage(error),
+            } as ErrorStatus;
+        }
+
         return null;
+    }
+
+    /** Extracts a trailing `(status: NNN)` HTTP status code from a message. */
+    private parseStatusFromMessage(message?: string): number | undefined {
+        if (!message) {
+            return undefined;
+        }
+        const match = message.match(/\(status:\s*(\d{3})\)/i);
+        return match ? Number(match[1]) : undefined;
+    }
+
+    /**
+     * Strips Electron's IPC wrapper and error-class prefixes so the user sees a
+     * clean provider message instead of "Error invoking remote method '…':".
+     */
+    private cleanErrorMessage(message?: string): string | undefined {
+        if (!message) {
+            return undefined;
+        }
+        return message
+            .replace(/^Error invoking remote method '[^']*':\s*/i, '')
+            .replace(/^StalkerRequestError:\s*/i, '')
+            .replace(/\s*\(status:\s*\d{3}\)\s*$/i, '')
+            .trim();
     }
 
     removeAllListeners(type: string): void {

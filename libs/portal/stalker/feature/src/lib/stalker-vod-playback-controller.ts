@@ -7,6 +7,7 @@ import type {
     PortalPlayer,
 } from '@iptvnator/portal/shared/util';
 import type { PlaybackFallbackRequest } from '@iptvnator/ui/playback';
+import { classifyStalkerPlaybackFailure } from '@iptvnator/portal/stalker/data-access';
 import {
     PlaybackPositionData,
     ResolvedPortalPlayback,
@@ -48,14 +49,14 @@ export class StalkerVodPlaybackController {
                 this.config.playbackErrorLogMessage,
                 error
             );
-            const errorMessage =
-                error instanceof Error && error.message === 'nothing_to_play'
-                    ? this.config.translateService.instant(
-                          'PORTALS.CONTENT_NOT_AVAILABLE'
-                      )
-                    : this.config.translateService.instant(
-                          'PORTALS.PLAYBACK_ERROR'
-                      );
+            const failure = classifyStalkerPlaybackFailure(error);
+            const errorMessage = this.config.translateService.instant(
+                failure === 'content-unavailable'
+                    ? 'PORTALS.CONTENT_NOT_AVAILABLE'
+                    : failure === 'stream-offline'
+                      ? 'PORTALS.STREAM_OFFLINE'
+                      : 'PORTALS.PLAYBACK_ERROR'
+            );
             this.config.snackBar.open(errorMessage, undefined, {
                 duration: 3000,
             });

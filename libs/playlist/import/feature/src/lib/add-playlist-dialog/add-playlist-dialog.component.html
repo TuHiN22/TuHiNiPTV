@@ -143,6 +143,23 @@
                     </button>
                 }
                 @case ('stalker') {
+                    <button
+                        mat-stroked-button
+                        type="button"
+                        [disabled]="
+                            !stalkerImport()?.form?.valid ||
+                            stalkerImport()?.isTestingConnection() ||
+                            stalkerImport()?.isLoading()
+                        "
+                        (click)="stalkerImport()?.testConnection()"
+                    >
+                        {{
+                            stalkerImport()?.isTestingConnection()
+                                ? ('HOME.STALKER_PORTAL.TESTING' | translate)
+                                : ('HOME.STALKER_PORTAL.TEST_CONNECTION'
+                                  | translate)
+                        }}
+                    </button>
                     @if (stalkerImport()?.isLoading()) {
                         <button
                             mat-flat-button

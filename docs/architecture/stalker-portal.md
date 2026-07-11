@@ -29,7 +29,7 @@ Stalker support covers:
 
 ## Routing Structure
 
-Primary route tree lives in `/Users/4gray/Code/iptvnator/libs/portal/stalker/feature/src/lib/stalker-feature.routes.ts`.
+Primary route tree lives in `libs/portal/stalker/feature/src/lib/stalker-feature.routes.ts`.
 
 - `/stalker/:id/vod`
 - `/stalker/:id/series`
@@ -45,30 +45,49 @@ Primary route tree lives in `/Users/4gray/Code/iptvnator/libs/portal/stalker/fea
 1. Angular Stalker screens call methods/resources in `StalkerStore`.
 2. `StalkerStore` builds request params based on selected content type and current view state.
 3. Requests go through `DataService.sendIpcEvent(STALKER_REQUEST, ...)` or `StalkerSessionService` (full portal auth).
-4. Electron main process handles `STALKER_REQUEST` in `/Users/4gray/Code/iptvnator/apps/electron-backend/src/app/events/stalker.events.ts`.
+4. Electron main process handles `STALKER_REQUEST` in `apps/electron-backend/src/app/events/stalker.events.ts`.
 5. Axios calls Stalker `load.php` API with required headers/cookies and returns normalized payloads to renderer.
+
+## Connection and Playback Diagnostics
+
+- The import dialog's **Test Connection** action runs the normal
+  `StalkerSessionService.authenticate(...)` handshake/profile flow without
+  importing a playlist. Its result is `online` when a token is returned,
+  `offline` for provider/auth rejection, and `unavailable` for network reachability
+  failures.
+- Electron Stalker IPC failures must be thrown as `StalkerRequestError extends
+Error`. The HTTP status is retained as a property and embedded in the message
+  because Electron may flatten rejected IPC errors during serialization.
+- Renderer error normalization strips the Electron IPC wrapper and recovers the
+  embedded status. `create_link` failures do not show this lower-level raw
+  snackbar; the Stalker playback layer classifies provider/network loading
+  failures as `PORTALS.STREAM_OFFLINE`.
+- If a Stalker stream URL resolves but the inline player later emits a network
+  diagnostic, the shared player displays **STREAM is OFFLINE**. Browser-access,
+  codec, container, media-decode, and DRM failures keep their more specific
+  shared diagnostics.
 
 ## Main UI Components
 
-- `/Users/4gray/Code/iptvnator/libs/portal/stalker/feature/src/lib/stalker-main-container.component.ts`
+- `libs/portal/stalker/feature/src/lib/stalker-main-container.component.ts`
     - Category + content layout for `vod` and `series`
-- `/Users/4gray/Code/iptvnator/libs/portal/stalker/feature/src/lib/stalker-live-stream-layout/stalker-live-stream-layout.component.ts`
+- `libs/portal/stalker/feature/src/lib/stalker-live-stream-layout/stalker-live-stream-layout.component.ts`
     - ITV live playback, radio playback, channel/station navigation, EPG panel integration
-- `/Users/4gray/Code/iptvnator/libs/ui/playback/src/lib/audio-player/audio-player.component.ts`
+- `libs/ui/playback/src/lib/audio-player/audio-player.component.ts`
     - Shared inline audio player used by M3U radio channels and Stalker radio stations
-- `/Users/4gray/Code/iptvnator/libs/ui/components/src/lib/stalker-series-view/stalker-series-view.component.ts`
+- `libs/portal/stalker/feature/src/lib/stalker-series-view/stalker-series-view.component.ts`
     - Season/episode UI for all Stalker series modes
-- `/Users/4gray/Code/iptvnator/libs/portal/stalker/feature/src/lib/stalker-favorites/stalker-favorites.component.ts`
-- `/Users/4gray/Code/iptvnator/libs/portal/stalker/feature/src/lib/recently-viewed/recently-viewed.component.ts`
-- `/Users/4gray/Code/iptvnator/libs/portal/stalker/feature/src/lib/stalker-search/stalker-search.component.ts`
+- `libs/portal/stalker/feature/src/lib/stalker-favorites/stalker-favorites.component.ts`
+- `libs/portal/stalker/feature/src/lib/recently-viewed/recently-viewed.component.ts`
+- `libs/portal/stalker/feature/src/lib/stalker-search/stalker-search.component.ts`
 
 ## Store and Data Flow
 
 Stalker store is now feature-composed:
 
-- Facade: `/Users/4gray/Code/iptvnator/libs/portal/stalker/data-access/src/lib/stalker.store.ts`
-- Feature slices: `/Users/4gray/Code/iptvnator/libs/portal/stalker/data-access/src/lib/stores/features/*`
-- Shared helpers: `/Users/4gray/Code/iptvnator/libs/portal/stalker/data-access/src/lib/*`
+- Facade: `libs/portal/stalker/data-access/src/lib/stalker.store.ts`
+- Feature slices: `libs/portal/stalker/data-access/src/lib/stores/features/*`
+- Shared helpers: `libs/portal/stalker/data-access/src/lib/*`
 
 Important store responsibilities:
 
@@ -197,8 +216,8 @@ Series inline playback behavior is shared across all three modes:
 
 Core decision logic and normalization are centralized in:
 
-- `/Users/4gray/Code/iptvnator/libs/portal/stalker/data-access/src/lib/stalker-vod.utils.ts`
-- `/Users/4gray/Code/iptvnator/libs/portal/stalker/data-access/src/lib/models/*.ts`
+- `libs/portal/stalker/data-access/src/lib/stalker-vod.utils.ts`
+- `libs/portal/stalker/data-access/src/lib/models/*.ts`
 
 ## Favorites and Recently Viewed
 
@@ -213,10 +232,10 @@ Current implementation is shared via Stalker-specific helpers:
 
 Where this is used:
 
-- `/Users/4gray/Code/iptvnator/libs/portal/stalker/feature/src/lib/stalker-favorites/stalker-favorites.component.ts`
-- `/Users/4gray/Code/iptvnator/libs/portal/stalker/feature/src/lib/recently-viewed/recently-viewed.component.ts`
-- `/Users/4gray/Code/iptvnator/libs/portal/stalker/feature/src/lib/stalker-search/stalker-search.component.ts`
-- `/Users/4gray/Code/iptvnator/libs/ui/components/src/lib/stalker-favorites-button/stalker-favorites-button.component.ts`
+- `libs/portal/stalker/feature/src/lib/stalker-favorites/stalker-favorites.component.ts`
+- `libs/portal/stalker/feature/src/lib/recently-viewed/recently-viewed.component.ts`
+- `libs/portal/stalker/feature/src/lib/stalker-search/stalker-search.component.ts`
+- `libs/portal/stalker/feature/src/lib/stalker-favorites-button/stalker-favorites-button.component.ts`
 
 Navigation rule to preserve:
 
@@ -264,7 +283,7 @@ Import rule:
 
 Stalker live remote control is implemented in:
 
-- `/Users/4gray/Code/iptvnator/libs/portal/stalker/feature/src/lib/stalker-live-stream-layout/stalker-live-stream-layout.component.ts`
+- `libs/portal/stalker/feature/src/lib/stalker-live-stream-layout/stalker-live-stream-layout.component.ts`
 
 Supported today:
 
@@ -301,7 +320,7 @@ This reduces duplicate UI logic across portal types and keeps compatibility beha
 
 Focused regression tests for Stalker VOD mode branching live in:
 
-- `/Users/4gray/Code/iptvnator/libs/portal/stalker/data-access/src/lib/stalker-vod.utils.spec.ts`
+- `libs/portal/stalker/data-access/src/lib/stalker-vod.utils.spec.ts`
 
 Covered scenarios include:
 

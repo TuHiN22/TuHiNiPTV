@@ -1,6 +1,10 @@
-import { PlaylistMeta, StalkerPortalActions } from '@iptvnator/shared/interfaces';
+import {
+    PlaylistMeta,
+    StalkerPortalActions,
+} from '@iptvnator/shared/interfaces';
 import { StalkerSessionService } from '../../stalker-session.service';
 import {
+    classifyStalkerPlaybackFailure,
     fetchStalkerExpireDate,
     fetchStalkerMovieFileId,
     fetchStalkerPlaybackLink,
@@ -132,5 +136,35 @@ describe('stalker-player-request.utils', () => {
                 PLAYLIST
             )
         ).resolves.toBe(new Date(expireDate * 1000).toLocaleDateString());
+    });
+
+    it('classifies provider and serialized IPC loading failures as offline streams', () => {
+        expect(
+            classifyStalkerPlaybackFailure({
+                message: 'Service unavailable',
+                status: 503,
+            })
+        ).toBe('stream-offline');
+        expect(
+            classifyStalkerPlaybackFailure(
+                new Error(
+                    "Error invoking remote method 'STALKER_REQUEST': StalkerRequestError: HTTP Error: Not Found (status: 404)"
+                )
+            )
+        ).toBe('stream-offline');
+        expect(
+            classifyStalkerPlaybackFailure(
+                new Error('getaddrinfo ENOTFOUND stream.example.test')
+            )
+        ).toBe('stream-offline');
+    });
+
+    it('keeps unavailable content separate from unknown playback failures', () => {
+        expect(
+            classifyStalkerPlaybackFailure(new Error('nothing_to_play'))
+        ).toBe('content-unavailable');
+        expect(
+            classifyStalkerPlaybackFailure(new Error('unexpected response'))
+        ).toBe('unknown');
     });
 });

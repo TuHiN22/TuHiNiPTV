@@ -575,6 +575,22 @@ describe('WebPlayerViewComponent', () => {
         );
     });
 
+    it('uses the Stalker stream-offline copy only for network diagnostics', () => {
+        fixture.componentRef.setInput('streamOfflineOnNetworkError', true);
+
+        expect(component.getDiagnosticTitleKey(createNetworkDiagnostic())).toBe(
+            'PLAYBACK_DIAGNOSTICS.STREAM_OFFLINE.TITLE'
+        );
+        expect(
+            component.getDiagnosticDescriptionKey(createNetworkDiagnostic())
+        ).toBe('PLAYBACK_DIAGNOSTICS.STREAM_OFFLINE.DESCRIPTION');
+        expect(
+            component.getDiagnosticTitleKey(
+                createUnsupportedContainerDiagnostic()
+            )
+        ).toBe('PLAYBACK_DIAGNOSTICS.UNSUPPORTED_CONTAINER.TITLE');
+    });
+
     it('renders technical details and codec-specific hints in the diagnostic banner', () => {
         fixture.detectChanges();
         const issue = createUnsupportedCodecDiagnostic();

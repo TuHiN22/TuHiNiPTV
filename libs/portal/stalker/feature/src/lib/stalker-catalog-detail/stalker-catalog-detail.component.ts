@@ -19,6 +19,7 @@ import {
 import {
     createPortalFavoritesResource,
     createRefreshTrigger,
+    classifyStalkerPlaybackFailure,
     isSelectedStalkerVodFavorite,
     normalizeStalkerEntityId,
     normalizeStalkerEntityIdAsNumber,
@@ -380,12 +381,14 @@ export class StalkerCatalogDetailComponent implements OnDestroy {
             void this.portalPlayer.openResolvedPlayback(playback, true);
         } catch (error) {
             this.logger.error('Failed to start inline VOD playback', error);
-            const errorMessage =
-                error instanceof Error && error.message === 'nothing_to_play'
-                    ? this.translateService.instant(
-                          'PORTALS.CONTENT_NOT_AVAILABLE'
-                      )
-                    : this.translateService.instant('PORTALS.PLAYBACK_ERROR');
+            const failure = classifyStalkerPlaybackFailure(error);
+            const errorMessage = this.translateService.instant(
+                failure === 'content-unavailable'
+                    ? 'PORTALS.CONTENT_NOT_AVAILABLE'
+                    : failure === 'stream-offline'
+                      ? 'PORTALS.STREAM_OFFLINE'
+                      : 'PORTALS.PLAYBACK_ERROR'
+            );
             this.snackBar.open(errorMessage, undefined, {
                 duration: 3000,
             });

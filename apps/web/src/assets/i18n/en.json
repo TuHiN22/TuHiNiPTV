@@ -195,7 +195,12 @@
             "SERVER_URL": "Server URL",
             "URL_VALIDATION_ERROR": "Should be a valid url with protocol (e.g. http://example.com/c or https://example.com/stalker_portal/c)",
             "ADD": "Add",
-            "VALIDATING": "Validating portal..."
+            "VALIDATING": "Validating portal...",
+            "TEST_CONNECTION": "Test Connection",
+            "TESTING": "Testing...",
+            "CONNECTION_ONLINE": "Connection successful — portal is online",
+            "CONNECTION_OFFLINE": "Portal reachable but rejected the connection. Check the MAC address or credentials.",
+            "CONNECTION_UNAVAILABLE": "Could not reach the portal. Check the URL and your network."
         },
         "FILTER_BY_NAME": "Filter by name",
         "FILTER_AND_SORT": "Filter & Sort",
@@ -508,6 +513,10 @@
         "NETWORK_ERROR": {
             "TITLE": "The stream could not be loaded",
             "DESCRIPTION": "The player reported a network or provider loading error. Check the stream URL, headers, or provider availability."
+        },
+        "STREAM_OFFLINE": {
+            "TITLE": "STREAM is OFFLINE",
+            "DESCRIPTION": "The Stalker provider could not deliver this stream. Retry the stream or choose another channel."
         },
         "BROWSER_ACCESS_ERROR": {
             "TITLE": "The browser player could not access this stream",
@@ -838,6 +847,7 @@
         }
     },
     "PORTALS": {
+        "STREAM_OFFLINE": "STREAM is OFFLINE",
         "ALL_CATEGORIES": "All categories",
         "MY_FAVORITES": "My favorites",
         "ADD_TO_FAVORITES": "Add to favorites",

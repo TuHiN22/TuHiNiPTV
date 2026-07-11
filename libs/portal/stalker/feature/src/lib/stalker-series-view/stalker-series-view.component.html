@@ -123,6 +123,7 @@
                 [playback]="playback"
                 [episodeMetadata]="inlineEpisodeMetadata()"
                 [seriesNavigation]="inlineSeriesNavigation()"
+                [streamOfflineOnNetworkError]="true"
                 (timeUpdate)="handleInlineTimeUpdate($event)"
                 (closed)="closeInlinePlayer()"
                 (backClicked)="goBack()"
@@ -167,10 +168,7 @@
 
         <div detail-extras>
             @if (similarInPortals().length) {
-                <section
-                    class="details__similar"
-                    data-test-id="tmdb-similar"
-                >
+                <section class="details__similar" data-test-id="tmdb-similar">
                     <h3>{{ 'XTREAM.SIMILAR' | translate }}</h3>
                     <div class="details__similar-strip">
                         @for (
@@ -181,9 +179,7 @@
                                 type="button"
                                 class="details__similar-card"
                                 [title]="
-                                    item.title +
-                                    ' — ' +
-                                    item.match.playlistName
+                                    item.title + ' — ' + item.match.playlistName
                                 "
                                 (click)="openSimilarInPortals(item)"
                             >
@@ -221,7 +217,15 @@
                         <iframe
                             [src]="trailerUrl | safe"
                             title="YouTube video player"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allow="
+                                accelerometer;
+                                autoplay;
+                                clipboard-write;
+                                encrypted-media;
+                                gyroscope;
+                                picture-in-picture;
+                                web-share;
+                            "
                             referrerpolicy="strict-origin-when-cross-origin"
                             allowfullscreen
                         ></iframe>
