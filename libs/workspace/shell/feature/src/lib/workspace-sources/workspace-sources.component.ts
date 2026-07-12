@@ -6,9 +6,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { RecentPlaylistsComponent } from '@iptvnator/playlist/shared/ui';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { selectActiveTypeFilters, selectAllPlaylistsMeta } from '@iptvnator/m3u-state';
-import { map, startWith } from 'rxjs';
+import { interpolateText } from '@iptvnator/portal/shared/util';
+import {
+    selectActiveTypeFilters,
+    selectAllPlaylistsMeta,
+} from '@iptvnator/m3u-state';
+import { map } from 'rxjs';
 import { SortBy, SortOrder, SortService } from '@iptvnator/services';
 import {
     WORKSPACE_SHELL_ACTIONS,
@@ -19,7 +22,7 @@ interface SortOption {
     by: SortBy;
     order: SortOrder;
     icon: string;
-    translationKey: string;
+    label: string;
 }
 
 @Component({
@@ -29,7 +32,6 @@ interface SortOption {
         MatIconModule,
         MatMenuModule,
         RecentPlaylistsComponent,
-        TranslatePipe,
     ],
     templateUrl: './workspace-sources.component.html',
     styleUrl: './workspace-sources.component.scss',
@@ -38,7 +40,6 @@ export class WorkspaceSourcesComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly store = inject(Store);
     private readonly workspaceActions = inject(WORKSPACE_SHELL_ACTIONS);
-    private readonly translate = inject(TranslateService);
     private readonly sortService = inject(SortService);
 
     private readonly activeTypeFilters = this.store.selectSignal(
@@ -47,41 +48,37 @@ export class WorkspaceSourcesComponent {
     private readonly playlists = this.store.selectSignal(
         selectAllPlaylistsMeta
     );
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
 
     readonly sortOptions: SortOption[] = [
         {
             by: SortBy.DATE_ADDED,
             order: SortOrder.DESC,
             icon: 'schedule',
-            translationKey: 'HOME.SORT_OPTIONS.NEWEST',
+            label: 'Date added (Newest first)',
         },
         {
             by: SortBy.DATE_ADDED,
             order: SortOrder.ASC,
             icon: 'history',
-            translationKey: 'HOME.SORT_OPTIONS.OLDEST',
+            label: 'Date added (Oldest first)',
         },
         {
             by: SortBy.NAME,
             order: SortOrder.ASC,
             icon: 'sort_by_alpha',
-            translationKey: 'HOME.SORT_OPTIONS.NAME_ASC',
+            label: 'Name (A-Z)',
         },
         {
             by: SortBy.NAME,
             order: SortOrder.DESC,
             icon: 'sort_by_alpha',
-            translationKey: 'HOME.SORT_OPTIONS.NAME_DESC',
+            label: 'Name (Z-A)',
         },
         {
             by: SortBy.CUSTOM,
             order: SortOrder.ASC,
             icon: 'drag_indicator',
-            translationKey: 'HOME.SORT_OPTIONS.CUSTOM_ORDER',
+            label: 'Custom order (Drag & Drop)',
         },
     ];
 
@@ -95,25 +92,21 @@ export class WorkspaceSourcesComponent {
         { initialValue: '' }
     );
     readonly title = computed(() => {
-        this.languageTick();
-
         const filters = this.activeTypeFilters();
 
         if (filters.length === 1) {
             if (filters[0] === 'm3u') {
-                return this.translateText('WORKSPACE.SOURCES.M3U_PLAYLISTS');
+                return this.formatText('M3U Playlists');
             }
             if (filters[0] === 'xtream') {
-                return this.translateText('WORKSPACE.SOURCES.XTREAM_PLAYLISTS');
+                return this.formatText('Xtream Playlists');
             }
             if (filters[0] === 'stalker') {
-                return this.translateText(
-                    'WORKSPACE.SOURCES.STALKER_PLAYLISTS'
-                );
+                return this.formatText('Stalker Playlists');
             }
         }
 
-        return this.translateText('WORKSPACE.SOURCES.ALL_PLAYLISTS');
+        return this.formatText('All Playlists');
     });
 
     readonly visibleSourcesCount = computed(() => {
@@ -144,28 +137,23 @@ export class WorkspaceSourcesComponent {
     });
 
     readonly subtitle = computed(() => {
-        this.languageTick();
-
         const count = this.visibleSourcesCount();
         if (count === 1) {
-            return this.translateText('WORKSPACE.SOURCES.PLAYLIST_COUNT_ONE');
+            return this.formatText('1 playlist');
         }
 
-        return this.translateText('WORKSPACE.SOURCES.PLAYLIST_COUNT_OTHER', {
+        return this.formatText('{{count}} playlists', {
             count,
         });
     });
 
     readonly activeSortLabel = computed(() => {
-        this.languageTick();
         const current = this.currentSortOptions();
         const match = this.sortOptions.find(
             (option) =>
                 option.by === current.by && option.order === current.order
         );
-        return this.translateText(
-            match?.translationKey ?? 'HOME.SORT_OPTIONS.NEWEST'
-        );
+        return this.formatText(match?.label ?? 'Date added (Newest first)');
     });
 
     onAddPlaylist(type?: WorkspacePlaylistType): void {
@@ -184,10 +172,10 @@ export class WorkspaceSourcesComponent {
         });
     }
 
-    private translateText(
+    private formatText(
         key: string,
         params?: Record<string, string | number>
     ): string {
-        return this.translate.instant(key, params);
+        return interpolateText(key, params);
     }
 }

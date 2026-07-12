@@ -45,13 +45,15 @@ const EMPTY_STATE_BY_MODE: Record<
 > = {
     favorites: {
         icon: 'favorite_border',
-        titleKey: 'WORKSPACE.GLOBAL_FAVORITES.NO_PLAYLISTS_TITLE',
-        descriptionKey: 'WORKSPACE.GLOBAL_FAVORITES.NO_PLAYLISTS_BODY',
+        titleKey: 'No favorites to show',
+        descriptionKey:
+            'Add a playlist to start collecting favorites from live channels, movies, and series.',
     },
     recent: {
         icon: 'history_toggle_off',
-        titleKey: 'WORKSPACE.GLOBAL_RECENT.NO_PLAYLISTS_TITLE',
-        descriptionKey: 'WORKSPACE.GLOBAL_RECENT.NO_PLAYLISTS_BODY',
+        titleKey: 'Nothing watched yet',
+        descriptionKey:
+            'Add a playlist and your watching history will appear here.',
     },
 };
 
@@ -163,8 +165,8 @@ export class GlobalCollectionDetailHostComponent implements OnDestroy {
                 [icon]="emptyState().icon"
                 [titleKey]="emptyState().titleKey"
                 [descriptionKey]="emptyState().descriptionKey"
-                primaryActionLabelKey="HOME.PLAYLISTS.ADD_YOUR_FIRST"
-                secondaryActionLabelKey="WORKSPACE.SHELL.GO_TO_DASHBOARD"
+                primaryActionLabelKey="Add Your First Playlist"
+                secondaryActionLabelKey="Back to dashboard"
                 (primaryActionClicked)="addPlaylist()"
                 (secondaryActionClicked)="goToDashboard()"
             />

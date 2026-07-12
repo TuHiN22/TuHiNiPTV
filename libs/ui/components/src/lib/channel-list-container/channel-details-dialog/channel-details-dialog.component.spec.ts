@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
 import { Channel } from '@iptvnator/shared/interfaces';
 import { ChannelDetailsDialogComponent } from './channel-details-dialog.component';
 
@@ -40,11 +39,7 @@ describe('ChannelDetailsDialogComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ChannelDetailsDialogComponent,
-                NoopAnimationsModule,
-                TranslateModule.forRoot(),
-            ],
+            imports: [ChannelDetailsDialogComponent, NoopAnimationsModule],
             providers: [
                 {
                     provide: MAT_DIALOG_DATA,
@@ -65,9 +60,8 @@ describe('ChannelDetailsDialogComponent', () => {
         expect(component.heroStats).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({
-                    labelKey: 'CHANNELS.DETAILS_DIALOG.WINDOW',
-                    translateParams: { count: 5 },
-                    valueKey: 'CHANNELS.DETAILS_DIALOG.DAYS_OTHER',
+                    labelKey: 'Archive window',
+                    value: '5 days',
                 }),
             ])
         );

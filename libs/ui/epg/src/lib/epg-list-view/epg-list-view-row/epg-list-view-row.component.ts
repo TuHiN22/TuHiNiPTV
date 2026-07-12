@@ -7,7 +7,6 @@ import {
     output,
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 import { EpgListRow } from '../epg-list-view.utils';
 
 /**
@@ -21,7 +20,7 @@ import { EpgListRow } from '../epg-list-view.utils';
     templateUrl: './epg-list-view-row.component.html',
     styleUrl: './epg-list-view-row.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [DatePipe, MatIcon, TranslatePipe],
+    imports: [DatePipe, MatIcon],
     host: {
         class: 'g-row',
         role: 'button',

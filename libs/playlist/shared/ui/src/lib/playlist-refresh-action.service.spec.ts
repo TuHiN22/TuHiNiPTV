@@ -3,7 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { DialogService } from '@iptvnator/ui/components';
 import {
@@ -180,12 +179,6 @@ describe('PlaylistRefreshActionService', () => {
                 {
                     provide: Store,
                     useValue: store,
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: jest.fn((key: string) => key),
-                    },
                 },
                 {
                     provide: MatSnackBar,

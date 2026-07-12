@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { EpgProgram } from '@iptvnator/shared/interfaces';
-import { TranslatePipe } from '@ngx-translate/core';
 import { areProgramsSame } from '../epg-program.utils';
 import {
     TimelineBlock,
@@ -41,7 +40,7 @@ interface PopoverState {
     templateUrl: './epg-timeline-track.component.html',
     styleUrl: './epg-timeline-track.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [DatePipe, MatIcon, TranslatePipe],
+    imports: [DatePipe, MatIcon],
 })
 export class EpgTimelineTrackComponent {
     readonly items = input<TimelineRenderItem[]>([]);
@@ -128,9 +127,7 @@ export class EpgTimelineTrackComponent {
                     rect.left + rect.width / 2 - width / 2
                 )
             ),
-            top: flipAbove
-                ? Math.max(12, rect.top - estHeight - 8)
-                : below,
+            top: flipAbove ? Math.max(12, rect.top - estHeight - 8) : below,
         });
     }
 

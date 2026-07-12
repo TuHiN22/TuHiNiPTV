@@ -14,7 +14,7 @@ import {
     SEARCH_SOURCES_PLACEHOLDER,
 } from './workspace-shell-constants';
 
-export type TranslateFn = (
+export type TextFormatter = (
     key: string,
     params?: Record<string, string | number>
 ) => string;
@@ -23,7 +23,7 @@ export interface SearchScopeContext {
     kind: WorkspaceShellPageKind;
     context: WorkspacePortalContext | null;
     section: PortalRailSection | null;
-    translate: TranslateFn;
+    formatText: TextFormatter;
     xtreamCategory:
         | { category_name?: string; name?: string }
         | null
@@ -36,30 +36,27 @@ export function getRailTooltipKey(
     section?: PortalRailSection
 ): string {
     if (provider === 'xtreams' && section === 'library') {
-        return 'WORKSPACE.SHELL.RAIL_LIBRARY';
+        return 'Library';
     }
 
-    return (
-        (section ? RAIL_TOOLTIP_KEYS[section] : null) ??
-        'WORKSPACE.SHELL.RAIL_CONTEXT_ACTIONS'
-    );
+    return (section ? RAIL_TOOLTIP_KEYS[section] : null) ?? 'Section actions';
 }
 
-export function translateRailSection(
+export function formatRailSection(
     section: PortalRailSection,
-    translate: TranslateFn
+    formatText: TextFormatter
 ): string {
-    return translate(getRailTooltipKey('playlists', section));
+    return formatText(getRailTooltipKey('playlists', section));
 }
 
-export function translateRailLinks(
+export function formatRailLinks(
     links: PortalRailLink[],
     provider: WorkspacePortalContext['provider'],
-    translate: TranslateFn
+    formatText: TextFormatter
 ): PortalRailLink[] {
     return links.map((link) => ({
         ...link,
-        tooltip: translate(getRailTooltipKey(provider, link.section)),
+        tooltip: formatText(getRailTooltipKey(provider, link.section)),
     }));
 }
 
@@ -91,8 +88,13 @@ export function resolveSearchPlaceholderKey(
 }
 
 export function resolveActiveCategoryLabel(ctx: SearchScopeContext): string {
-    const { context, section, translate, xtreamCategory, stalkerCategoryName } =
-        ctx;
+    const {
+        context,
+        section,
+        formatText,
+        xtreamCategory,
+        stalkerCategoryName,
+    } = ctx;
     if (!context || !section) {
         return '';
     }
@@ -101,45 +103,44 @@ export function resolveActiveCategoryLabel(ctx: SearchScopeContext): string {
         return (
             xtreamCategory?.category_name ??
             xtreamCategory?.name ??
-            translateRailSection(section, translate)
+            formatRailSection(section, formatText)
         );
     }
 
     if (context.provider === 'stalker') {
         return (
-            stalkerCategoryName.trim() ||
-            translateRailSection(section, translate)
+            stalkerCategoryName.trim() || formatRailSection(section, formatText)
         );
     }
 
-    return translateRailSection(section, translate);
+    return formatRailSection(section, formatText);
 }
 
 export function resolveSearchScopeLabel(ctx: SearchScopeContext): string {
-    const { kind, context, section, translate } = ctx;
+    const { kind, context, section, formatText } = ctx;
 
     if (kind === 'sources') {
-        return translate('WORKSPACE.SHELL.RAIL_SOURCES');
+        return formatText('Sources');
     }
 
     if (kind === 'global-favorites') {
-        return translate('HOME.PLAYLISTS.GLOBAL_FAVORITES');
+        return formatText('Global favorites');
     }
 
     if (kind === 'global-recent') {
-        return translate('PORTALS.RECENTLY_VIEWED');
+        return formatText('Recently viewed');
     }
 
     if (kind === 'global-search') {
-        return translate('WORKSPACE.SHELL.RAIL_GLOBAL_SEARCH');
+        return formatText('Global search');
     }
 
     if (kind === 'downloads') {
-        return translate('WORKSPACE.SHELL.RAIL_DOWNLOADS');
+        return formatText('Downloads');
     }
 
     if (kind === 'dashboard' || section === 'search') {
-        return translate('WORKSPACE.SHELL.RAIL_SEARCH');
+        return formatText('Advanced search');
     }
 
     if (!context || !section) {
@@ -154,12 +155,12 @@ export function resolveSearchScopeLabel(ctx: SearchScopeContext): string {
         section === 'radio'
     ) {
         const categoryLabel = resolveActiveCategoryLabel(ctx);
-        const sectionLabel = translateRailSection(section, translate);
+        const sectionLabel = formatRailSection(section, formatText);
 
         return categoryLabel
             ? `${sectionLabel} / ${categoryLabel}`
             : sectionLabel;
     }
 
-    return translateRailSection(section, translate);
+    return formatRailSection(section, formatText);
 }

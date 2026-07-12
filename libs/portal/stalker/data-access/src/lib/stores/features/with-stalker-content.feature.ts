@@ -7,7 +7,6 @@ import {
     withProps,
     withState,
 } from '@ngrx/signals';
-import { TranslateService } from '@ngx-translate/core';
 import { createLogger } from '@iptvnator/portal/shared/util';
 import { DataService } from '@iptvnator/services';
 import {
@@ -115,23 +114,17 @@ function buildCategoryPatch(
 }
 
 function buildAllCategory(
-    contentType: StalkerContentType,
-    translateService: TranslateService
+    contentType: StalkerContentType
 ): StalkerCategoryItem {
     return {
-        category_name: translateService.instant(
-            contentType === 'radio'
-                ? 'PORTALS.ALL_RADIO'
-                : 'PORTALS.ALL_CATEGORIES'
-        ),
+        category_name: contentType === 'radio' ? 'All radio' : 'All categories',
         category_id: '*',
     };
 }
 
 function prependAllCategory(
     contentType: StalkerContentType,
-    categories: StalkerCategoryItem[],
-    translateService: TranslateService
+    categories: StalkerCategoryItem[]
 ): StalkerCategoryItem[] {
     const allIndex = categories.findIndex(
         (category) => category.category_name.trim().toLowerCase() === 'all'
@@ -147,16 +140,14 @@ function prependAllCategory(
         categories.length > 0 &&
         !categories.some((category) => String(category.category_id) === '*')
     ) {
-        categories.unshift(buildAllCategory(contentType, translateService));
+        categories.unshift(buildAllCategory(contentType));
     }
 
     return categories;
 }
 
-function fallbackRadioCategories(
-    translateService: TranslateService
-): StalkerCategoryItem[] {
-    return [buildAllCategory('radio', translateService)];
+function fallbackRadioCategories(): StalkerCategoryItem[] {
+    return [buildAllCategory('radio')];
 }
 
 function buildEmptyContentPatch(
@@ -190,8 +181,7 @@ export function withStalkerContent() {
             (
                 store,
                 dataService = inject(DataService),
-                stalkerSession = inject(StalkerSessionService),
-                translateService = inject(TranslateService)
+                stalkerSession = inject(StalkerSessionService)
             ) => {
                 const storeContext = store as typeof store &
                     StalkerContentResourceStoreContract;
@@ -246,9 +236,7 @@ export function withStalkerContent() {
                                     );
                                     if (params.contentType === 'radio') {
                                         const fallback =
-                                            fallbackRadioCategories(
-                                                translateService
-                                            );
+                                            fallbackRadioCategories();
                                         patchState(store, {
                                             radioCategories: fallback,
                                             categoryError: null,
@@ -275,11 +263,8 @@ export function withStalkerContent() {
                                     params.contentType,
                                     params.contentType === 'radio' &&
                                         normalizedCategories.length === 0
-                                        ? fallbackRadioCategories(
-                                              translateService
-                                          )
-                                        : normalizedCategories,
-                                    translateService
+                                        ? fallbackRadioCategories()
+                                        : normalizedCategories
                                 );
 
                                 patchState(store, {
@@ -297,10 +282,7 @@ export function withStalkerContent() {
                                     error,
                                 });
                                 if (params.contentType === 'radio') {
-                                    const fallback =
-                                        fallbackRadioCategories(
-                                            translateService
-                                        );
+                                    const fallback = fallbackRadioCategories();
                                     patchState(store, {
                                         radioCategories: fallback,
                                         categoryError: null,

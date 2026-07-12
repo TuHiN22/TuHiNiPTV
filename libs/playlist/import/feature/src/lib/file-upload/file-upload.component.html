@@ -13,7 +13,7 @@
             type="button"
             class="file-selected__remove"
             (click)="clearSelection()"
-            [attr.aria-label]="'CLEAR' | translate"
+            [attr.aria-label]="'Clear'"
         >
             <mat-icon>close</mat-icon>
         </button>
@@ -33,14 +33,14 @@
             <mat-icon>file_download</mat-icon>
         </span>
         <span class="file-drop__title">
-            {{ 'HOME.FILE_UPLOAD.DRAG_DROP' | translate }}
+            {{ 'Drop an .m3u or .m3u8 file here' }}
         </span>
         <span class="file-drop__subtitle">
-            {{ 'HOME.FILE_UPLOAD.OR' | translate }}
-            {{ 'HOME.FILE_UPLOAD.CHOOSE_PLAYLIST' | translate }}
+            {{ 'or' }}
+            {{ 'click to browse' }}
         </span>
         <span class="file-drop__browse">
-            {{ 'HOME.FILE_UPLOAD.BROWSE' | translate }}
+            {{ 'Browse files' }}
         </span>
     </button>
 }

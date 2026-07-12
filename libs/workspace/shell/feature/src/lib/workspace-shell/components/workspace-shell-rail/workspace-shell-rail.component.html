@@ -2,23 +2,17 @@
     <a
         class="brand"
         [routerLink]="brandLink()"
-        [matTooltip]="brandTooltipKey() | translate"
+        [matTooltip]="brandTooltipKey()"
         [matTooltipPosition]="'right'"
-        [attr.aria-label]="brandAriaLabelKey() | translate"
+        [attr.aria-label]="brandAriaLabelKey()"
     >
-        <img
-            src="./assets/icons/icon-tv-256.png"
-            [attr.alt]="'WORKSPACE.SHELL.BRAND_ALT' | translate"
-        />
+        <img src="./assets/icons/icon-tv-256.png" [attr.alt]="'TuHiN iPTV'" />
     </a>
 
     <app-workspace-shell-rail-links [links]="workspaceLinks()" />
 
     @if (primaryContextLinks().length > 0) {
-        <div
-            class="rail-context-region"
-            [class]="railProviderClass()"
-        >
+        <div class="rail-context-region" [class]="railProviderClass()">
             <app-workspace-shell-rail-links
                 activeClass="is-active"
                 [selectedSection]="selectedSection()"
@@ -41,9 +35,9 @@
             class="rail-shortcut nav-item"
             routerLink="/workspace/settings"
             [class.is-active]="isSettingsRoute()"
-            [matTooltip]="'WORKSPACE.SHELL.RAIL_SETTINGS' | translate"
+            [matTooltip]="'Settings'"
             [matTooltipPosition]="'right'"
-            [attr.aria-label]="'WORKSPACE.SHELL.OPEN_SETTINGS' | translate"
+            [attr.aria-label]="'Open settings'"
         >
             <mat-icon>settings</mat-icon>
         </a>

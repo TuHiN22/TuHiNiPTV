@@ -1,8 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
 import {
     WorkspaceCommandContribution,
     WorkspaceViewCommandService,
@@ -58,7 +56,6 @@ describe('WorkspacePlayerCommandsContributor', () => {
               >;
           }
         | undefined;
-    let translate: { instant: jest.Mock; onLangChange: ReturnType<typeof of> };
 
     function bootstrap(options: {
         supportsManagedExternalPlayers: boolean;
@@ -90,14 +87,6 @@ describe('WorkspacePlayerCommandsContributor', () => {
               }
             : undefined;
         (window as unknown as { electron?: unknown }).electron = electronStub;
-        translate = {
-            instant: jest.fn(
-                (key: string, params?: Record<string, string | number>) =>
-                    params?.['name'] ? `${key}:${params['name']}` : key
-            ),
-            onLangChange: of(null),
-        };
-
         TestBed.configureTestingModule({
             providers: [
                 WorkspacePlayerCommandsContributor,
@@ -108,7 +97,6 @@ describe('WorkspacePlayerCommandsContributor', () => {
                 { provide: SettingsStore, useValue: settingsStore },
                 { provide: RuntimeCapabilitiesService, useValue: runtime },
                 { provide: MatSnackBar, useValue: snackBar },
-                { provide: TranslateService, useValue: translate },
             ],
         });
 
@@ -243,9 +231,7 @@ describe('WorkspacePlayerCommandsContributor', () => {
         });
         expect(snackBar.open).toHaveBeenCalledTimes(1);
         const [message, action, config] = snackBar.open.mock.calls[0];
-        expect(message).toContain(
-            'WORKSPACE.SHELL.COMMANDS.SWITCH_PLAYER_FEEDBACK'
-        );
+        expect(message).toBe('Player set to MPV player');
         expect(action).toBeUndefined();
         expect(config?.duration).toBe(2500);
     });

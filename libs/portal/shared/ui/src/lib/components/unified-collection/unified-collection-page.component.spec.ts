@@ -10,7 +10,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateModule } from '@ngx-translate/core';
 import { DialogService } from '@iptvnator/ui/components';
 import {
     COLLECTION_VIEW_STATE_KEY,
@@ -25,7 +24,10 @@ import {
     UnifiedFavoritesDataService,
     UnifiedRecentDataService,
 } from '@iptvnator/portal/shared/data-access';
-import { selectAllPlaylistsMeta, selectPlaylistsLoadingFlag } from '@iptvnator/m3u-state';
+import {
+    selectAllPlaylistsMeta,
+    selectPlaylistsLoadingFlag,
+} from '@iptvnator/m3u-state';
 import { BehaviorSubject } from 'rxjs';
 import { PlaylistMeta } from '@iptvnator/shared/interfaces';
 import { UnifiedCollectionPageComponent } from './unified-collection-page.component';
@@ -232,7 +234,6 @@ describe('UnifiedCollectionPageComponent', () => {
             imports: [
                 HostUnifiedCollectionPageComponent,
                 UnifiedCollectionPageComponent,
-                TranslateModule.forRoot(),
             ],
             providers: [
                 {
@@ -478,16 +479,18 @@ describe('UnifiedCollectionPageComponent', () => {
         await fixture.whenStable();
 
         expect(favoritesData.removeFavorite).toHaveBeenCalledWith(recentItem);
-        expect(fixture.componentInstance.favoriteUidSet().has(recentItem.uid))
-            .toBe(false);
+        expect(
+            fixture.componentInstance.favoriteUidSet().has(recentItem.uid)
+        ).toBe(false);
         expect(fixture.componentInstance.allItems()).toEqual([recentItem]);
 
         liveTab.favoriteToggled.emit(recentItem);
         await fixture.whenStable();
 
         expect(favoritesData.addFavorite).toHaveBeenCalledWith(recentItem);
-        expect(fixture.componentInstance.favoriteUidSet().has(recentItem.uid))
-            .toBe(true);
+        expect(
+            fixture.componentInstance.favoriteUidSet().has(recentItem.uid)
+        ).toBe(true);
         expect(fixture.componentInstance.allItems()).toEqual([recentItem]);
     });
 
@@ -603,9 +606,8 @@ describe('UnifiedCollectionPageComponent', () => {
                 id: 'unified-collection-clear-current-favorites',
                 group: 'view',
                 icon: 'delete_sweep',
-                labelKey: 'WORKSPACE.SHELL.CLEAR_FAVORITES_TYPE',
-                descriptionKey:
-                    'WORKSPACE.SHELL.COMMANDS.CLEAR_CURRENT_VIEW_DESCRIPTION',
+                labelKey: 'Clear Live TV favorites',
+                descriptionKey: 'Clear all visible Live TV items in this view',
             })
         );
     });

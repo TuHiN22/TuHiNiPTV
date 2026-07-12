@@ -8,15 +8,17 @@
             <mat-icon>info</mat-icon>
         </div>
         <div class="settings-group__header-text">
-            <h3>{{ 'SETTINGS.ABOUT' | translate }}</h3>
-            <p>{{ 'SETTINGS.ABOUT_SUBTITLE' | translate }}</p>
+            <h3>{{ 'About' }}</h3>
+            <p>
+                {{ 'Version, project links and ways to support TuHiN iPTV.' }}
+            </p>
         </div>
     </header>
 
     <div class="setting-item">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.VERSION' | translate }}</h4>
-            <p>{{ 'SETTINGS.VERSION_DESCRIPTION' | translate }}</p>
+            <h4>{{ 'Version' }}</h4>
+            <p>{{ 'Current version of the application' }}</p>
         </div>
         <div class="setting-item__control version-block">
             <span>{{ version() }}</span>
@@ -27,21 +29,13 @@
     @if (isDesktop() && appUpdateStatus(); as updateStatus) {
         <div class="setting-item setting-item--full-control app-update-panel">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.APP_UPDATE_TITLE' | translate }}</h4>
-                <p>{{ 'SETTINGS.APP_UPDATE_DESCRIPTION' | translate }}</p>
+                <h4>{{ 'Application update' }}</h4>
+                <p>{{ 'Check GitHub Releases for desktop app updates.' }}</p>
             </div>
             <div class="setting-item__control app-update-panel__control">
                 <div class="app-update-status" data-test-id="app-update-status">
                     <strong>
-                        {{
-                            appUpdateStatusLabelKey()
-                                | translate
-                                    : {
-                                          version:
-                                              updateStatus.latestVersion ||
-                                              updateStatus.currentVersion,
-                                      }
-                        }}
+                        {{ appUpdateStatusLabel() }}
                     </strong>
                     @if (updateStatus.error) {
                         <span>{{ updateStatus.error }}</span>
@@ -63,7 +57,7 @@
                         data-test-id="app-update-check"
                     >
                         <mat-icon>sync</mat-icon>
-                        {{ 'SETTINGS.APP_UPDATE_CHECK' | translate }}
+                        {{ 'Check again' }}
                     </button>
                     @if (canDownloadAppUpdate()) {
                         <button
@@ -73,7 +67,7 @@
                             data-test-id="app-update-download"
                         >
                             <mat-icon>download</mat-icon>
-                            {{ 'SETTINGS.APP_UPDATE_DOWNLOAD' | translate }}
+                            {{ 'Update' }}
                         </button>
                     }
                     @if (canOpenAppUpdateReleaseNotes()) {
@@ -84,10 +78,7 @@
                             data-test-id="app-update-release-notes"
                         >
                             <mat-icon>article</mat-icon>
-                            {{
-                                'SETTINGS.APP_UPDATE_RELEASE_NOTES'
-                                    | translate
-                            }}
+                            {{ "What's new" }}
                         </button>
                     }
                     @if (canInstallAppUpdate()) {
@@ -98,7 +89,7 @@
                             data-test-id="app-update-install"
                         >
                             <mat-icon>restart_alt</mat-icon>
-                            {{ 'SETTINGS.APP_UPDATE_INSTALL' | translate }}
+                            {{ 'Restart application' }}
                         </button>
                     }
                     @if (canOpenManualAppUpdate()) {
@@ -109,7 +100,7 @@
                             data-test-id="app-update-open-release"
                         >
                             <mat-icon>open_in_new</mat-icon>
-                            {{ 'SETTINGS.APP_UPDATE_OPEN_RELEASE' | translate }}
+                            {{ 'Open GitHub release' }}
                         </button>
                     }
                 </div>
@@ -119,19 +110,21 @@
 
     @if (isDesktop()) {
         <div class="settings-note">
-            <strong>{{
-                'SETTINGS.EMBEDDED_MPV_NOTICE_TITLE' | translate
-            }}</strong>
+            <strong>{{ 'Embedded MPV runtime' }}</strong>
             <span>{{
-                'SETTINGS.EMBEDDED_MPV_NOTICE_DESCRIPTION' | translate
+                'Desktop builds can include bundled libmpv and FFmpeg libraries for the experimental Embedded MPV player. Users do not need to install the MPV app separately; external MPV and VLC remain available as fallback players.'
             }}</span>
         </div>
     }
 
     <div class="setting-item setting-item--full-control">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.TMDB_CREDITS' | translate }}</h4>
-            <p>{{ 'SETTINGS.TMDB_ATTRIBUTION' | translate }}</p>
+            <h4>{{ 'Metadata' }}</h4>
+            <p>
+                {{
+                    'This product uses the TMDB API but is not endorsed or certified by TMDB.'
+                }}
+            </p>
             <a
                 href="https://www.themoviedb.org"
                 target="_blank"
@@ -145,5 +138,4 @@
             </a>
         </div>
     </div>
-
 </section>

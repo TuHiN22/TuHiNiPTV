@@ -1,7 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import {
     selectAllPlaylistsMeta,
     selectPlaylistsLoadingFlag,
@@ -235,15 +234,6 @@ describe('DashboardDataService', () => {
                 {
                     provide: PlaylistsService,
                     useValue: playlistsServiceMock,
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => key,
-                        onLangChange: of(null),
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                    },
                 },
                 {
                     provide: PORTAL_PLAYBACK_POSITIONS,
@@ -1135,9 +1125,7 @@ describe('DashboardDataService', () => {
 
         // Crucially, the movie favorite is excluded — the rail source must
         // never leak VOD posters into the channel layout.
-        expect(liveOnly.map((it) => it.title)).not.toContain(
-            'Favorite Movie'
-        );
+        expect(liveOnly.map((it) => it.title)).not.toContain('Favorite Movie');
         expect(
             service.globalFavoriteLiveItems().every((it) => it.type === 'live')
         ).toBe(true);

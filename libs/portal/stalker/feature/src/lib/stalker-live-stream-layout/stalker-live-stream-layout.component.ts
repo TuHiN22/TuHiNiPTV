@@ -19,7 +19,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     ChannelListItemComponent,
     ChannelListSkeletonComponent,
@@ -92,7 +91,6 @@ type StalkerPlayableChannel = StalkerPortalItem & {
         NgTemplateOutlet,
         PortalEmptyStateComponent,
         ResizableDirective,
-        TranslatePipe,
         WebPlayerViewComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -104,7 +102,6 @@ export class StalkerLiveStreamLayoutComponent implements OnDestroy {
     private readonly settingsStore = inject(SettingsStore);
     private readonly portalPlayer = inject(PORTAL_PLAYER);
     private readonly snackBar = inject(MatSnackBar);
-    private readonly translate = inject(TranslateService);
     private readonly liveSidebarStateService = inject(
         LiveLayoutSidebarStateService
     );
@@ -448,13 +445,12 @@ export class StalkerLiveStreamLayoutComponent implements OnDestroy {
 
             this.logger.error('Playback failed', error);
             const failure = classifyStalkerPlaybackFailure(error);
-            const errorMessage = this.translate.instant(
+            const errorMessage =
                 failure === 'content-unavailable'
-                    ? 'PORTALS.CONTENT_NOT_AVAILABLE'
+                    ? 'This content is not available on this server'
                     : failure === 'stream-offline'
-                      ? 'PORTALS.STREAM_OFFLINE'
-                      : 'PORTALS.PLAYBACK_ERROR'
-            );
+                      ? 'STREAM is OFFLINE'
+                      : 'Failed to get playback URL';
             this.snackBar.open(errorMessage, undefined, { duration: 3000 });
         }
     }

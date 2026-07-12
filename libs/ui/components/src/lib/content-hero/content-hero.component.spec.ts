@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { ContentHeroComponent } from './content-hero.component';
 
 describe('ContentHeroComponent', () => {
@@ -16,7 +15,7 @@ describe('ContentHeroComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ContentHeroComponent, TranslateModule.forRoot()],
+            imports: [ContentHeroComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ContentHeroComponent);

@@ -2,16 +2,10 @@ import { Component, input, output, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-settings-backup-section',
-    imports: [
-        MatButtonModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        TranslateModule,
-    ],
+    imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule],
     templateUrl: './settings-backup-section.component.html',
     encapsulation: ViewEncapsulation.None,
     styles: [':host { display: contents; }'],

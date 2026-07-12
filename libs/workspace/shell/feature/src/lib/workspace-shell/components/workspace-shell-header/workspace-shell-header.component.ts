@@ -9,20 +9,13 @@ import {
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { TranslatePipe } from '@ngx-translate/core';
 import { PlaylistSwitcherComponent } from '@iptvnator/playlist/shared/ui';
 import { WorkspaceHeaderAction } from '@iptvnator/portal/shared/util';
 import { WorkspaceHeaderBulkAction } from '../../services/helpers/workspace-shell-constants';
 
 @Component({
     selector: 'app-workspace-shell-header',
-    imports: [
-        MatIcon,
-        MatIconButton,
-        MatTooltip,
-        PlaylistSwitcherComponent,
-        TranslatePipe,
-    ],
+    imports: [MatIcon, MatIconButton, MatTooltip, PlaylistSwitcherComponent],
     templateUrl: './workspace-shell-header.component.html',
     styleUrl: './workspace-shell-header.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

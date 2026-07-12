@@ -10,7 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { TranslateModule } from '@ngx-translate/core';
 import { of, Subject } from 'rxjs';
 import { VideoPlayer } from '@iptvnator/shared/interfaces';
 import { RuntimeCapabilitiesService } from '@iptvnator/services';
@@ -113,7 +112,7 @@ describe('WebPlayerViewComponent', () => {
         await TestBed.configureTestingModule({
             // @defer blocks render their main content synchronously in tests.
             deferBlockBehavior: DeferBlockBehavior.Playthrough,
-            imports: [WebPlayerViewComponent, TranslateModule.forRoot()],
+            imports: [WebPlayerViewComponent],
             providers: [
                 { provide: StorageMap, useValue: storageMap },
                 {
@@ -133,7 +132,6 @@ describe('WebPlayerViewComponent', () => {
                         MatButtonModule,
                         MatIconModule,
                         MatTooltipModule,
-                        TranslateModule,
                     ],
                 },
             })
@@ -178,10 +176,10 @@ describe('WebPlayerViewComponent', () => {
         );
 
         expect(banner.nativeElement.textContent).toContain(
-            'PLAYBACK_DIAGNOSTICS.UNSUPPORTED_CONTAINER.TITLE'
+            'This stream container is likely unsupported by the browser player'
         );
         expect(banner.nativeElement.textContent).toContain(
-            'PLAYBACK_DIAGNOSTICS.NATIVE_FALLBACK_TITLE'
+            'Open it in a native player instead'
         );
         mpvButton.nativeElement.click();
 
@@ -537,11 +535,11 @@ describe('WebPlayerViewComponent', () => {
     it('uses the PWA browser access diagnostic description key outside desktop', () => {
         const issue = createBrowserAccessDiagnostic();
 
-        expect(component.getDiagnosticTitleKey(issue)).toBe(
-            'PLAYBACK_DIAGNOSTICS.BROWSER_ACCESS_ERROR.TITLE'
+        expect(component.getDiagnosticTitle(issue)).toBe(
+            'The browser player could not access this stream'
         );
-        expect(component.getDiagnosticDescriptionKey(issue)).toBe(
-            'PLAYBACK_DIAGNOSTICS.BROWSER_ACCESS_ERROR.PWA_DESCRIPTION'
+        expect(component.getDiagnosticDescription(issue)).toBe(
+            'The request may be blocked by CORS, mixed content, or provider header/proxy restrictions. The PWA cannot launch external players directly; use the Copy stream URL action and open it manually in MPV, VLC, IINA, or another player.'
         );
     });
 
@@ -549,8 +547,8 @@ describe('WebPlayerViewComponent', () => {
         runtimeCapabilities.supportsManagedExternalPlayers = true;
         const issue = createBrowserAccessDiagnostic();
 
-        expect(component.getDiagnosticDescriptionKey(issue)).toBe(
-            'PLAYBACK_DIAGNOSTICS.BROWSER_ACCESS_ERROR.DESCRIPTION'
+        expect(component.getDiagnosticDescription(issue)).toBe(
+            'The request may be blocked by CORS, mixed content, or provider header/proxy restrictions. MPV or VLC can often bypass browser-player access limits.'
         );
     });
 
@@ -568,27 +566,29 @@ describe('WebPlayerViewComponent', () => {
 
         expect(mpvButton).toBeNull();
         expect(banner.nativeElement.textContent).toContain(
-            'PLAYBACK_DIAGNOSTICS.NETWORK_ERROR.TITLE'
+            'The stream could not be loaded'
         );
         expect(banner.nativeElement.textContent).toContain(
-            'PLAYBACK_DIAGNOSTICS.INLINE_FAILURE_TITLE'
+            'Copy the URL or try again'
         );
     });
 
     it('uses the Stalker stream-offline copy only for network diagnostics', () => {
         fixture.componentRef.setInput('streamOfflineOnNetworkError', true);
 
-        expect(component.getDiagnosticTitleKey(createNetworkDiagnostic())).toBe(
-            'PLAYBACK_DIAGNOSTICS.STREAM_OFFLINE.TITLE'
+        expect(component.getDiagnosticTitle(createNetworkDiagnostic())).toBe(
+            'STREAM is OFFLINE'
         );
         expect(
-            component.getDiagnosticDescriptionKey(createNetworkDiagnostic())
-        ).toBe('PLAYBACK_DIAGNOSTICS.STREAM_OFFLINE.DESCRIPTION');
+            component.getDiagnosticDescription(createNetworkDiagnostic())
+        ).toBe(
+            'The Stalker provider could not deliver this stream. Retry the stream or choose another channel.'
+        );
         expect(
-            component.getDiagnosticTitleKey(
-                createUnsupportedContainerDiagnostic()
-            )
-        ).toBe('PLAYBACK_DIAGNOSTICS.UNSUPPORTED_CONTAINER.TITLE');
+            component.getDiagnosticTitle(createUnsupportedContainerDiagnostic())
+        ).toBe(
+            'This stream container is likely unsupported by the browser player'
+        );
     });
 
     it('renders technical details and codec-specific hints in the diagnostic banner', () => {
@@ -606,31 +606,31 @@ describe('WebPlayerViewComponent', () => {
         );
 
         expect(details.nativeElement.textContent).toContain(
-            'PLAYBACK_DIAGNOSTICS.DETAILS_SUMMARY'
+            'Technical details'
         );
         expect(component.getDiagnosticCodecHint(issue)).toBe('HEVC, AC-3');
         expect(component.getDiagnosticDetails(issue)).toEqual(
             expect.arrayContaining([
                 {
-                    labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_CODE',
+                    labelKey: 'Diagnostic code',
                     value: 'unsupported-codec',
                 },
                 {
-                    labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_PLAYER',
+                    labelKey: 'Player',
                     value: 'Video.js',
                 },
                 {
-                    labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_VIDEO_CODECS',
+                    labelKey: 'Video codecs',
                     value: 'hvc1.1.6.L93.B0',
                 },
                 {
-                    labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_AUDIO_CODECS',
+                    labelKey: 'Audio codecs',
                     value: 'ac-3',
                 },
             ])
         );
         expect(codecHint.nativeElement.textContent).toContain(
-            'PLAYBACK_DIAGNOSTICS.CODEC_HINT'
+            'Detected HEVC, AC-3. Chromium/Electron browser players often have limited support for these codecs.'
         );
     });
 

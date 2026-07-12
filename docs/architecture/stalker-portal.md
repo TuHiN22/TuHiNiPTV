@@ -124,14 +124,13 @@ Failure-handling rule:
 
 ## Stalker Identity Policy
 
-Full Stalker/Ministra portal authentication defaults to MAC-only identity. The
-import UI can capture optional serial number, device IDs, and signatures, but
-blank fields are not generated or forwarded to `get_profile`.
+New Stalker/Ministra portal imports use MAC-only identity. The import UI does
+not expose serial number, device ID, or signature fields, and does not generate
+or forward those values to `get_profile`.
 
-- User-provided `sn`, `device_id`, `device_id2`, `signature`, and `signature2`
-  values are trimmed, persisted under the canonical `stalker*` playlist fields,
-  and reused for initial auth, token refresh, retry auth, normal API requests,
-  and same-origin playback headers.
+- Existing playlists and restored backups can retain canonical `stalker*`
+  identity fields. When present, they remain supported for token refresh, retry
+  auth, normal API requests, and same-origin playback headers.
 - Empty optional identity fields remain absent. IPTVnator must not generate a
   device ID from the MAC address or duplicate `device_id2` from `device_id1`.
 - The legacy default serial value `BEDACD4569BAF` is treated as absent at

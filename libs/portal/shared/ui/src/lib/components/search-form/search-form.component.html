@@ -24,8 +24,8 @@
                     [(ngModel)]="filters[filter.key]"
                     (ngModelChange)="onFilterChange(filter.key)"
                 >
-                    @if (filter.translationKey) {
-                        {{ filter.translationKey | translate }}
+                    @if (filter.label) {
+                        {{ filter.label }}
                     } @else {
                         {{ filter.label }}
                     }

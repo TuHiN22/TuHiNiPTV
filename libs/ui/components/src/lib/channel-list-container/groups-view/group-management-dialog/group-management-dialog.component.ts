@@ -14,7 +14,6 @@ import {
     MatDialogRef,
 } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 
 export interface GroupManagementDialogGroup {
     readonly count: number;
@@ -38,7 +37,6 @@ interface GroupWithSelection extends GroupManagementDialogGroup {
         MatCheckboxModule,
         MatIconModule,
         TitleCasePipe,
-        TranslatePipe,
     ],
     templateUrl: './group-management-dialog.component.html',
     styleUrl: './group-management-dialog.component.scss',

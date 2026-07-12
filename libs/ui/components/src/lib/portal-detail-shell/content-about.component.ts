@@ -1,6 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, TemplateRef, input } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * Watch-state metadata block ("About the show / movie"). Rendered by
@@ -14,10 +13,10 @@ import { TranslateModule } from '@ngx-translate/core';
 @Component({
     selector: 'app-content-about',
     standalone: true,
-    imports: [NgTemplateOutlet, TranslateModule],
+    imports: [NgTemplateOutlet],
     template: `
         <section class="about">
-            <h3 class="about__heading">{{ 'PORTALS.ABOUT' | translate }}</h3>
+            <h3 class="about__heading">{{ 'About' }}</h3>
             <div class="about__body">
                 @if (posterUrl()) {
                     <img

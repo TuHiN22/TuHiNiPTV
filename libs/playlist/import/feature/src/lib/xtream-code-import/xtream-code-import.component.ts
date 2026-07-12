@@ -13,7 +13,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Store } from '@ngrx/store';
-import { TranslatePipe } from '@ngx-translate/core';
 import { PlaylistActions } from '@iptvnator/m3u-state';
 import { PortalStatus, PortalStatusService } from '@iptvnator/services';
 import {
@@ -58,7 +57,6 @@ function xtreamServerUrlValidator(
         MatIcon,
         MatInputModule,
         ReactiveFormsModule,
-        TranslatePipe,
     ],
     selector: 'app-xtream-code-import',
     templateUrl: './xtream-code-import.component.html',
@@ -127,21 +125,24 @@ export class XtreamCodeImportComponent {
     @Output() addClicked = new EventEmitter<void>();
     URL_REGEX = /^\s*https?:\/\/[^ "]+\s*$/;
 
-    form = new FormGroup({
-        _id: new FormControl(uuid()),
-        title: new FormControl('', [Validators.required]),
-        password: new FormControl('', [Validators.required]),
-        username: new FormControl('', [Validators.required]),
-        serverUrl: new FormControl('', [
-            Validators.required,
-            Validators.pattern(this.URL_REGEX),
-            xtreamServerUrlValidator,
-        ]),
-        importDate: new FormControl(new Date().toISOString()),
-        importLive: new FormControl(true),
-        importVod: new FormControl(true),
-        importSeries: new FormControl(true),
-    }, { validators: atLeastOneContentTypeValidator });
+    form = new FormGroup(
+        {
+            _id: new FormControl(uuid()),
+            title: new FormControl('', [Validators.required]),
+            password: new FormControl('', [Validators.required]),
+            username: new FormControl('', [Validators.required]),
+            serverUrl: new FormControl('', [
+                Validators.required,
+                Validators.pattern(this.URL_REGEX),
+                xtreamServerUrlValidator,
+            ]),
+            importDate: new FormControl(new Date().toISOString()),
+            importLive: new FormControl(true),
+            importVod: new FormControl(true),
+            importSeries: new FormControl(true),
+        },
+        { validators: atLeastOneContentTypeValidator }
+    );
 
     readonly store = inject(Store);
     readonly portalStatusService = inject(PortalStatusService);
@@ -210,12 +211,8 @@ export class XtreamCodeImportComponent {
             return;
         }
 
-        const {
-            importLive,
-            importVod,
-            importSeries,
-            ...playlistFields
-        } = this.form.value;
+        const { importLive, importVod, importSeries, ...playlistFields } =
+            this.form.value;
 
         const importContentTypes = [
             importLive ? 'live' : null,

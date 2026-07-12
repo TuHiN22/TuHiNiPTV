@@ -2,17 +2,11 @@ import { Component, input, output, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { TranslateModule } from '@ngx-translate/core';
 import { SettingsPlaylistDeleteSummary } from './settings.models';
 
 @Component({
     selector: 'app-settings-reset-section',
-    imports: [
-        MatButtonModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        TranslateModule,
-    ],
+    imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule],
     templateUrl: './settings-reset-section.component.html',
     encapsulation: ViewEncapsulation.None,
     styles: [':host { display: contents; }'],

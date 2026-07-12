@@ -2,9 +2,7 @@ import { computed, inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, startWith } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import {
     PlaylistInfoComponent,
     PlaylistRefreshActionService,
@@ -12,6 +10,7 @@ import {
 import {
     WorkspaceHeaderAction,
     WorkspaceHeaderContextService,
+    interpolateText,
 } from '@iptvnator/portal/shared/util';
 import { XtreamStore } from '@iptvnator/portal/xtream/data-access';
 import { PlaylistsService } from '@iptvnator/services';
@@ -37,17 +36,11 @@ export class WorkspaceShellHeaderService {
     private readonly xtreamStore = inject(XtreamStore);
     private readonly playlistsService = inject(PlaylistsService);
     private readonly workspaceActions = inject(WORKSPACE_SHELL_ACTIONS);
-    private readonly translate = inject(TranslateService);
     private readonly dialog = inject(MatDialog);
     private readonly routeState = inject(WorkspaceShellRouteStateService);
     private readonly headerContext = inject(WorkspaceHeaderContextService);
     private readonly playlistRefreshAction = inject(
         PlaylistRefreshActionService
-    );
-
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
     );
 
     readonly playlistTitle = computed(() => {
@@ -78,15 +71,11 @@ export class WorkspaceShellHeaderService {
         Boolean(this.routeState.activePlaylist()?.serverUrl)
     );
     readonly canRefreshPlaylist = computed(() =>
-        this.playlistRefreshAction.canRefresh(
-            this.routeState.activePlaylist()
-        )
+        this.playlistRefreshAction.canRefresh(this.routeState.activePlaylist())
     );
     readonly isRefreshingPlaylist = this.playlistRefreshAction.isRefreshing;
     readonly headerBulkAction = computed<WorkspaceHeaderBulkAction | null>(
         () => {
-            this.languageTick();
-
             const context = this.routeState.currentContext();
             const section = this.routeState.currentSection();
 
@@ -104,36 +93,34 @@ export class WorkspaceShellHeaderService {
 
             return {
                 icon: 'delete_sweep',
-                tooltip: this.translateText(CLEAR_RECENTLY_VIEWED_TOOLTIP),
-                ariaLabel: this.translateText(CLEAR_RECENTLY_VIEWED_ARIA),
+                tooltip: this.formatText(CLEAR_RECENTLY_VIEWED_TOOLTIP),
+                ariaLabel: this.formatText(CLEAR_RECENTLY_VIEWED_ARIA),
                 disabled: this.isRecentCleanupDisabled(context.provider),
             };
         }
     );
     readonly playlistSubtitle = computed(() => {
-        this.languageTick();
-
         const active = this.routeState.activePlaylist();
         if (active?.serverUrl) {
-            return this.translateText('WORKSPACE.SHELL.XTREAM_CODE');
+            return this.formatText('Xtream Code');
         }
         if (active?.macAddress) {
-            return this.translateText('WORKSPACE.SHELL.STALKER_PORTAL');
+            return this.formatText('Stalker Portal');
         }
         if (active?.count) {
-            return this.translateText('WORKSPACE.SHELL.CHANNELS_COUNT', {
+            return this.formatText('{{count}} channels', {
                 count: active.count,
             });
         }
 
         const sourcesCount = this.routeState.playlists().length;
         if (sourcesCount === 0) {
-            return this.translateText('WORKSPACE.SHELL.NO_SOURCES_AVAILABLE');
+            return this.formatText('No sources available');
         }
         if (sourcesCount === 1) {
-            return this.translateText('WORKSPACE.SHELL.ONE_SOURCE_AVAILABLE');
+            return this.formatText('1 source available');
         }
-        return this.translateText('WORKSPACE.SHELL.SOURCES_AVAILABLE', {
+        return this.formatText('{{count}} sources available', {
             count: sourcesCount,
         });
     });
@@ -182,18 +169,13 @@ export class WorkspaceShellHeaderService {
                     } as PlaylistMeta,
                 })
             );
-            bumpRefreshQueryParam(
-                this.router,
-                this.routeState.currentUrl()
-            );
+            bumpRefreshQueryParam(this.router, this.routeState.currentUrl());
             return;
         }
 
         if (context.provider === 'playlists') {
             const updatedPlaylist = await firstValueFrom(
-                this.playlistsService.clearM3uRecentlyViewed(
-                    context.playlistId
-                )
+                this.playlistsService.clearM3uRecentlyViewed(context.playlistId)
             );
             this.store.dispatch(
                 PlaylistActions.updatePlaylistMeta({
@@ -203,10 +185,7 @@ export class WorkspaceShellHeaderService {
                     } as PlaylistMeta,
                 })
             );
-            bumpRefreshQueryParam(
-                this.router,
-                this.routeState.currentUrl()
-            );
+            bumpRefreshQueryParam(this.router, this.routeState.currentUrl());
         }
     }
 
@@ -265,17 +244,18 @@ export class WorkspaceShellHeaderService {
 
         if (provider === 'playlists') {
             return (
-                this.routeState.activePlaylist()?.recentlyViewed?.length ?? 0
-            ) === 0;
+                (this.routeState.activePlaylist()?.recentlyViewed?.length ??
+                    0) === 0
+            );
         }
 
         return false;
     }
 
-    private translateText(
+    private formatText(
         key: string,
         params?: Record<string, string | number>
     ): string {
-        return this.translate.instant(key, params);
+        return interpolateText(key, params);
     }
 }

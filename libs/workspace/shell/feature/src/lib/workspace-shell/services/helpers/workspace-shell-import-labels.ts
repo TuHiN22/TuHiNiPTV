@@ -1,5 +1,5 @@
 import type { XtreamImportPhaseTone } from './workspace-shell-constants';
-import type { TranslateFn } from './workspace-shell-search-labels';
+import type { TextFormatter } from './workspace-shell-search-labels';
 
 export type XtreamImportContentType = 'live' | 'vod' | 'series' | null;
 export type XtreamRefreshPreparationPhase =
@@ -12,15 +12,15 @@ export type XtreamRefreshPreparationPhase =
 
 export function buildXtreamImportTypeLabel(
     contentType: XtreamImportContentType,
-    translate: TranslateFn
+    formatText: TextFormatter
 ): string {
     switch (contentType) {
         case 'live':
-            return translate('WORKSPACE.SHELL.RAIL_LIVE');
+            return formatText('Live TV');
         case 'vod':
-            return translate('WORKSPACE.SHELL.RAIL_MOVIES');
+            return formatText('Movies');
         case 'series':
-            return translate('WORKSPACE.SHELL.RAIL_SERIES');
+            return formatText('Series');
         default:
             return '';
     }
@@ -48,56 +48,54 @@ export function buildXtreamImportPhaseTone(
 
 export function buildXtreamRefreshPreparationPhaseLabel(
     phase: XtreamRefreshPreparationPhase,
-    translate: TranslateFn
+    formatText: TextFormatter
 ): string {
     switch (phase) {
         case 'collecting-user-data':
-            return translate('WORKSPACE.SHELL.XTREAM_REFRESH_COLLECTING_DATA');
+            return formatText('Preserving your library data...');
         case 'deleting-content':
-            return translate('WORKSPACE.SHELL.XTREAM_REFRESH_DELETING_CONTENT');
+            return formatText('Removing cached streams...');
         case 'deleting-categories':
-            return translate(
-                'WORKSPACE.SHELL.XTREAM_REFRESH_DELETING_CATEGORIES'
-            );
+            return formatText('Removing cached categories...');
         default:
-            return translate('WORKSPACE.SHELL.XTREAM_REFRESH_COLLECTING_DATA');
+            return formatText('Preserving your library data...');
     }
 }
 
 export function buildXtreamImportSourceLabel(
     tone: XtreamImportPhaseTone,
-    translate: TranslateFn
+    formatText: TextFormatter
 ): string {
     if (tone === 'remote') {
-        return translate('WORKSPACE.SHELL.XTREAM_IMPORT_REMOTE_BADGE');
+        return formatText('Remote source');
     }
     if (tone === 'local') {
-        return translate('WORKSPACE.SHELL.XTREAM_IMPORT_LOCAL_BADGE');
+        return formatText('Local library');
     }
     return '';
 }
 
 export function buildXtreamImportPhaseLabel(
     phase: string | null | undefined,
-    translate: TranslateFn
+    formatText: TextFormatter
 ): string {
     switch (phase) {
         case 'preparing-content':
-            return translate('WORKSPACE.SHELL.XTREAM_IMPORT_PREPARING');
+            return formatText('Preparing local library...');
         case 'loading-categories':
         case 'loading-live':
         case 'loading-movies':
         case 'loading-series':
-            return translate('WORKSPACE.SHELL.XTREAM_IMPORT_LOADING');
+            return formatText('Fetching playlist data from source...');
         case 'saving-categories':
         case 'saving-content':
-            return translate('WORKSPACE.SHELL.XTREAM_IMPORT_SAVING');
+            return formatText('Saving playlist data locally...');
         case 'restoring-favorites':
-            return translate(
-                'WORKSPACE.SHELL.XTREAM_IMPORT_RESTORING_FAVORITES'
-            );
+            return formatText('Restoring favorites from local library...');
         case 'restoring-recently-viewed':
-            return translate('WORKSPACE.SHELL.XTREAM_IMPORT_RESTORING_RECENT');
+            return formatText(
+                'Restoring recently viewed from local library...'
+            );
         default:
             return '';
     }
@@ -105,13 +103,15 @@ export function buildXtreamImportPhaseLabel(
 
 export function buildXtreamImportDetailLabel(
     tone: XtreamImportPhaseTone,
-    translate: TranslateFn
+    formatText: TextFormatter
 ): string {
     if (tone === 'remote') {
-        return translate('WORKSPACE.SHELL.XTREAM_IMPORT_DETAIL_REMOTE');
+        return formatText('Waiting on the provider response.');
     }
     if (tone === 'local') {
-        return translate('WORKSPACE.SHELL.XTREAM_IMPORT_DETAIL_LOCAL');
+        return formatText(
+            'Preparing faster playlist switching for the next visit.'
+        );
     }
     return '';
 }
@@ -120,14 +120,14 @@ export function buildXtreamImportProgressLabel(
     typeLabel: string,
     currentCount: number,
     totalCount: number,
-    translate: TranslateFn,
+    formatText: TextFormatter,
     formatNumber: (value: number) => string
 ): string {
     if (!typeLabel || totalCount === 0) {
         return '';
     }
 
-    return translate('WORKSPACE.SHELL.XTREAM_IMPORT_PROGRESS', {
+    return formatText('{{type}} imported: {{current}} / {{total}}', {
         type: typeLabel,
         current: formatNumber(currentCount),
         total: formatNumber(totalCount),
@@ -137,24 +137,19 @@ export function buildXtreamImportProgressLabel(
 export function buildXtreamRefreshPreparationProgressLabel(
     currentCount: number,
     totalCount: number,
-    translate: TranslateFn,
+    formatText: TextFormatter,
     formatNumber: (value: number) => string
 ): string {
     if (totalCount === 0) {
         return '';
     }
 
-    return translate('WORKSPACE.SHELL.XTREAM_REFRESH_PROGRESS', {
+    return formatText('Local records processed: {{current}} / {{total}}', {
         current: formatNumber(currentCount),
         total: formatNumber(totalCount),
     });
 }
 
-export function formatLocalizedNumber(
-    value: number,
-    currentLang: string | null | undefined,
-    defaultLang: string | null | undefined
-): string {
-    const locale = currentLang || defaultLang || 'en';
-    return new Intl.NumberFormat(locale).format(value);
+export function formatEnglishNumber(value: number): string {
+    return new Intl.NumberFormat('en-US').format(value);
 }

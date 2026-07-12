@@ -40,7 +40,7 @@
                 [ngModel]="filters()[filter.key]"
                 (ngModelChange)="updateFilter(filter.key, $event)"
             >
-                {{ filter.translationKey | translate }}
+                {{ filter.label }}
             </mat-checkbox>
         }
     </ng-container>

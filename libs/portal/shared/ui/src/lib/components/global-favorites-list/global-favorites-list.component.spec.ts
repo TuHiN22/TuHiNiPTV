@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
 import { ChannelDetailsDialogComponent } from '@iptvnator/ui/components';
 import { UnifiedFavoriteChannel } from '@iptvnator/portal/shared/util';
 import { Channel } from '@iptvnator/shared/interfaces';
@@ -19,11 +18,7 @@ describe('GlobalFavoritesListComponent', () => {
         };
 
         await TestBed.configureTestingModule({
-            imports: [
-                GlobalFavoritesListComponent,
-                NoopAnimationsModule,
-                TranslateModule.forRoot(),
-            ],
+            imports: [GlobalFavoritesListComponent, NoopAnimationsModule],
             providers: [
                 {
                     provide: MatDialog,
@@ -57,10 +52,7 @@ describe('GlobalFavoritesListComponent', () => {
 
     it('renders favorite state from the supplied favorite ids in recent mode', () => {
         fixture.componentRef.setInput('mode', 'recent');
-        fixture.componentRef.setInput(
-            'favoriteUids',
-            new Set<string>(['b'])
-        );
+        fixture.componentRef.setInput('favoriteUids', new Set<string>(['b']));
         fixture.componentRef.setInput('channels', [
             buildChannel('a', 'Alpha'),
             buildChannel('b', 'Beta'),

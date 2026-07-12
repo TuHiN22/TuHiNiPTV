@@ -14,15 +14,12 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { normalizeDateLocale } from '@iptvnator/pipes';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { addDays, differenceInMinutes, format, parse, subDays } from 'date-fns';
-import { Observable, Subscription, startWith } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import {
     Channel,
     ElectronBridgeEpgChannelWithPrograms,
@@ -61,7 +58,7 @@ export function isSelectedEpgDayToday(
 }
 
 @Component({
-    imports: [DatePipe, MatButtonModule, MatIcon, MatTooltip, TranslatePipe],
+    imports: [DatePipe, MatButtonModule, MatIcon, MatTooltip],
     selector: 'app-multi-epg-container',
     templateUrl: './multi-epg-container.component.html',
     styleUrls: ['./multi-epg-container.component.scss'],
@@ -106,17 +103,7 @@ export class MultiEpgContainerComponent
     readonly isSearchingPrograms = signal(false);
     readonly highlightedProgramKey = signal<string | null>(null);
     private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
-    private readonly translate = inject(TranslateService);
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
-    readonly currentLocale = computed(() => {
-        this.languageTick();
-        return normalizeDateLocale(
-            this.translate.currentLang || this.translate.defaultLang
-        );
-    });
+    readonly currentLocale = () => 'en-US';
     readonly selectedDayDate = computed(() =>
         parse(this.today(), 'yyyyMMdd', new Date())
     );

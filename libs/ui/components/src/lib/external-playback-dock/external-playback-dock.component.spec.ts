@@ -1,25 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import {
-    TranslateLoader,
-    TranslateModule,
-    TranslateService,
-} from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
 import { ExternalPlayerSession } from '@iptvnator/shared/interfaces';
 import { ExternalPlaybackDockComponent } from './external-playback-dock.component';
-
-class FakeTranslateLoader implements TranslateLoader {
-    getTranslation(): Observable<Record<string, unknown>> {
-        return of({
-            WORKSPACE: {
-                SHELL: {
-                    EXTERNAL_PLAYBACK_CLOSE: 'Close player',
-                },
-            },
-        });
-    }
-}
 
 describe('ExternalPlaybackDockComponent', () => {
     let fixture: ComponentFixture<ExternalPlaybackDockComponent>;
@@ -38,20 +20,8 @@ describe('ExternalPlaybackDockComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ExternalPlaybackDockComponent,
-                TranslateModule.forRoot({
-                    loader: {
-                        provide: TranslateLoader,
-                        useClass: FakeTranslateLoader,
-                    },
-                }),
-            ],
+            imports: [ExternalPlaybackDockComponent],
         }).compileComponents();
-
-        const translate = TestBed.inject(TranslateService);
-        translate.setDefaultLang('en');
-        translate.use('en');
 
         fixture = TestBed.createComponent(ExternalPlaybackDockComponent);
         component = fixture.componentInstance;

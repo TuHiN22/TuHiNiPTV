@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { EpgRuntimeBridgeService } from '@iptvnator/epg/data-access';
 import { PlaylistActions } from '@iptvnator/m3u-state';
@@ -135,23 +134,6 @@ describe('PlaylistInfoComponent', () => {
                     useValue: dialogRef,
                 },
                 {
-                    provide: TranslateService,
-                    useValue: {
-                        currentLang: 'en',
-                        get: jest.fn((key: string) => of(key)),
-                        instant: jest.fn((key: string) => key),
-                        onDefaultLangChange: of({
-                            lang: 'en',
-                            translations: {},
-                        }),
-                        onLangChange: of({ lang: 'en', translations: {} }),
-                        onTranslationChange: of({
-                            lang: 'en',
-                            translations: {},
-                        }),
-                    },
-                },
-                {
                     provide: RuntimeCapabilitiesService,
                     useValue: runtime,
                 },
@@ -200,8 +182,8 @@ describe('PlaylistInfoComponent', () => {
             PlaylistActions.updatePlaylistMeta({ playlist: updatedPlaylist })
         );
         expect(snackBar.open).toHaveBeenCalledWith(
-            'HOME.PLAYLISTS.PLAYLIST_UPDATE_SUCCESS',
-            'CLOSE',
+            'Success! The playlist was successfully updated.',
+            'Close',
             { duration: 3000 }
         );
         expect(dialogRef.close).toHaveBeenCalledTimes(1);
@@ -299,8 +281,8 @@ describe('PlaylistInfoComponent', () => {
             '#EXTM3U\n'
         );
         expect(snackBar.open).toHaveBeenCalledWith(
-            'HOME.PLAYLISTS.INFO_DIALOG.PLAYLIST_EXPORT_SUCCESS',
-            'CLOSE',
+            'Playlist was exported successfully.',
+            'Close',
             { duration: 3000 }
         );
     });
@@ -373,8 +355,8 @@ describe('PlaylistInfoComponent', () => {
         );
         expect(settingsStore.updateSettings).not.toHaveBeenCalled();
         expect(snackBar.open).toHaveBeenCalledWith(
-            'EPG.FETCH_SUCCESS',
-            'CLOSE',
+            'EPG was fetched successfully',
+            'Close',
             { duration: 3000 }
         );
     });
@@ -399,11 +381,9 @@ describe('PlaylistInfoComponent', () => {
                 'https://new-playlist.example.com/guide.xml',
             ],
         });
-        expect(snackBar.open).toHaveBeenCalledWith(
-            'SETTINGS.ADD_EPG_SOURCE',
-            'CLOSE',
-            { duration: 3000 }
-        );
+        expect(snackBar.open).toHaveBeenCalledWith('Add EPG source', 'Close', {
+            duration: 3000,
+        });
     });
 
     it('does not duplicate a playlist EPG source that already exists globally', async () => {
@@ -500,8 +480,8 @@ describe('PlaylistInfoComponent', () => {
             );
             expect(store.dispatch).not.toHaveBeenCalled();
             expect(snackBar.open).toHaveBeenCalledWith(
-                'SETTINGS.EPG_DATA_CLEAR_FAILED',
-                'CLOSE',
+                'Failed to clear EPG data. Please try again.',
+                'Close',
                 { duration: 3000 }
             );
         } finally {
@@ -562,7 +542,7 @@ describe('PlaylistInfoComponent', () => {
 
         expect(store.dispatch).not.toHaveBeenCalled();
         expect(fixture.nativeElement.textContent).toContain(
-            'SETTINGS.EPG_URL_ERROR'
+            'The value is not a valid URL'
         );
     });
 

@@ -2,7 +2,7 @@
     <div class="section-header">
         <div class="section-header__left">
             <h3 class="section-title">
-                {{ 'PORTALS.SEASONS_AND_EPISODES' | translate }}
+                {{ 'Seasons and Episodes' }}
             </h3>
         </div>
         @if (hasSeasons() && !showSeasonEmptyState()) {
@@ -12,16 +12,10 @@
                     (change)="setViewMode($event.value)"
                     hideSingleSelectionIndicator
                 >
-                    <mat-button-toggle
-                        value="grid"
-                        [matTooltip]="'PORTALS.GRID_VIEW' | translate"
-                    >
+                    <mat-button-toggle value="grid" [matTooltip]="'Grid view'">
                         <mat-icon>grid_view</mat-icon>
                     </mat-button-toggle>
-                    <mat-button-toggle
-                        value="list"
-                        [matTooltip]="'PORTALS.LIST_VIEW' | translate"
-                    >
+                    <mat-button-toggle value="list" [matTooltip]="'List view'">
                         <mat-icon>view_list</mat-icon>
                     </mat-button-toggle>
                 </mat-button-toggle-group>
@@ -53,10 +47,12 @@
                     <mat-icon>video_library</mat-icon>
                 </div>
                 <h4 class="empty-state-panel__title">
-                    {{ 'PORTALS.NO_EPISODES_AVAILABLE' | translate }}
+                    {{ 'No episodes available' }}
                 </h4>
                 <p class="empty-state-panel__message">
-                    {{ 'PORTALS.NO_EPISODES_AVAILABLE_MESSAGE' | translate }}
+                    {{
+                        'This series is listed by your provider, but no seasons or episodes are available to play.'
+                    }}
                 </p>
             </div>
         } @else if (showSeasonEmptyState()) {
@@ -68,10 +64,12 @@
                     <mat-icon>video_library</mat-icon>
                 </div>
                 <h4 class="empty-state-panel__title">
-                    {{ 'PORTALS.SEASON_EMPTY' | translate }}
+                    {{ 'This season is empty' }}
                 </h4>
                 <p class="empty-state-panel__message">
-                    {{ 'PORTALS.SEASON_EMPTY_MESSAGE' | translate }}
+                    {{
+                        'This season is listed by your provider, but no playable episodes are available.'
+                    }}
                 </p>
             </div>
         } @else {
@@ -142,10 +140,9 @@
                                     data-testid="episode-watched-toggle"
                                     (click)="toggleWatched($event, episode)"
                                     [matTooltip]="
-                                        (isEpisodeWatched(episode)
-                                            ? 'XTREAM.MARK_UNWATCHED'
-                                            : 'XTREAM.MARK_WATCHED'
-                                        ) | translate
+                                        isEpisodeWatched(episode)
+                                            ? 'Mark as Unwatched'
+                                            : 'Mark as Watched'
                                     "
                                 >
                                     <mat-icon>{{
@@ -166,10 +163,7 @@
                                                         episode
                                                     )
                                                 "
-                                                [matTooltip]="
-                                                    'DOWNLOADS.PLAY_LOCAL'
-                                                        | translate
-                                                "
+                                                [matTooltip]="'Play Local'"
                                             >
                                                 <mat-icon>play_circle</mat-icon>
                                             </button>
@@ -180,10 +174,7 @@
                                                 mat-icon-button
                                                 class="download-btn download-btn--downloading"
                                                 disabled
-                                                [matTooltip]="
-                                                    'DOWNLOADS.STATUS.DOWNLOADING'
-                                                        | translate
-                                                "
+                                                [matTooltip]="'Downloading'"
                                             >
                                                 <mat-icon>downloading</mat-icon>
                                             </button>
@@ -197,10 +188,7 @@
                                                         episode
                                                     )
                                                 "
-                                                [matTooltip]="
-                                                    'DOWNLOADS.DOWNLOAD'
-                                                        | translate
-                                                "
+                                                [matTooltip]="'Download'"
                                             >
                                                 <mat-icon>download</mat-icon>
                                             </button>
@@ -241,15 +229,9 @@
                                             class="episode-card__info-btn"
                                             data-testid="episode-info-button"
                                             (click)="
-                                                openEpisodeInfo(
-                                                    $event,
-                                                    episode
-                                                )
+                                                openEpisodeInfo($event, episode)
                                             "
-                                            [matTooltip]="
-                                                'PORTALS.EPISODE_INFO'
-                                                    | translate
-                                            "
+                                            [matTooltip]="'Episode details'"
                                         >
                                             <mat-icon>info_outline</mat-icon>
                                         </button>
@@ -406,10 +388,7 @@
                                             (click)="
                                                 playFromLocal($event, episode)
                                             "
-                                            [matTooltip]="
-                                                'DOWNLOADS.PLAY_LOCAL'
-                                                    | translate
-                                            "
+                                            [matTooltip]="'Play Local'"
                                         >
                                             <mat-icon>folder_open</mat-icon>
                                         </button>
@@ -418,10 +397,7 @@
                                             mat-icon-button
                                             class="action-btn"
                                             disabled
-                                            [matTooltip]="
-                                                'DOWNLOADS.STATUS.DOWNLOADING'
-                                                    | translate
-                                            "
+                                            [matTooltip]="'Downloading'"
                                         >
                                             <mat-icon>downloading</mat-icon>
                                         </button>
@@ -432,9 +408,7 @@
                                             (click)="
                                                 downloadEpisode($event, episode)
                                             "
-                                            [matTooltip]="
-                                                'DOWNLOADS.DOWNLOAD' | translate
-                                            "
+                                            [matTooltip]="'Download'"
                                         >
                                             <mat-icon>download</mat-icon>
                                         </button>
@@ -448,9 +422,7 @@
                                         (click)="
                                             openEpisodeInfo($event, episode)
                                         "
-                                        [matTooltip]="
-                                            'PORTALS.EPISODE_INFO' | translate
-                                        "
+                                        [matTooltip]="'Episode details'"
                                     >
                                         <mat-icon>info_outline</mat-icon>
                                     </button>
@@ -460,10 +432,9 @@
                                     class="action-btn"
                                     (click)="toggleWatched($event, episode)"
                                     [matTooltip]="
-                                        (isEpisodeWatched(episode)
-                                            ? 'XTREAM.MARK_UNWATCHED'
-                                            : 'XTREAM.MARK_WATCHED'
-                                        ) | translate
+                                        isEpisodeWatched(episode)
+                                            ? 'Mark as Unwatched'
+                                            : 'Mark as Watched'
                                     "
                                     [class.action-btn--success]="
                                         isEpisodeWatched(episode)

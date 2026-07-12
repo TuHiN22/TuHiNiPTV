@@ -3,101 +3,75 @@
     (ngSubmit)="saveChanges(playlistDetails.value)"
 >
     <h2 mat-dialog-title>
-        {{ 'HOME.PLAYLISTS.INFO_DIALOG.PLAYLIST_DETAILS' | translate }}
+        {{ 'Playlist details' }}
     </h2>
     <mat-dialog-content class="mat-typography">
         <mat-form-field class="w-full">
-            <mat-label>{{
-                'HOME.PLAYLISTS.INFO_DIALOG.TITLE' | translate
-            }}</mat-label>
+            <mat-label>{{ 'Title' }}</mat-label>
             <input formControlName="title" matInput />
         </mat-form-field>
         @if (playlist.portalUrl) {
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.PLAYLISTS.INFO_DIALOG.SERVER_URL' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Server URL' }}</mat-label>
                 <input matInput formControlName="portalUrl" />
             </mat-form-field>
         }
         @if (playlist.macAddress) {
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.PLAYLISTS.INFO_DIALOG.MAC_ADDRESS' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Mac Address' }}</mat-label>
                 <input matInput formControlName="macAddress" />
             </mat-form-field>
         }
         @if (playlist.portalUrl) {
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.STALKER_PORTAL.SERIAL_NUMBER' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Serial Number (Optional)' }}</mat-label>
                 <input matInput formControlName="stalkerSerialNumber" />
             </mat-form-field>
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.STALKER_PORTAL.DEVICE_ID_1' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Device ID 1 (Optional)' }}</mat-label>
                 <input matInput formControlName="stalkerDeviceId1" />
             </mat-form-field>
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.STALKER_PORTAL.DEVICE_ID_2' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Device ID 2 (Optional)' }}</mat-label>
                 <input matInput formControlName="stalkerDeviceId2" />
             </mat-form-field>
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.STALKER_PORTAL.SIGNATURE_1' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Signature 1 (Optional)' }}</mat-label>
                 <input matInput formControlName="stalkerSignature1" />
             </mat-form-field>
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.STALKER_PORTAL.SIGNATURE_2' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Signature 2 (Optional)' }}</mat-label>
                 <input matInput formControlName="stalkerSignature2" />
             </mat-form-field>
         }
         @if (playlist.serverUrl) {
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.PLAYLISTS.INFO_DIALOG.SERVER_URL' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Server URL' }}</mat-label>
                 <input matInput formControlName="serverUrl" />
             </mat-form-field>
         }
         @if (playlist.username) {
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.PLAYLISTS.INFO_DIALOG.USERNAME' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Username' }}</mat-label>
                 <input matInput formControlName="username" />
             </mat-form-field>
         }
         @if (playlist.password) {
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.PLAYLISTS.INFO_DIALOG.PASSWORD' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Password' }}</mat-label>
                 <input matInput formControlName="password" />
             </mat-form-field>
         }
         @if (playlist.url) {
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.PLAYLISTS.INFO_DIALOG.FROM_URL' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Added from the URL' }}</mat-label>
                 <input matInput formControlName="url" />
                 <button
                     mat-icon-button
                     matSuffix
                     type="button"
                     (click)="copyUrl()"
-                    [matTooltip]="
-                        'HOME.PLAYLISTS.INFO_DIALOG.COPY_URL' | translate
-                    "
+                    [matTooltip]="'Copy URL to clipboard'"
                 >
                     <mat-icon>content_copy</mat-icon>
                 </button>
@@ -105,49 +79,38 @@
         }
         @if (playlist.filename) {
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.PLAYLISTS.INFO_DIALOG.ORIGINAL_FILENAME' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Original filename' }}</mat-label>
                 <input matInput formControlName="filename" />
             </mat-form-field>
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.PLAYLISTS.INFO_DIALOG.IMPORT_DATE' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Import date' }}</mat-label>
                 <input matInput formControlName="importDate" />
             </mat-form-field>
         }
         @if (playlist.count) {
             <mat-form-field class="w-full">
-                <mat-label>{{
-                    'HOME.PLAYLISTS.INFO_DIALOG.CHANNELS' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Number of channels' }}</mat-label>
                 <input matInput formControlName="count" />
             </mat-form-field>
         }
         @if (isDesktop) {
             <mat-form-field class="w-full mb-10">
-                <mat-label>{{
-                    'HOME.PLAYLISTS.INFO_DIALOG.USER_AGENT' | translate
-                }}</mat-label>
+                <mat-label>{{ 'User agent' }}</mat-label>
                 <input formControlName="userAgent" matInput />
                 <mat-hint>{{
-                    'HOME.PLAYLISTS.INFO_DIALOG.CUSTOM_USER_AGENT' | translate
+                    'Some IPTV providers need a specific user-agent in order to play their playlist.'
                 }}</mat-hint>
             </mat-form-field>
         }
         @if (playlist.filePath) {
             <mat-form-field class="w-full">
                 <mat-label>
-                    {{ 'HOME.PLAYLISTS.INFO_DIALOG.FILE_PATH' | translate }}
+                    {{ 'File path' }}
                 </mat-label>
                 <input formControlName="filePath" matInput />
                 @if (playlist.updateState === 2) {
                     <mat-hint>
-                        {{
-                            'HOME.PLAYLISTS.INFO_DIALOG.UPDATE_FAILED'
-                                | translate
-                        }}
+                        {{ 'Last playlist update failed' }}
                     </mat-hint>
                 }
             </mat-form-field>
@@ -161,25 +124,16 @@
                     <mat-icon>event_note</mat-icon>
                     <div>
                         <h3 class="playlist-epg-sources__title">
-                            {{ 'SETTINGS.EPG_SOURCES' | translate }}
+                            {{ 'EPG sources' }}
                         </h3>
                         <p>
                             @if (hiddenDetectedPlaylistEpgSourceCount > 0) {
-                                {{
-                                    'SETTINGS.PLAYLIST_EPG_SOURCES_AUTO_SELECTED'
-                                        | translate
-                                            : {
-                                                  enabled:
-                                                      playlistEpgUrls.length,
-                                                  detected:
-                                                      playlistDetectedEpgUrls.length,
-                                              }
-                                }}
+                                {{ playlistEpgUrls.length }} of
+                                {{ playlistDetectedEpgUrls.length }} detected
+                                playlist EPG sources were auto-selected for
+                                import.
                             } @else {
-                                {{
-                                    'SETTINGS.EPG_SOURCES_DESCRIPTION'
-                                        | translate
-                                }}
+                                {{ 'Add one or more URLs as EPG sources' }}
                             }
                         </p>
                     </div>
@@ -191,7 +145,7 @@
                             subscriptSizing="dynamic"
                         >
                             <mat-label>{{
-                                'SETTINGS.EPG_URL_LABEL' | translate
+                                'EPG Url (*.xml or *.xml.gz)'
                             }}</mat-label>
                             <input matInput [value]="epgUrl" readonly />
                         </mat-form-field>
@@ -199,7 +153,7 @@
                             mat-icon-button
                             type="button"
                             [disabled]="!canRefreshPlaylistEpg"
-                            [matTooltip]="'SETTINGS.REFRESH_EPG' | translate"
+                            [matTooltip]="'Refresh EPG'"
                             (click)="refreshPlaylistEpgSource(epgUrl)"
                         >
                             <mat-icon>refresh</mat-icon>
@@ -208,7 +162,7 @@
                             mat-icon-button
                             type="button"
                             [disabled]="isGlobalEpgSource(epgUrl)"
-                            [matTooltip]="'SETTINGS.ADD_EPG_SOURCE' | translate"
+                            [matTooltip]="'Add EPG source'"
                             (click)="addPlaylistEpgSourceToSettings(epgUrl)"
                         >
                             <mat-icon>playlist_add</mat-icon>
@@ -216,9 +170,7 @@
                         <button
                             mat-icon-button
                             type="button"
-                            [matTooltip]="
-                                'SETTINGS.REMOVE_EPG_SOURCE' | translate
-                            "
+                            [matTooltip]="'Remove EPG source'"
                             (click)="removePlaylistEpgSource(epgUrl)"
                         >
                             <mat-icon>delete</mat-icon>
@@ -239,21 +191,19 @@
                                 subscriptSizing="dynamic"
                             >
                                 <mat-label>{{
-                                    'SETTINGS.EPG_URL_LABEL' | translate
+                                    'EPG Url (*.xml or *.xml.gz)'
                                 }}</mat-label>
                                 <input matInput [formControlName]="$index" />
                                 @if (control.invalid && control.touched) {
                                     <mat-error>{{
-                                        'SETTINGS.EPG_URL_ERROR' | translate
+                                        'The value is not a valid URL'
                                     }}</mat-error>
                                 }
                             </mat-form-field>
                             <button
                                 mat-icon-button
                                 type="button"
-                                [matTooltip]="
-                                    'SETTINGS.REMOVE_EPG_SOURCE' | translate
-                                "
+                                [matTooltip]="'Remove EPG source'"
                                 (click)="removePlaylistEpgSourceInput($index)"
                             >
                                 <mat-icon>remove</mat-icon>
@@ -267,21 +217,16 @@
                             (click)="addPlaylistEpgSourceInput()"
                         >
                             <mat-icon>add</mat-icon>
-                            {{ 'SETTINGS.ADD_EPG_SOURCE' | translate }}
+                            {{ 'Add EPG source' }}
                         </button>
                         <button
                             mat-stroked-button
                             type="button"
-                            [attr.aria-label]="
-                                ('HOME.PLAYLISTS.INFO_DIALOG.SAVE'
-                                    | translate) +
-                                ' ' +
-                                ('SETTINGS.EPG_SOURCES' | translate)
-                            "
+                            [attr.aria-label]="'Save' + ' ' + 'EPG sources'"
                             (click)="savePlaylistEpgSources()"
                         >
                             <mat-icon>playlist_add</mat-icon>
-                            {{ 'HOME.PLAYLISTS.INFO_DIALOG.SAVE' | translate }}
+                            {{ 'Save' }}
                         </button>
                     </div>
                 </div>
@@ -289,12 +234,11 @@
         }
         @if (isDesktop && (playlist.url || playlist.filePath)) {
             <mat-checkbox class="w-full" formControlName="autoRefresh">
-                {{ 'HOME.PLAYLISTS.INFO_DIALOG.AUTO_UPDATE' | translate }}
+                {{ 'Auto-update' }}
             </mat-checkbox>
             <p>
                 {{
-                    'HOME.PLAYLISTS.INFO_DIALOG.AUTO_UPDATE_DESCRIPTION'
-                        | translate
+                    'If the auto-refresh function is activated, the playlist will be updated automatically each time the app is started.'
                 }}
             </p>
         }
@@ -308,12 +252,12 @@
                 (click)="exportPlaylist()"
             >
                 <mat-icon>download</mat-icon>
-                {{ 'HOME.PLAYLISTS.INFO_DIALOG.EXPORT_PLAYLIST' | translate }}
+                {{ 'Export playlist as m3u' }}
             </button>
         }
         <span class="spacer"></span>
         <button mat-button mat-dialog-close>
-            {{ 'HOME.PLAYLISTS.INFO_DIALOG.CLOSE' | translate }}
+            {{ 'Close' }}
         </button>
         <button
             mat-flat-button
@@ -321,7 +265,7 @@
             type="submit"
             [disabled]="!playlistDetails.valid || playlistDetails.pristine"
         >
-            {{ 'HOME.PLAYLISTS.INFO_DIALOG.SAVE' | translate }}
+            {{ 'Save' }}
         </button>
     </mat-dialog-actions>
 </form>

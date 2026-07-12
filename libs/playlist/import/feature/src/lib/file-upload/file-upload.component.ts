@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 import { PlaylistFileImportService } from '@iptvnator/playlist/shared/util';
 import { DragDropFileUploadDirective } from './drag-drop-file-upload.directive';
 
@@ -8,7 +7,7 @@ const MB = 1024 * 1024;
 const KB = 1024;
 
 @Component({
-    imports: [DragDropFileUploadDirective, MatIconModule, TranslatePipe],
+    imports: [DragDropFileUploadDirective, MatIconModule],
     selector: 'app-file-upload',
     templateUrl: './file-upload.component.html',
     styleUrls: ['./file-upload.component.scss'],

@@ -19,4 +19,4 @@ export function createChannel(params: Partial<Channel>): Channel {
 }
 
 /** Possible sidebar view options */
-export type SidebarView = 'CHANNELS' | 'PLAYLISTS';
+export type SidebarView = 'CHANNELS' | 'Playlists';

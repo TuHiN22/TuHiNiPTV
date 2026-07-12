@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
 import { Channel } from '@iptvnator/shared/interfaces';
 import { ChannelDetailsDialogComponent } from '../channel-details-dialog/channel-details-dialog.component';
 import { RecentViewComponent, RecentViewItem } from './recent-view.component';
@@ -52,11 +51,7 @@ describe('RecentViewComponent', () => {
         };
 
         await TestBed.configureTestingModule({
-            imports: [
-                RecentViewComponent,
-                NoopAnimationsModule,
-                TranslateModule.forRoot(),
-            ],
+            imports: [RecentViewComponent, NoopAnimationsModule],
             providers: [
                 {
                     provide: MatDialog,

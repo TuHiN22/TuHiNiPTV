@@ -1,7 +1,6 @@
 import { Component, input, output, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
 import { ContentHeroComponent } from '@iptvnator/ui/components';
 import {
     PORTAL_EXTERNAL_PLAYBACK,
@@ -167,17 +166,6 @@ describe('StalkerCollectionDetailComponent', () => {
                     provide: MatSnackBar,
                     useValue: {
                         open: jest.fn(),
-                    },
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => key,
-                        get: (key: string) => of(key),
-                        stream: (key: string) => of(key),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
                     },
                 },
                 {

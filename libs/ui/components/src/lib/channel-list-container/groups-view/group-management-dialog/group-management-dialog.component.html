@@ -1,10 +1,10 @@
-<h2 mat-dialog-title>{{ 'CHANNELS.GROUP_MANAGEMENT.TITLE' | translate }}</h2>
+<h2 mat-dialog-title>{{ 'Manage groups' }}</h2>
 
 <mat-dialog-content>
     <div class="header-actions">
         <div class="selection-info">
-            {{ 'CHANNELS.GROUP_MANAGEMENT.SELECTED' | translate }}:
-            <strong>{{ selectedCount() }}</strong> / {{ totalCount() }}
+            {{ 'Selected' }}: <strong>{{ selectedCount() }}</strong> /
+            {{ totalCount() }}
         </div>
         <div class="bulk-actions">
             <button
@@ -13,7 +13,7 @@
                 [disabled]="allSelected()"
             >
                 <mat-icon>check_box</mat-icon>
-                {{ 'CHANNELS.GROUP_MANAGEMENT.SELECT_ALL' | translate }}
+                {{ 'Select all' }}
             </button>
             <button
                 mat-stroked-button
@@ -21,7 +21,7 @@
                 [disabled]="selectedCount() === 0"
             >
                 <mat-icon>check_box_outline_blank</mat-icon>
-                {{ 'CHANNELS.GROUP_MANAGEMENT.DESELECT_ALL' | translate }}
+                {{ 'Deselect all' }}
             </button>
         </div>
     </div>
@@ -33,9 +33,7 @@
             spellcheck="false"
             [value]="searchTerm()"
             (input)="searchTerm.set($any($event.target).value)"
-            [placeholder]="
-                'CHANNELS.GROUP_MANAGEMENT.SEARCH_PLACEHOLDER' | translate
-            "
+            [placeholder]="'Search groups...'"
         />
         @if (searchTerm()) {
             <button
@@ -62,14 +60,14 @@
                     @if (group.key) {
                         {{ group.key | titlecase }}
                     } @else {
-                        {{ 'CHANNELS.UNGROUPED' | translate }}
+                        {{ 'Ungrouped' }}
                     }
                 </span>
                 <span class="item-count">({{ group.count }})</span>
             </div>
         } @empty {
             <div class="empty-message">
-                {{ 'CHANNELS.GROUP_MANAGEMENT.NO_RESULTS' | translate }}
+                {{ 'No matching groups found' }}
             </div>
         }
     </div>
@@ -77,9 +75,9 @@
 
 <mat-dialog-actions align="end">
     <button mat-button (click)="cancel()">
-        {{ 'CLOSE' | translate }}
+        {{ 'Close' }}
     </button>
     <button mat-flat-button color="primary" (click)="save()">
-        {{ 'CHANNELS.GROUP_MANAGEMENT.SAVE' | translate }}
+        {{ 'Save' }}
     </button>
 </mat-dialog-actions>

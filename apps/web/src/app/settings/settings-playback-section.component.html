@@ -9,21 +9,19 @@
             <mat-icon>play_circle</mat-icon>
         </div>
         <div class="settings-group__header-text">
-            <h3>{{ 'SETTINGS.PLAYBACK' | translate }}</h3>
-            <p>{{ 'SETTINGS.VIDEO_PLAYER_DESCRIPTION' | translate }}</p>
+            <h3>{{ 'Playback' }}</h3>
+            <p>{{ 'Select default video player' }}</p>
         </div>
     </header>
 
     <div class="setting-item">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.VIDEO_PLAYER_LABEL' | translate }}</h4>
-            <p>{{ 'SETTINGS.VIDEO_PLAYER_DESCRIPTION' | translate }}</p>
+            <h4>{{ 'Video player' }}</h4>
+            <p>{{ 'Select default video player' }}</p>
         </div>
         <div class="setting-item__control">
             <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                <mat-label>{{
-                    'SETTINGS.VIDEO_PLAYER_PLACEHOLDER' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Select an option' }}</mat-label>
                 <mat-select
                     formControlName="player"
                     data-test-id="select-video-player"
@@ -32,7 +30,7 @@
                         <mat-option
                             [value]="player.id"
                             [attr.data-test-id]="player.id"
-                            >{{ player.labelKey | translate }}
+                            >{{ player.labelKey }}
                         </mat-option>
                     }
                 </mat-select>
@@ -42,14 +40,12 @@
 
     <div class="setting-item">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.STREAM_FORMAT' | translate }}</h4>
-            <p>{{ 'SETTINGS.STREAM_FORMAT_DESCRIPTION' | translate }}</p>
+            <h4>{{ 'Stream Format' }}</h4>
+            <p>{{ 'Select default stream format (xtream)' }}</p>
         </div>
         <div class="setting-item__control">
             <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                <mat-label>{{
-                    'SETTINGS.VIDEO_PLAYER_PLACEHOLDER' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Select an option' }}</mat-label>
                 <mat-select
                     formControlName="streamFormat"
                     data-test-id="select-stream-format"
@@ -76,15 +72,11 @@
         >
             <div class="setting-item__meta">
                 <h4>
-                    {{
-                        'SETTINGS.OPEN_EXTERNAL_PLAYER_ON_DOUBLE_CLICK'
-                            | translate
-                    }}
+                    {{ 'Start MPV/VLC with double-click' }}
                 </h4>
                 <p>
                     {{
-                        'SETTINGS.OPEN_EXTERNAL_PLAYER_ON_DOUBLE_CLICK_DESCRIPTION'
-                            | translate
+                        'Require a double-click on channel rows before MPV or VLC playback starts.'
                     }}
                 </p>
             </div>
@@ -99,11 +91,10 @@
     @if (isDesktop()) {
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.SHOW_EXTERNAL_PLAYBACK_BAR' | translate }}</h4>
+                <h4>{{ 'Show now playing footer' }}</h4>
                 <p>
                     {{
-                        'SETTINGS.SHOW_EXTERNAL_PLAYBACK_BAR_DESCRIPTION'
-                            | translate
+                        'Keep the external-player status bar visible at the bottom of the workspace on desktop.'
                     }}
                 </p>
             </div>
@@ -116,15 +107,17 @@
 
         <div class="setting-item" data-test-id="recording-folder-setting">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.RECORDING_FOLDER_LABEL' | translate }}</h4>
+                <h4>{{ 'Recording folder' }}</h4>
                 <p>
-                    {{ 'SETTINGS.RECORDING_FOLDER_DESCRIPTION' | translate }}
+                    {{
+                        'Folder for live stream recordings from Embedded MPV. Leave empty to use the system Downloads folder.'
+                    }}
                 </p>
             </div>
             <div class="setting-item__control">
                 <mat-form-field appearance="outline" subscriptSizing="dynamic">
                     <mat-label for="recordingFolder">{{
-                        'SETTINGS.RECORDING_FOLDER' | translate
+                        'Recording folder'
                     }}</mat-label>
                     <input
                         matInput
@@ -136,9 +129,7 @@
                         mat-icon-button
                         matSuffix
                         type="button"
-                        [attr.aria-label]="
-                            'SETTINGS.RECORDING_FOLDER_SELECT' | translate
-                        "
+                        [attr.aria-label]="'Select recording folder'"
                         (click)="selectRecordingFolder.emit()"
                     >
                         <mat-icon>folder_open</mat-icon>
@@ -148,21 +139,27 @@
         </div>
     }
 
-    @if (supportsExternalPlayerPathSettings() && form().value.player === 'mpv') {
+    @if (
+        supportsExternalPlayerPathSettings() && form().value.player === 'mpv'
+    ) {
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.MPV_PLAYER_PATH_LABEL' | translate }}</h4>
+                <h4>{{ 'mpv path' }}</h4>
                 <p>
-                    {{ 'SETTINGS.MPV_PLAYER_PATH_DESCRIPTION' | translate }}
+                    {{
+                        'Set the path to MPV. On macOS you can use the MPV app bundle, such as /Applications/mpv.app, or the executable path.'
+                    }}
                 </p>
                 <p data-test-id="mpv-compatible-player-tip">
-                    {{ 'SETTINGS.MPV_COMPATIBLE_PLAYER_TIP' | translate }}
+                    {{
+                        'IINA can be launched as an MPV-compatible player on macOS, but use its executable path, such as /Applications/IINA.app/Contents/MacOS/iina-cli or /Applications/IINA.app/Contents/MacOS/IINA. TuHiN iPTV controls, position polling, and reuse-instance behavior are guaranteed only for MPV IPC.'
+                    }}
                 </p>
             </div>
             <div class="setting-item__control">
                 <mat-form-field appearance="outline" subscriptSizing="dynamic">
                     <mat-label for="mpvPlayerPath">{{
-                        'SETTINGS.MPV_PLAYER_PATH' | translate
+                        'mpv player path'
                     }}</mat-label>
                     <input
                         matInput
@@ -179,17 +176,17 @@
             data-test-id="mpv-player-arguments-setting"
         >
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.MPV_PLAYER_ARGUMENTS_LABEL' | translate }}</h4>
+                <h4>{{ 'mpv command-line arguments' }}</h4>
                 <p>
                     {{
-                        'SETTINGS.MPV_PLAYER_ARGUMENTS_DESCRIPTION' | translate
+                        'Optional arguments passed to mpv when TuHiN iPTV starts a new external player process.'
                     }}
                 </p>
             </div>
             <div class="setting-item__control">
                 <mat-form-field appearance="outline" subscriptSizing="dynamic">
                     <mat-label for="mpvPlayerArguments">{{
-                        'SETTINGS.MPV_PLAYER_ARGUMENTS' | translate
+                        'mpv arguments'
                     }}</mat-label>
                     <textarea
                         matInput
@@ -201,7 +198,7 @@
                         autocomplete="off"
                     ></textarea>
                     <mat-hint>{{
-                        'SETTINGS.EXTERNAL_PLAYER_ARGUMENTS_HINT' | translate
+                        'Use one argument per line. These values are applied before stream-specific TuHiN iPTV options.'
                     }}</mat-hint>
                 </mat-form-field>
             </div>
@@ -209,9 +206,11 @@
 
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.MPV_REUSE_INSTANCE_LABEL' | translate }}</h4>
+                <h4>{{ 'Reuse MPV instance' }}</h4>
                 <p>
-                    {{ 'SETTINGS.MPV_REUSE_INSTANCE_DESCRIPTION' | translate }}
+                    {{
+                        'When enabled, the same MPV window will be reused for playing different streams. When disabled, each stream opens in a new MPV window.'
+                    }}
                 </p>
             </div>
             <div class="setting-item__control setting-item__toggle">
@@ -220,18 +219,22 @@
         </div>
     }
 
-    @if (supportsExternalPlayerPathSettings() && form().value.player === 'vlc') {
+    @if (
+        supportsExternalPlayerPathSettings() && form().value.player === 'vlc'
+    ) {
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.VLC_PLAYER_PATH_LABEL' | translate }}</h4>
+                <h4>{{ 'VLC path' }}</h4>
                 <p>
-                    {{ 'SETTINGS.VLC_PLAYER_PATH_DESCRIPTION' | translate }}
+                    {{
+                        'Set the path to VLC. On macOS you can use the VLC app bundle, such as /Applications/VLC.app, or the executable path.'
+                    }}
                 </p>
             </div>
             <div class="setting-item__control">
                 <mat-form-field appearance="outline" subscriptSizing="dynamic">
                     <mat-label for="vlcPlayerPath">{{
-                        'SETTINGS.VLC_PLAYER_PATH' | translate
+                        'VLC player path'
                     }}</mat-label>
                     <input
                         matInput
@@ -248,17 +251,17 @@
             data-test-id="vlc-player-arguments-setting"
         >
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.VLC_PLAYER_ARGUMENTS_LABEL' | translate }}</h4>
+                <h4>{{ 'VLC command-line arguments' }}</h4>
                 <p>
                     {{
-                        'SETTINGS.VLC_PLAYER_ARGUMENTS_DESCRIPTION' | translate
+                        'Optional arguments passed to VLC when TuHiN iPTV starts a new external player process.'
                     }}
                 </p>
             </div>
             <div class="setting-item__control">
                 <mat-form-field appearance="outline" subscriptSizing="dynamic">
                     <mat-label for="vlcPlayerArguments">{{
-                        'SETTINGS.VLC_PLAYER_ARGUMENTS' | translate
+                        'VLC arguments'
                     }}</mat-label>
                     <textarea
                         matInput
@@ -270,7 +273,7 @@
                         autocomplete="off"
                     ></textarea>
                     <mat-hint>{{
-                        'SETTINGS.EXTERNAL_PLAYER_ARGUMENTS_HINT' | translate
+                        'Use one argument per line. These values are applied before stream-specific TuHiN iPTV options.'
                     }}</mat-hint>
                 </mat-form-field>
             </div>
@@ -278,9 +281,11 @@
 
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.VLC_REUSE_INSTANCE_LABEL' | translate }}</h4>
+                <h4>{{ 'Reuse VLC instance' }}</h4>
                 <p>
-                    {{ 'SETTINGS.VLC_REUSE_INSTANCE_DESCRIPTION' | translate }}
+                    {{
+                        'When enabled, the same VLC window will be reused for playing different streams. When disabled, each stream opens in a new VLC window.'
+                    }}
                 </p>
             </div>
             <div class="setting-item__control setting-item__toggle">

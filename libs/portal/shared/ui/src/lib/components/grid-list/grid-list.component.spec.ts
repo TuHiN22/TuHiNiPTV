@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe } from 'ng-mocks';
 import {
     formatGridRating,
     GridListComponent,
@@ -42,15 +40,7 @@ describe('GridListComponent', () => {
             imports: [GridListComponent],
         })
             .overrideComponent(GridListComponent, {
-                remove: { imports: [TranslatePipe] },
-                add: {
-                    imports: [
-                        MockPipe(
-                            TranslatePipe,
-                            (value: string | null | undefined) => value ?? ''
-                        ),
-                    ],
-                },
+                remove: { imports: [] },
             })
             .compileComponents();
 

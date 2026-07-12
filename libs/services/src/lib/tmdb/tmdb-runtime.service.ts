@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { SettingsStore } from '../settings-store.service';
-import { DEFAULT_TMDB_API_KEY, toTmdbLanguage } from './tmdb-config';
+import { DEFAULT_TMDB_API_KEY, TMDB_LANGUAGE } from './tmdb-config';
 
 /**
  * Shared TMDB runtime context: opt-in gate, effective API key and language
@@ -22,13 +22,8 @@ export class TmdbRuntimeService {
         );
     }
 
-    /** TMDB language code derived from the app language ("en-US") */
+    /** English is the application's only metadata language. */
     language(): string {
-        return toTmdbLanguage(this.appLanguage());
-    }
-
-    /** Raw app language setting ("en") */
-    appLanguage(): string {
-        return this.settingsStore.language();
+        return TMDB_LANGUAGE;
     }
 }

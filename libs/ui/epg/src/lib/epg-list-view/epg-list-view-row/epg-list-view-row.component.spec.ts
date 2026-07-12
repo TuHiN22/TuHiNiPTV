@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { EpgProgram } from '@iptvnator/shared/interfaces';
 import { EpgListRow } from '../epg-list-view.utils';
 import { EpgListViewRowComponent } from './epg-list-view-row.component';
@@ -35,17 +34,23 @@ describe('EpgListViewRowComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [EpgListViewRowComponent, TranslateModule.forRoot()],
+            imports: [EpgListViewRowComponent],
         });
         fixture = TestBed.createComponent(EpgListViewRowComponent);
         component = fixture.componentInstance;
     });
 
     it('marks an active past programme as playing (archive), not a now row', () => {
-        fixture.componentRef.setInput('row', row({ when: 'past', isActive: true }));
+        fixture.componentRef.setInput(
+            'row',
+            row({ when: 'past', isActive: true })
+        );
         expect(component.isPlaying()).toBe(true);
 
-        fixture.componentRef.setInput('row', row({ when: 'now', isActive: true }));
+        fixture.componentRef.setInput(
+            'row',
+            row({ when: 'now', isActive: true })
+        );
         expect(component.isPlaying()).toBe(false);
     });
 

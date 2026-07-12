@@ -15,19 +15,13 @@
             <div class="icon-container">
                 <mat-icon
                     class="upload-type-icon"
-                    [matTooltip]="
-                        ('HOME.PLAYLISTS.ADDED_VIA_URL' | translate) +
-                        ' ' +
-                        item.url
-                    "
+                    [matTooltip]="'Added via URL upload. URL:' + ' ' + item.url"
                     >cloud</mat-icon
                 >
                 @if (item.autoRefresh) {
                     <mat-icon
                         class="auto-refresh-indicator"
-                        [matTooltip]="
-                            'HOME.PLAYLISTS.AUTO_REFRESH_ENABLED' | translate
-                        "
+                        [matTooltip]="'Auto-refresh enabled'"
                         >autorenew</mat-icon
                     >
                 }
@@ -37,15 +31,13 @@
             <div class="icon-container">
                 <mat-icon
                     class="upload-type-icon"
-                    [matTooltip]="'HOME.PLAYLISTS.ADDED_VIA_FILE' | translate"
+                    [matTooltip]="'Added via file upload'"
                     >folder</mat-icon
                 >
                 @if (item.autoRefresh) {
                     <mat-icon
                         class="auto-refresh-indicator"
-                        [matTooltip]="
-                            'HOME.PLAYLISTS.AUTO_REFRESH_ENABLED' | translate
-                        "
+                        [matTooltip]="'Auto-refresh enabled'"
                         >autorenew</mat-icon
                     >
                 }
@@ -55,7 +47,7 @@
             <div class="icon-container">
                 <mat-icon
                     class="upload-type-icon"
-                    [matTooltip]="'HOME.PLAYLISTS.XTREAM_PLAYLIST' | translate"
+                    [matTooltip]="'Xtream playlist'"
                     >public</mat-icon
                 >
                 <span
@@ -67,9 +59,7 @@
             </div>
         }
         @if (item.macAddress) {
-            <mat-icon
-                class="upload-type-icon"
-                [matTooltip]="'HOME.PLAYLISTS.STALKER_PORTAL' | translate"
+            <mat-icon class="upload-type-icon" [matTooltip]="'Stalker portal'"
                 >dashboard</mat-icon
             >
         }
@@ -80,13 +70,16 @@
         </div>
         <div class="meta">
             @if (!item.serverUrl && !item.portalUrl) {
-                {{ 'HOME.PLAYLISTS.CHANNELS' | translate }}: {{ item.count }}
+                {{ 'Channels' }}: {{ item.count }}
                 @if (item.importDate.length > 3) {
-                    | {{ 'HOME.PLAYLISTS.ADDED' | translate }}:
-                    {{ item.importDate | date: undefined : undefined : currentLocale() }}
+                    | {{ 'Added' }}:
+                    {{
+                        item.importDate
+                            | date: undefined : undefined : currentLocale()
+                    }}
                 }
                 @if (item.updateDate) {
-                    | {{ 'HOME.PLAYLISTS.UPDATED' | translate }}:
+                    | {{ 'Updated' }}:
                     {{
                         item.updateDate
                             | date
@@ -97,10 +90,7 @@
                 }
                 @if (item.updateState === 2) {
                     <mat-icon
-                        [matTooltip]="
-                            'HOME.PLAYLISTS.INFO_DIALOG.UPDATE_FAILED'
-                                | translate
-                        "
+                        [matTooltip]="'Last playlist update failed'"
                         [inline]="true"
                         >warning</mat-icon
                     >
@@ -112,11 +102,14 @@
                     Xtream
                 }
                 @if (item.importDate.length > 3) {
-                    | {{ 'HOME.PLAYLISTS.ADDED' | translate }}:
-                    {{ item.importDate | date: undefined : undefined : currentLocale() }}
+                    | {{ 'Added' }}:
+                    {{
+                        item.importDate
+                            | date: undefined : undefined : currentLocale()
+                    }}
                 }
                 @if (item.updateDate) {
-                    | {{ 'HOME.PLAYLISTS.UPDATED' | translate }}:
+                    | {{ 'Updated' }}:
                     {{
                         item.updateDate
                             | date
@@ -160,9 +153,7 @@
                     (click)="
                         $event.stopPropagation(); cancelBusyActionClicked.emit()
                     "
-                    [matTooltip]="
-                        'WORKSPACE.SHELL.XTREAM_IMPORT_CANCEL' | translate
-                    "
+                    [matTooltip]="'Stop sync'"
                 >
                     <mat-icon>close</mat-icon>
                 </button>
@@ -175,7 +166,7 @@
                         $event.stopPropagation(); refreshClicked.emit(item)
                     "
                     [disabled]="isBusy()"
-                    [matTooltip]="'HOME.PLAYLISTS.REFRESH' | translate"
+                    [matTooltip]="'Refresh playlist'"
                 >
                     @if (isRefreshing()) {
                         <mat-spinner
@@ -196,7 +187,7 @@
                         $event.stopPropagation(); refreshClicked.emit(item)
                     "
                     [disabled]="isBusy()"
-                    [matTooltip]="'HOME.PLAYLISTS.REFRESH_XTREAM' | translate"
+                    [matTooltip]="'Refresh Xtream playlist from remote'"
                 >
                     @if (isRefreshing()) {
                         <mat-spinner
@@ -217,7 +208,7 @@
                     $event.stopPropagation(); editPlaylistClicked.emit(item)
                 "
                 [disabled]="isBusy()"
-                [matTooltip]="'HOME.PLAYLISTS.SHOW_DETAILS' | translate"
+                [matTooltip]="'Show playlist details'"
             >
                 <mat-icon>edit</mat-icon>
             </button>
@@ -227,7 +218,7 @@
                 class="delete-btn"
                 (click)="$event.stopPropagation(); removeClicked.emit(item._id)"
                 [disabled]="isBusy()"
-                [matTooltip]="'HOME.PLAYLISTS.REMOVE' | translate"
+                [matTooltip]="'Remove playlist'"
             >
                 @if (isDeleting()) {
                     <mat-spinner

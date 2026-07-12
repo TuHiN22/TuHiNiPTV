@@ -19,7 +19,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { TranslatePipe } from '@ngx-translate/core';
 import { EpgService } from '@iptvnator/epg/data-access';
 import { PlaylistContextFacade } from '@iptvnator/playlist/shared/util';
 import {
@@ -109,7 +108,6 @@ const EPG_AVAILABILITY_REFRESH_DEBOUNCE_MS = 2000;
         MatButtonModule,
         MatIconModule,
         RecentViewComponent,
-        TranslatePipe,
     ],
 })
 export class ChannelListContainerComponent implements OnInit, OnDestroy {
@@ -209,13 +207,13 @@ export class ChannelListContainerComponent implements OnInit, OnDestroy {
     readonly viewTitle = computed(() => {
         const view = this.activeView();
         const url = this.currentUrl();
-        if (view === 'all') return 'CHANNELS.ALL_CHANNELS';
-        if (view === 'groups') return 'CHANNELS.GROUPS';
-        if (view === 'recent') return 'PORTALS.SIDEBAR.RECENT';
+        if (view === 'all') return 'All channels';
+        if (view === 'groups') return 'Groups';
+        if (view === 'recent') return 'Recent';
         if (view === 'favorites') {
             return url.includes('/workspace/global-favorites')
-                ? 'HOME.PLAYLISTS.GLOBAL_FAVORITES'
-                : 'CHANNELS.FAVORITES';
+                ? 'Global favorites'
+                : 'Favorites';
         }
         return '';
     });

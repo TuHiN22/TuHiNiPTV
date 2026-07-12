@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { Channel } from '@iptvnator/shared/interfaces';
 import { ChannelDetailsDialogComponent } from '../channel-details-dialog/channel-details-dialog.component';
@@ -105,11 +104,7 @@ describe('GroupsViewComponent', () => {
         };
 
         await TestBed.configureTestingModule({
-            imports: [
-                GroupsViewComponent,
-                NoopAnimationsModule,
-                TranslateModule.forRoot(),
-            ],
+            imports: [GroupsViewComponent, NoopAnimationsModule],
             providers: [
                 {
                     provide: MatDialog,
@@ -596,7 +591,7 @@ describe('GroupsViewComponent', () => {
 
         expect(layout).not.toBeNull();
         expect(emptyState).not.toBeNull();
-        expect(emptyState?.textContent).toContain('CHANNELS.NO_SEARCH_RESULTS');
+        expect(emptyState?.textContent).toContain('No channels found');
         expect(manageButton).not.toBeNull();
     });
 
@@ -609,7 +604,7 @@ describe('GroupsViewComponent', () => {
 
         expect(emptyState).not.toBeNull();
         expect(emptyState?.textContent).toContain(
-            'PORTALS.ERROR_VIEW.EMPTY_CATEGORY.TITLE'
+            'No content in this category'
         );
     });
 
@@ -629,7 +624,7 @@ describe('GroupsViewComponent', () => {
         ) as HTMLButtonElement | null;
 
         expect(layout).not.toBeNull();
-        expect(emptyState?.textContent).toContain('CHANNELS.NO_VISIBLE_GROUPS');
+        expect(emptyState?.textContent).toContain('No visible groups');
         expect(manageButton).not.toBeNull();
     });
 });

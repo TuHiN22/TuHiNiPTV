@@ -6,7 +6,6 @@ import { normalizeEpgUrls } from '@iptvnator/shared/m3u-utils';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { TranslateService } from '@ngx-translate/core';
 import {
     EMPTY,
     filter,
@@ -59,7 +58,6 @@ export class PlaylistEffects {
     private snackBar = inject(MatSnackBar);
     private storage = inject(StorageMap);
     private store = inject(Store);
-    private translate = inject(TranslateService);
     private settingsStore = inject(SettingsStore);
     private readonly playlistScopedEpgFetchKeys = new Map<string, string>();
 
@@ -76,11 +74,9 @@ export class PlaylistEffects {
                     this.playlistsService.updateFavorites(playlistId, favorites)
                 ),
                 tap(() => {
-                    this.snackBar.open(
-                        this.translate.instant('CHANNELS.FAVORITES_UPDATED'),
-                        undefined,
-                        { duration: 2000 }
-                    );
+                    this.snackBar.open('Favorites were updated!', undefined, {
+                        duration: 2000,
+                    });
                 })
             );
         },
@@ -116,9 +112,7 @@ export class PlaylistEffects {
                     activeChannel,
                     () =>
                         this.snackBar.open(
-                            this.translate.instant(
-                                'EPG.TIMELINE.CATCHUP_FAILED'
-                            ),
+                            "Couldn't start archive playback for this program",
                             undefined,
                             { duration: 4000 }
                         )
@@ -295,16 +289,18 @@ export class PlaylistEffects {
             return this.actions$.pipe(
                 ofType(PlaylistActions.updatePlaylist),
                 switchMap((action) =>
-                    this.playlistsService.updatePlaylist(action.playlistId, {
-                        ...action.playlist,
-                        _id: action.playlistId,
-                    }).pipe(
-                        tap(() => {
-                            this.fetchPlaylistScopedEpg(action.playlist, {
-                                force: action.refreshEpg === true,
-                            });
+                    this.playlistsService
+                        .updatePlaylist(action.playlistId, {
+                            ...action.playlist,
+                            _id: action.playlistId,
                         })
-                    )
+                        .pipe(
+                            tap(() => {
+                                this.fetchPlaylistScopedEpg(action.playlist, {
+                                    force: action.refreshEpg === true,
+                                });
+                            })
+                        )
                 )
             );
         },
@@ -343,12 +339,14 @@ export class PlaylistEffects {
                     if ('isTemporary' in action && action.isTemporary) {
                         return EMPTY;
                     }
-                    return this.playlistsService.addPlaylist(action.playlist).pipe(
-                        tap(() => {
-                            this.fetchPlaylistScopedEpg(action.playlist);
-                            this.navigateToPlaylist(action.playlist);
-                        })
-                    );
+                    return this.playlistsService
+                        .addPlaylist(action.playlist)
+                        .pipe(
+                            tap(() => {
+                                this.fetchPlaylistScopedEpg(action.playlist);
+                                this.navigateToPlaylist(action.playlist);
+                            })
+                        );
                 })
             );
         },
@@ -360,17 +358,21 @@ export class PlaylistEffects {
             return this.actions$.pipe(
                 ofType(PlaylistActions.updatePlaylistMeta),
                 switchMap((action) =>
-                    this.playlistsService.updatePlaylistMeta(action.playlist).pipe(
-                        tap(() => {
-                            if (
-                                this.hasPlaylistScopedEpgSourceChange(
-                                    action.playlist
-                                )
-                            ) {
-                                this.fetchPlaylistScopedEpg(action.playlist);
-                            }
-                        })
-                    )
+                    this.playlistsService
+                        .updatePlaylistMeta(action.playlist)
+                        .pipe(
+                            tap(() => {
+                                if (
+                                    this.hasPlaylistScopedEpgSourceChange(
+                                        action.playlist
+                                    )
+                                ) {
+                                    this.fetchPlaylistScopedEpg(
+                                        action.playlist
+                                    );
+                                }
+                            })
+                        )
                 )
             );
         },

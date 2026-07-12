@@ -24,12 +24,8 @@
             (click)="groupExpand.emit(item)"
         >
             <span class="epg-timeline__group-count">{{ item.count }}</span>
-            <span class="epg-timeline__group-label">{{
-                'EPG.TIMELINE.GROUP_SHORT' | translate
-            }}</span>
-            <span class="epg-timeline__group-hint">{{
-                'EPG.TIMELINE.GROUP_EXPAND' | translate
-            }}</span>
+            <span class="epg-timeline__group-label">{{ 'short progs' }}</span>
+            <span class="epg-timeline__group-hint">{{ 'show ›' }}</span>
         </button>
     } @else {
         <div
@@ -77,21 +73,22 @@
 
             <div class="epg-timeline__block-foot">
                 @if (item.block.when === 'now') {
-                    <span class="epg-timeline__tag is-now">{{
-                        'EPG.TIMELINE.ON_NOW' | translate
-                    }}</span>
+                    <span class="epg-timeline__tag is-now">{{ 'On now' }}</span>
                 } @else if (isPlaying(item)) {
                     <span class="epg-timeline__tag is-arch">{{
-                        'EPG.TIMELINE.FROM_ARCHIVE' | translate
+                        'From archive'
                     }}</span>
                 } @else if (item.canCatchUp) {
                     <button
                         type="button"
                         class="epg-timeline__watch"
-                        (click)="watchClick.emit(item.block); $event.stopPropagation()"
+                        (click)="
+                            watchClick.emit(item.block);
+                            $event.stopPropagation()
+                        "
                     >
                         <mat-icon>replay</mat-icon>
-                        {{ 'EPG.TIMELINE.WATCH' | translate }}
+                        {{ 'Watch' }}
                     </button>
                 }
             </div>
@@ -99,9 +96,7 @@
             <button
                 type="button"
                 class="epg-timeline__info"
-                [attr.aria-label]="
-                    'EPG.PROGRAM_DIALOG.SHOW_PROGRAM_DETAILS' | translate
-                "
+                [attr.aria-label]="'Show details about this program'"
                 (click)="infoClick.emit(item.block); $event.stopPropagation()"
             >
                 <mat-icon>info_outline</mat-icon>
@@ -123,8 +118,8 @@
         role="tooltip"
     >
         <div class="epg-timeline__pop-time">
-            {{ pop.startMs | date: 'HH:mm' }} – {{ pop.stopMs | date: 'HH:mm' }} ·
-            {{ pop.durationMin }} {{ 'EPG.TIMELINE.MINUTES_SHORT' | translate }}
+            {{ pop.startMs | date: 'HH:mm' }} –
+            {{ pop.stopMs | date: 'HH:mm' }} · {{ pop.durationMin }} {{ 'min' }}
         </div>
         <div class="epg-timeline__pop-title">{{ pop.title }}</div>
         @if (pop.desc) {

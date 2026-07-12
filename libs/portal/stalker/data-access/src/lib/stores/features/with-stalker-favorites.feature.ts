@@ -2,7 +2,6 @@ import { inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { signalStoreFeature, withMethods } from '@ngrx/signals';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { PlaylistsService } from '@iptvnator/services';
 import { PlaylistMeta, StalkerPortalItem } from '@iptvnator/shared/interfaces';
 import { StalkerSelectionStoreContract } from '../stalker-store.contracts';
@@ -33,7 +32,6 @@ export function withStalkerFavorites() {
                 store,
                 playlistService = inject(PlaylistsService),
                 snackBar = inject(MatSnackBar),
-                translate = inject(TranslateService),
                 ngrxStore = inject(Store)
             ) => {
                 const storeContext = store as typeof store &
@@ -63,15 +61,9 @@ export function withStalkerFavorites() {
                                         favorites: updatedPlaylist?.favorites,
                                     }
                                 );
-                                snackBar.open(
-                                    translate.instant(
-                                        'PORTALS.ADDED_TO_FAVORITES'
-                                    ),
-                                    undefined,
-                                    {
-                                        duration: 1000,
-                                    }
-                                );
+                                snackBar.open('Added to favorites', undefined, {
+                                    duration: 1000,
+                                });
                                 onDone?.();
                             });
                     },
@@ -95,9 +87,7 @@ export function withStalkerFavorites() {
                                     }
                                 );
                                 snackBar.open(
-                                    translate.instant(
-                                        'PORTALS.REMOVED_FROM_FAVORITES'
-                                    ),
+                                    'Removed from favorites',
                                     undefined,
                                     {
                                         duration: 1000,

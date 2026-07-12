@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { PORTAL_PLAYER } from '@iptvnator/portal/shared/util';
 import { DataService, PlaylistsService } from '@iptvnator/services';
@@ -57,12 +56,6 @@ describe('StalkerStore API compatibility smoke', () => {
                     provide: MatSnackBar,
                     useValue: {
                         open: jest.fn(),
-                    },
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: jest.fn((key: string) => key),
                     },
                 },
             ],

@@ -12,8 +12,6 @@ import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe } from 'ng-mocks';
 import { BehaviorSubject, of } from 'rxjs';
 import {
     ChannelActions,
@@ -422,10 +420,6 @@ describe('VideoPlayerComponent', () => {
                         StubResizableDirective,
                         StubSidebarComponent,
                         StubWebPlayerViewComponent,
-                        MockPipe(
-                            TranslatePipe,
-                            (value: string | null | undefined) => value ?? ''
-                        ),
                     ],
                 },
             })
@@ -512,7 +506,9 @@ describe('VideoPlayerComponent', () => {
             fixture.nativeElement.querySelector('app-web-player-view')
         ).not.toBeNull();
         expect(fixture.nativeElement.querySelector('.epg')).toBeNull();
-        expect(fixture.nativeElement.querySelector('app-epg-timeline')).toBeNull();
+        expect(
+            fixture.nativeElement.querySelector('app-epg-timeline')
+        ).toBeNull();
         expect(headerContext.action()).toBeNull();
     });
 
@@ -715,7 +711,7 @@ describe('VideoPlayerComponent', () => {
             expect.objectContaining({ title: 'Current Show' })
         );
         expect(timeline.componentInstance.summaryLabelKey()).toBe(
-            'EPG.CURRENT_PROGRAM'
+            'Current program'
         );
     });
 
@@ -782,7 +778,7 @@ describe('VideoPlayerComponent', () => {
             expect.objectContaining({ title: 'Archived Show' })
         );
         expect(timeline.componentInstance.summaryLabelKey()).toBe(
-            'EPG.ARCHIVE_PLAYBACK'
+            'Archive playback'
         );
         expect(timeline.componentInstance.isLivePlayback()).toBe(false);
     });
@@ -877,7 +873,7 @@ describe('VideoPlayerComponent', () => {
 
         expect(emptyState).not.toBeNull();
         expect(emptyState?.textContent).toContain(
-            'CHANNELS.SELECT_CHANNEL_PLAYBACK'
+            'Please select a channel to start playback'
         );
     });
 

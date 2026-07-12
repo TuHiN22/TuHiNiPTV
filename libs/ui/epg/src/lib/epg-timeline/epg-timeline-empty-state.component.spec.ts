@@ -1,6 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
 import { EpgTimelineEmptyStateComponent } from './epg-timeline-empty-state.component';
 
 describe('EpgTimelineEmptyStateComponent', () => {
@@ -8,18 +6,6 @@ describe('EpgTimelineEmptyStateComponent', () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             imports: [EpgTimelineEmptyStateComponent],
-            providers: [
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                        onLangChange: new BehaviorSubject(null),
-                        get: () => new BehaviorSubject(''),
-                        stream: () => new BehaviorSubject(''),
-                    },
-                },
-            ],
         });
         const fixture = TestBed.createComponent(EpgTimelineEmptyStateComponent);
         fixture.componentRef.setInput('reason', reason);

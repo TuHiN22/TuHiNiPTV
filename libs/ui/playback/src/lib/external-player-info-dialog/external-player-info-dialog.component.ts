@@ -4,11 +4,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     template: `
-        <h2 mat-dialog-title>{{ 'INFORMATION' | translate }}</h2>
+        <h2 mat-dialog-title>{{ 'Information' }}</h2>
         <mat-dialog-content class="mat-typography">
             <div class="centered">
                 <mat-icon class="icon">live_tv</mat-icon>
@@ -38,7 +37,7 @@ import { TranslateModule } from '@ngx-translate/core';
                 >
             </div>
             <button mat-button mat-dialog-close cdkFocusInitial>
-                {{ 'CLOSE' | translate }}
+                {{ 'Close' }}
             </button>
         </mat-dialog-actions>
     `,
@@ -63,7 +62,6 @@ import { TranslateModule } from '@ngx-translate/core';
         MatDialogModule,
         MatIconModule,
         RouterLink,
-        TranslateModule,
     ],
 })
 export class ExternalPlayerInfoDialogComponent {

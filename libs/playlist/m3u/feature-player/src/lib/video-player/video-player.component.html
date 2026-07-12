@@ -15,8 +15,8 @@
             mat-icon-button
             type="button"
             class="sidebar-collapse-toggle"
-            [attr.aria-label]="'LAYOUT.HIDE_CHANNELS_LIST' | translate"
-            [matTooltip]="'LAYOUT.TOGGLE_SIDEBAR_TOOLTIP' | translate"
+            [attr.aria-label]="'Hide channels list'"
+            [matTooltip]="'Toggle channels list (⌘/Ctrl+B)'"
             [attr.aria-pressed]="isSidebarCollapsed()"
             (click)="toggleSidebar()"
         >
@@ -49,8 +49,8 @@
             mat-icon-button
             type="button"
             class="sidebar-restore"
-            [attr.aria-label]="'LAYOUT.SHOW_CHANNELS_LIST' | translate"
-            [matTooltip]="'LAYOUT.TOGGLE_SIDEBAR_TOOLTIP' | translate"
+            [attr.aria-label]="'Show channels list'"
+            [matTooltip]="'Toggle channels list (⌘/Ctrl+B)'"
             [attr.aria-pressed]="isSidebarCollapsed()"
             (click)="toggleSidebar()"
         >
@@ -105,7 +105,9 @@
                             [programs]="epgPrograms()"
                             [channelName]="timelineChannelName()"
                             [channelLogo]="timelineChannelLogo()"
-                            [archivePlaybackAvailable]="archivePlaybackAvailable()"
+                            [archivePlaybackAvailable]="
+                                archivePlaybackAvailable()
+                            "
                             [archiveDays]="epgArchiveDays()"
                             [activeProgram]="activeEpgProgramOrNull()"
                             [isLivePlayback]="!showReturnToLive()"
@@ -131,7 +133,9 @@
                             [programs]="epgPrograms()"
                             [channelName]="timelineChannelName()"
                             [channelLogo]="timelineChannelLogo()"
-                            [archivePlaybackAvailable]="archivePlaybackAvailable()"
+                            [archivePlaybackAvailable]="
+                                archivePlaybackAvailable()
+                            "
                             [archiveDays]="epgArchiveDays()"
                             [activeProgram]="activeEpgProgramOrNull()"
                             [isLivePlayback]="!showReturnToLive()"
@@ -167,7 +171,7 @@
     } @else {
         <app-portal-empty-state
             icon="live_tv"
-            [message]="'CHANNELS.SELECT_CHANNEL_PLAYBACK' | translate"
+            [message]="'Please select a channel to start playback'"
         />
     }
 </div>

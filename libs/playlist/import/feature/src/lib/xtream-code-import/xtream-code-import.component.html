@@ -1,14 +1,10 @@
 <form [formGroup]="form">
     <mat-form-field class="w-full">
-        <mat-label for="title">{{
-            'HOME.XTREAM_PLAYLIST.TITLE' | translate
-        }}</mat-label>
+        <mat-label for="title">{{ 'Playlist title' }}</mat-label>
         <input matInput type="text" id="title" formControlName="title" />
     </mat-form-field>
     <mat-form-field class="w-full" subscriptSizing="dynamic">
-        <mat-label for="serverUrl">{{
-            'HOME.XTREAM_PLAYLIST.SERVER_URL' | translate
-        }}</mat-label>
+        <mat-label for="serverUrl">{{ 'Server URL' }}</mat-label>
         <input
             matInput
             type="text"
@@ -17,41 +13,37 @@
             (input)="extractParams(form.value.serverUrl ?? '')"
         />
         <mat-hint>{{
-            'HOME.XTREAM_PLAYLIST.URL_VALIDATION_ERROR' | translate
+            'Should be a valid url with protocol (e.g. http://example.com or https://example.com:4324)'
         }}</mat-hint>
-        <mat-error>{{ 'SETTINGS.EPG_URL_ERROR' | translate }}</mat-error>
+        <mat-error>{{ 'The value is not a valid URL' }}</mat-error>
     </mat-form-field>
     <mat-form-field class="w-full">
-        <mat-label for="username">{{
-            'HOME.XTREAM_PLAYLIST.USERNAME' | translate
-        }}</mat-label>
+        <mat-label for="username">{{ 'Username' }}</mat-label>
         <input matInput type="text" id="username" formControlName="username" />
     </mat-form-field>
     <mat-form-field class="w-full">
-        <mat-label for="password">{{
-            'HOME.XTREAM_PLAYLIST.PASSWORD' | translate
-        }}</mat-label>
+        <mat-label for="password">{{ 'Password' }}</mat-label>
         <input matInput type="text" id="password" formControlName="password" />
     </mat-form-field>
 
     <div class="content-type-select">
         <span class="content-type-select__label">{{
-            'HOME.XTREAM_PLAYLIST.CONTENT_TO_IMPORT' | translate
+            'Content to import'
         }}</span>
         <div class="content-type-select__options">
             <mat-checkbox formControlName="importLive">
-                {{ 'HOME.XTREAM_PLAYLIST.LIVE_TV' | translate }}
+                {{ 'Live TV' }}
             </mat-checkbox>
             <mat-checkbox formControlName="importVod">
-                {{ 'HOME.XTREAM_PLAYLIST.MOVIES' | translate }}
+                {{ 'Movies' }}
             </mat-checkbox>
             <mat-checkbox formControlName="importSeries">
-                {{ 'HOME.XTREAM_PLAYLIST.SERIES' | translate }}
+                {{ 'Series' }}
             </mat-checkbox>
         </div>
         @if (form.hasError('noContentType')) {
             <span class="content-type-select__error">{{
-                'HOME.XTREAM_PLAYLIST.CONTENT_TO_IMPORT_ERROR' | translate
+                'Select at least one content type.'
             }}</span>
         }
     </div>

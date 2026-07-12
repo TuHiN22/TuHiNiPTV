@@ -246,7 +246,7 @@ export async function fetchStalkerExpireDate(
     const numericExpireDate = Number(expireDate);
 
     if (expireDate && !Number.isNaN(numericExpireDate)) {
-        return new Date(numericExpireDate * 1000).toLocaleDateString();
+        return new Date(numericExpireDate * 1000).toLocaleDateString('en-US');
     }
 
     return expireDate ? String(expireDate) : 'Unknown';

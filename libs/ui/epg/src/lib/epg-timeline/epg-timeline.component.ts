@@ -13,13 +13,9 @@ import {
     untracked,
     viewChild,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { normalizeDateLocale } from '@iptvnator/pipes';
 import { EpgProgram } from '@iptvnator/shared/interfaces';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { startWith } from 'rxjs';
 import {
     EpgDateNavigationDirection,
     getTodayEpgDateKey,
@@ -37,10 +33,7 @@ import {
     summaryMinutesLeft,
     summaryProgress,
 } from './epg-summary.util';
-import {
-    canCatchUpProgramme,
-    epgDialogActionFor,
-} from './epg-archive.util';
+import { canCatchUpProgramme, epgDialogActionFor } from './epg-archive.util';
 import {
     EpgTimelineEmptyReason,
     EpgTimelineEmptyStateComponent,
@@ -82,7 +75,6 @@ export type { EpgTimelineSummary } from './epg-summary.util';
         EpgTimelineTrackComponent,
         MatIcon,
         MatTooltip,
-        TranslatePipe,
     ],
 })
 export class EpgTimelineComponent {
@@ -99,7 +91,7 @@ export class EpgTimelineComponent {
     readonly selectedDate = input<string | null>(null);
     readonly collapsed = input(false);
     readonly summary = input<EpgTimelineSummary | null>(null);
-    readonly summaryLabelKey = input('EPG.CURRENT_PROGRAM');
+    readonly summaryLabelKey = input('Current program');
 
     readonly programActivated = output<EpgProgramActivationEvent>();
     readonly returnToLive = output<void>();
@@ -109,7 +101,6 @@ export class EpgTimelineComponent {
     readonly collapsedChange = output<boolean>();
 
     private readonly programmeDialog = inject(EpgProgrammeDialogService);
-    private readonly translate = inject(TranslateService);
 
     readonly ribbon = viewChild<ElementRef<HTMLElement>>('ribbon');
     /** px-per-minute zoom (D). */
@@ -140,17 +131,7 @@ export class EpgTimelineComponent {
         hasProgramsForDay: (dayKey) =>
             hasProgramsForDateKey(this.programs(), dayKey),
     });
-
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
-    readonly currentLocale = computed(() => {
-        this.languageTick();
-        return normalizeDateLocale(
-            this.translate.currentLang || this.translate.defaultLang
-        );
-    });
+    readonly currentLocale = () => 'en-US';
 
     readonly axis = computed(() =>
         buildTimelineAxis(this.programs(), this.nowMs())
@@ -178,17 +159,21 @@ export class EpgTimelineComponent {
     readonly dividers = computed(() => buildTimelineDayDividers(this.axis()));
     readonly trackWidthPx = computed(() => {
         const axis = this.axis();
-        return ((axis.endMs - axis.startMs) / TIMELINE_MINUTE_MS) * this.scale();
+        return (
+            ((axis.endMs - axis.startMs) / TIMELINE_MINUTE_MS) * this.scale()
+        );
     });
     readonly playheadLeftPx = computed(() => {
         const axis = this.axis();
-        return ((this.nowMs() - axis.startMs) / TIMELINE_MINUTE_MS) * this.scale();
+        return (
+            ((this.nowMs() - axis.startMs) / TIMELINE_MINUTE_MS) * this.scale()
+        );
     });
     readonly zoomLabelKey = computed(() => {
         const scale = this.scale();
-        if (scale < TIMELINE_GROUP_ZOOM_MAX) return 'EPG.TIMELINE.ZOOM_DAY';
-        if (scale < 3) return 'EPG.TIMELINE.ZOOM_HOURS';
-        return 'EPG.TIMELINE.ZOOM_DETAIL';
+        if (scale < TIMELINE_GROUP_ZOOM_MAX) return 'Day overview';
+        if (scale < 3) return 'By hour';
+        return 'Detailed';
     });
     readonly nowLabel = computed(() => formatClockTime(this.nowMs()));
 
@@ -225,7 +210,9 @@ export class EpgTimelineComponent {
      * could become usable, but with no programmes for the day there is nothing
      * to jump to or zoom.
      */
-    readonly showRibbonControls = computed(() => this.renderState() === 'ribbon');
+    readonly showRibbonControls = computed(
+        () => this.renderState() === 'ribbon'
+    );
 
     /**
      * The date stepper navigates between days, which is only meaningful when the
@@ -241,9 +228,7 @@ export class EpgTimelineComponent {
 
     // ── collapsed-summary state ──
     readonly hasSummary = computed(() => summaryHasTitle(this.summary()));
-    readonly hasTimeRange = computed(() =>
-        summaryHasTimeRange(this.summary())
-    );
+    readonly hasTimeRange = computed(() => summaryHasTimeRange(this.summary()));
     readonly progress = computed(() =>
         summaryProgress(this.summary(), this.nowMs())
     );

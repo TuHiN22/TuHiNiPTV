@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { StalkerSessionService } from '@iptvnator/portal/stalker/data-access';
 import { DataService, PlaylistsService } from '@iptvnator/services';
 import {
@@ -59,7 +58,6 @@ import { StalkerVodPlaybackController } from '../stalker-vod-playback-controller
 interface StalkerFilter {
     key: StalkerSearchContentType;
     label: string;
-    translationKey: string;
 }
 
 type StalkerSearchContentType = 'vod' | 'series';
@@ -80,7 +78,6 @@ interface StalkerSearchResponse {
         MatCheckboxModule,
         SearchLayoutComponent,
         StalkerInlineDetailComponent,
-        TranslatePipe,
     ],
     templateUrl: './stalker-search.component.html',
     styleUrl: './stalker-search.component.scss',
@@ -98,7 +95,6 @@ export class StalkerSearchComponent {
     private readonly stalkerStore = inject(StalkerStore);
     private readonly stalkerSession = inject(StalkerSessionService);
     private readonly snackBar = inject(MatSnackBar);
-    private readonly translateService = inject(TranslateService);
     private readonly logger = createLogger('StalkerSearch');
 
     readonly filters = signal<Record<StalkerSearchContentType, boolean>>({
@@ -111,12 +107,10 @@ export class StalkerSearchComponent {
         {
             key: 'vod',
             label: 'Movies',
-            translationKey: 'PORTALS.SIDEBAR.MOVIES',
         },
         {
             key: 'series',
             label: 'Series',
-            translationKey: 'PORTALS.SIDEBAR.SERIES',
         },
     ];
 
@@ -148,7 +142,6 @@ export class StalkerSearchComponent {
         playbackPositions: this.playbackPositions,
         portalPlayer: this.portalPlayer,
         snackBar: this.snackBar,
-        translateService: this.translateService,
         logger: this.logger,
         playbackErrorLogMessage: 'Failed to start search VOD playback',
     });

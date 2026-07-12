@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { GlobalFavoritesListComponent } from '../global-favorites-list/global-favorites-list.component';
 import { UnifiedLiveTabComponent } from './unified-live-tab.component';
 import {
@@ -25,10 +24,7 @@ import {
 } from '@iptvnator/ui/epg';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ResizableDirective } from '@iptvnator/ui/components';
-import {
-    RuntimeCapabilitiesService,
-    SettingsStore,
-} from '@iptvnator/services';
+import { RuntimeCapabilitiesService, SettingsStore } from '@iptvnator/services';
 import {
     EpgItem,
     EpgProgram,
@@ -179,7 +175,7 @@ describe('UnifiedLiveTabComponent', () => {
         snackBar = { open: jest.fn() };
 
         await TestBed.configureTestingModule({
-            imports: [TranslateModule.forRoot(), UnifiedLiveTabComponent],
+            imports: [UnifiedLiveTabComponent],
             providers: [
                 { provide: StreamResolverService, useValue: streamResolver },
                 { provide: UnifiedRecentDataService, useValue: recentData },
@@ -978,7 +974,7 @@ describe('UnifiedLiveTabComponent', () => {
             expect(playback?.isLive).toBe(false);
             expect(component.activeTimeshiftProgram()?.title).toBe('M3U Show');
             expect(component.liveEpgPanelSummaryLabelKey()).toBe(
-                'EPG.ARCHIVE_PLAYBACK'
+                'Archive playback'
             );
             expect(snackBar.open).not.toHaveBeenCalled();
         });
@@ -1006,7 +1002,7 @@ describe('UnifiedLiveTabComponent', () => {
                 'https://example.com/m3u.m3u8'
             );
             expect(component.liveEpgPanelSummaryLabelKey()).toBe(
-                'EPG.CURRENT_PROGRAM'
+                'Current program'
             );
         });
 

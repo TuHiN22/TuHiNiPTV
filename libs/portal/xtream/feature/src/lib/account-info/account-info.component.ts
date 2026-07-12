@@ -8,7 +8,6 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 import {
     XtreamAccountInfo,
     XtreamApiService,
@@ -34,7 +33,6 @@ interface AccountDetailRow {
     value: string;
     mono?: boolean;
     tone?: 'accent' | 'positive' | 'warning';
-    translateValue?: boolean;
 }
 
 interface AccountPort {
@@ -44,7 +42,7 @@ interface AccountPort {
 
 @Component({
     selector: 'app-account-info',
-    imports: [MatButtonModule, MatDialogModule, MatIconModule, TranslatePipe],
+    imports: [MatButtonModule, MatDialogModule, MatIconModule],
     templateUrl: './account-info.component.html',
     styleUrl: './account-info.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -123,15 +121,15 @@ export class AccountInfoComponent {
 
         return [
             {
-                labelKey: 'XTREAM.ACCOUNT_INFO.HTTP_PORT',
+                labelKey: 'HTTP',
                 value: serverInfo?.port || '-',
             },
             {
-                labelKey: 'XTREAM.ACCOUNT_INFO.HTTPS_PORT',
+                labelKey: 'HTTPS',
                 value: serverInfo?.https_port || '-',
             },
             {
-                labelKey: 'XTREAM.ACCOUNT_INFO.RTMP_PORT',
+                labelKey: 'RTMP',
                 value: serverInfo?.rtmp_port || '-',
             },
         ];
@@ -139,78 +137,75 @@ export class AccountInfoComponent {
     readonly heroStats = computed<AccountStat[]>(() => [
         {
             icon: 'bolt',
-            labelKey: 'XTREAM.ACCOUNT_INFO.ACTIVE_CONNECTIONS',
+            labelKey: 'Active Connections',
             value: this.activeConnectionsLabel(),
             meter: this.connectionUsagePercent(),
         },
         {
             icon: 'live_tv',
-            labelKey: 'XTREAM.ACCOUNT_INFO.LIVE_TV',
+            labelKey: 'Live TV',
             value: this.formatOptionalCount(this.data.liveStreamsCount),
             meter: null,
         },
         {
             icon: 'movie',
-            labelKey: 'XTREAM.ACCOUNT_INFO.MOVIES',
+            labelKey: 'Movies',
             value: this.formatOptionalCount(this.data.vodStreamsCount),
             meter: null,
         },
         {
             icon: 'tv',
-            labelKey: 'XTREAM.ACCOUNT_INFO.TV_SERIES',
+            labelKey: 'TV Series',
             value: this.formatOptionalCount(this.data.seriesCount),
             meter: null,
         },
     ]);
     readonly userDetails = computed<AccountDetailRow[]>(() => [
         {
-            labelKey: 'XTREAM.ACCOUNT_INFO.STATUS',
+            labelKey: 'Status',
             value: this.accountInfo()?.user_info?.status || '-',
             tone: this.isActive() ? 'positive' : undefined,
         },
         {
-            labelKey: 'XTREAM.ACCOUNT_INFO.USERNAME',
+            labelKey: 'Username',
             value: this.accountInfo()?.user_info?.username || '-',
             mono: true,
         },
         {
-            labelKey: 'XTREAM.ACCOUNT_INFO.ACTIVE_CONNECTIONS',
+            labelKey: 'Active Connections',
             value: this.activeConnectionsLabel(),
             tone: 'accent',
         },
         {
-            labelKey: 'XTREAM.ACCOUNT_INFO.CREATED',
+            labelKey: 'Created',
             value: this.formattedCreatedDate(),
         },
         {
-            labelKey: 'XTREAM.ACCOUNT_INFO.EXPIRES',
+            labelKey: 'Expires',
             value: this.formattedExpDate(),
         },
         {
-            labelKey: 'XTREAM.ACCOUNT_INFO.TRIAL_ACCOUNT',
-            value: this.isTrial()
-                ? 'XTREAM.ACCOUNT_INFO.YES'
-                : 'XTREAM.ACCOUNT_INFO.NO',
-            translateValue: true,
+            labelKey: 'Trial Account',
+            value: this.isTrial() ? 'Yes' : 'No',
             tone: this.isTrial() ? 'warning' : undefined,
         },
     ]);
     readonly serverDetails = computed<AccountDetailRow[]>(() => [
         {
-            labelKey: 'XTREAM.ACCOUNT_INFO.URL',
+            labelKey: 'URL',
             value: this.accountInfo()?.server_info?.url || '-',
             mono: true,
         },
         {
-            labelKey: 'XTREAM.ACCOUNT_INFO.PROTOCOL',
+            labelKey: 'Protocol',
             value: this.accountInfo()?.server_info?.server_protocol || '-',
         },
         {
-            labelKey: 'XTREAM.ACCOUNT_INFO.TIMEZONE',
+            labelKey: 'Timezone',
             value: this.accountInfo()?.server_info?.timezone || '-',
         },
         {
-            labelKey: 'XTREAM.ACCOUNT_INFO.SERVER_TIME',
+            labelKey: 'Server Time',
             value: this.accountInfo()?.server_info?.time_now || '-',
             mono: true,
         },
@@ -254,7 +249,7 @@ export class AccountInfoComponent {
             return '-';
         }
 
-        return new Date(value * 1000).toLocaleDateString();
+        return new Date(value * 1000).toLocaleDateString('en-US');
     }
 
     private parseNumber(value?: string): number {

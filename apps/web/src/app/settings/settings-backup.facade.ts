@@ -1,6 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { PlaylistActions } from '@iptvnator/m3u-state';
 import {
     PlaylistBackupImportSummary,
@@ -15,7 +14,6 @@ export class SettingsBackupFacade {
     private readonly runtime = inject(RuntimeCapabilitiesService);
     private readonly settingsSnackbar = inject(SettingsSnackbarService);
     private readonly store = inject(Store);
-    private readonly translate = inject(TranslateService);
 
     readonly isExportingData = signal(false);
 
@@ -101,7 +99,7 @@ export class SettingsBackupFacade {
                 this.settingsSnackbar.open(
                     error instanceof Error
                         ? error.message
-                        : this.translate.instant('SETTINGS.IMPORT_ERROR')
+                        : 'Import error, please try with another file.'
                 );
             }
         });

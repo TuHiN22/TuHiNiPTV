@@ -1,9 +1,9 @@
 <div class="context-column">
     <header class="context-header">
         <div class="context-header__top">
-            <h2>{{ 'WORKSPACE.SOURCES.TITLE' | translate }}</h2>
+            <h2>{{ 'Sources' }}</h2>
         </div>
-        <p>{{ 'WORKSPACE.SOURCES.SUBTITLE' | translate }}</p>
+        <p>{{ 'Filter and sort playlists' }}</p>
     </header>
 
     <div class="context-divider"></div>
@@ -11,7 +11,7 @@
     <section class="panel-section">
         <div class="nav-list option-list">
             <h3 class="panel-section-title">
-                {{ 'WORKSPACE.SOURCES.TYPE' | translate }}
+                {{ 'Type' }}
             </h3>
             @for (option of typeOptions; track option.id) {
                 <button
@@ -22,11 +22,7 @@
                 >
                     <mat-icon>{{ option.icon }}</mat-icon>
                     <span class="nav-item-label option-label">
-                        {{
-                            option.translationKey
-                                ? (option.translationKey | translate)
-                                : option.label
-                        }}
+                        {{ option.label ? option.label : option.label }}
                     </span>
                     <div class="nav-item-meta option-meta">
                         {{ getTypeCount(option.id) }}

@@ -6,21 +6,25 @@
             </span>
             <div>
                 <h2 mat-dialog-title>
-                    {{ 'WORKSPACE.SHORTCUTS.TITLE' | translate }}
+                    {{ 'Keyboard shortcuts' }}
                 </h2>
-                <p>{{ 'WORKSPACE.SHORTCUTS.SUBTITLE' | translate }}</p>
+                <p>
+                    {{
+                        'Workspace, navigation, playback, and dialog shortcuts available in TuHiN iPTV.'
+                    }}
+                </p>
             </div>
         </div>
         <div class="shortcuts-dialog__header-actions">
             <span class="shortcuts-dialog__platform">
                 <mat-icon aria-hidden="true">{{ data.platformIcon }}</mat-icon>
-                {{ data.platformLabelKey | translate }}
+                {{ data.platformLabelKey }}
             </span>
             <button
                 type="button"
                 mat-icon-button
                 class="shortcuts-dialog__close"
-                [attr.aria-label]="'CLOSE' | translate"
+                [attr.aria-label]="'Close'"
                 (click)="close()"
             >
                 <mat-icon>close</mat-icon>
@@ -39,7 +43,7 @@
                         >
                             <mat-icon>{{ group.icon }}</mat-icon>
                         </span>
-                        <h3>{{ group.labelKey | translate }}</h3>
+                        <h3>{{ group.labelKey }}</h3>
                     </header>
 
                     <div class="shortcuts-dialog__rows">
@@ -52,7 +56,7 @@
                                     <mat-icon>{{ item.icon }}</mat-icon>
                                 </span>
                                 <span class="shortcuts-dialog__label">
-                                    {{ item.labelKey | translate }}
+                                    {{ item.labelKey }}
                                 </span>
                                 <span class="shortcuts-dialog__chords">
                                     @for (
@@ -99,7 +103,7 @@
 
     <mat-dialog-actions align="end" class="shortcuts-dialog__actions">
         <button type="button" mat-button (click)="close()">
-            {{ 'CLOSE' | translate }}
+            {{ 'Close' }}
         </button>
     </mat-dialog-actions>
 </section>

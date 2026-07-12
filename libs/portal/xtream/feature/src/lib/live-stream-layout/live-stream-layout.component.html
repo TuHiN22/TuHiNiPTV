@@ -33,8 +33,8 @@
             <button
                 mat-icon-button
                 type="button"
-                [attr.aria-label]="'LAYOUT.HIDE_CHANNELS_LIST' | translate"
-                [matTooltip]="'LAYOUT.TOGGLE_SIDEBAR_TOOLTIP' | translate"
+                [attr.aria-label]="'Hide channels list'"
+                [matTooltip]="'Toggle channels list (⌘/Ctrl+B)'"
                 [attr.aria-pressed]="isSidebarCollapsed()"
                 (click)="toggleSidebar()"
             >
@@ -84,8 +84,8 @@
             mat-icon-button
             type="button"
             class="sidebar-restore"
-            [attr.aria-label]="'LAYOUT.SHOW_CHANNELS_LIST' | translate"
-            [matTooltip]="'LAYOUT.TOGGLE_SIDEBAR_TOOLTIP' | translate"
+            [attr.aria-label]="'Show channels list'"
+            [matTooltip]="'Toggle channels list (⌘/Ctrl+B)'"
             [attr.aria-pressed]="isSidebarCollapsed()"
             (click)="toggleSidebar()"
         >
@@ -166,7 +166,7 @@
     } @else {
         <app-portal-empty-state
             icon="live_tv"
-            [message]="'CHANNELS.SELECT_CHANNEL_PLAYBACK' | translate"
+            [message]="'Please select a channel to start playback'"
         />
     }
 </div>

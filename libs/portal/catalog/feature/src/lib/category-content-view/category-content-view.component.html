@@ -18,21 +18,19 @@
                             <div
                                 class="refinement-chip sort-refinement-chip"
                                 [attr.aria-label]="
-                                    ('WORKSPACE.SORT_LABEL' | translate) +
-                                    (activeSortLabelKey() | translate)
+                                    'Sort: ' + activeSortLabelKey()
                                 "
                             >
                                 <mat-icon>sort</mat-icon>
                                 <span
                                     class="refinement-chip-label refinement-chip-label-full"
                                 >
-                                    {{ 'WORKSPACE.SORT_LABEL' | translate
-                                    }}{{ activeSortLabelKey() | translate }}
+                                    {{ 'Sort: ' }}{{ activeSortLabelKey() }}
                                 </span>
                                 <span
                                     class="refinement-chip-label refinement-chip-label-compact"
                                 >
-                                    {{ activeSortLabelKey() | translate }}
+                                    {{ activeSortLabelKey() }}
                                 </span>
                             </div>
                         }
@@ -43,16 +41,16 @@
                                 class="refinement-chip rating-refinement-chip"
                                 (click)="setMinRating(null)"
                                 [attr.aria-label]="
-                                    'WORKSPACE.REFINE_CLEAR_RATING'
-                                        | translate: { value: rating }
+                                    'Clear ' +
+                                    rating +
+                                    '.0 and higher rating filter'
                                 "
                             >
                                 <mat-icon>star</mat-icon>
                                 <span
                                     class="refinement-chip-label refinement-chip-label-full"
                                 >
-                                    {{ 'WORKSPACE.FILTER_RATING' | translate }}:
-                                    {{ rating }}.0+
+                                    {{ 'Filter by rating' }}: {{ rating }}.0+
                                 </span>
                                 <span
                                     class="refinement-chip-label refinement-chip-label-compact"
@@ -67,13 +65,15 @@
                         type="button"
                         mat-button
                         class="refine-action"
-                        [class.refine-action-active]="activeRefinementCount() > 0"
+                        [class.refine-action-active]="
+                            activeRefinementCount() > 0
+                        "
                         [matMenuTriggerFor]="refineMenu"
-                        [matTooltip]="'WORKSPACE.REFINE_ACTION' | translate"
-                        [attr.aria-label]="'WORKSPACE.REFINE_ACTION' | translate"
+                        [matTooltip]="'Refine'"
+                        [attr.aria-label]="'Refine'"
                     >
                         <mat-icon>tune</mat-icon>
-                        <span>{{ 'WORKSPACE.REFINE_ACTION' | translate }}</span>
+                        <span>{{ 'Refine' }}</span>
                         @if (activeRefinementCount() > 0) {
                             <span class="refine-count">{{
                                 activeRefinementCount()
@@ -83,15 +83,13 @@
                     <mat-menu #refineMenu="matMenu" class="refine-menu">
                         @if (canSortContent()) {
                             <div class="refine-menu-section-title">
-                                {{ 'WORKSPACE.REFINE_SORT_SECTION' | translate }}
+                                {{ 'Sort by' }}
                             </div>
                             <button
                                 mat-menu-item
                                 (click)="setContentSortMode('date-desc')"
                             >
-                                <span>{{
-                                    'WORKSPACE.SORT_DATE_DESC' | translate
-                                }}</span>
+                                <span>{{ 'Date Added (Latest First)' }}</span>
                                 @if (contentSortMode() === 'date-desc') {
                                     <mat-icon>check</mat-icon>
                                 }
@@ -100,9 +98,7 @@
                                 mat-menu-item
                                 (click)="setContentSortMode('date-asc')"
                             >
-                                <span>{{
-                                    'WORKSPACE.SORT_DATE_ASC' | translate
-                                }}</span>
+                                <span>{{ 'Date Added (Oldest First)' }}</span>
                                 @if (contentSortMode() === 'date-asc') {
                                     <mat-icon>check</mat-icon>
                                 }
@@ -111,9 +107,7 @@
                                 mat-menu-item
                                 (click)="setContentSortMode('name-asc')"
                             >
-                                <span>{{
-                                    'WORKSPACE.SORT_NAME_ASC' | translate
-                                }}</span>
+                                <span>{{ 'Name A-Z' }}</span>
                                 @if (contentSortMode() === 'name-asc') {
                                     <mat-icon>check</mat-icon>
                                 }
@@ -122,9 +116,7 @@
                                 mat-menu-item
                                 (click)="setContentSortMode('name-desc')"
                             >
-                                <span>{{
-                                    'WORKSPACE.SORT_NAME_DESC' | translate
-                                }}</span>
+                                <span>{{ 'Name Z-A' }}</span>
                                 @if (contentSortMode() === 'name-desc') {
                                     <mat-icon>check</mat-icon>
                                 }
@@ -134,9 +126,7 @@
                                     mat-menu-item
                                     (click)="setContentSortMode('rating-desc')"
                                 >
-                                    <span>{{
-                                        'WORKSPACE.SORT_TOP_RATED' | translate
-                                    }}</span>
+                                    <span>{{ 'Top rated' }}</span>
                                     @if (contentSortMode() === 'rating-desc') {
                                         <mat-icon>check</mat-icon>
                                     }
@@ -145,10 +135,7 @@
                                     mat-menu-item
                                     (click)="setContentSortMode('rating-asc')"
                                 >
-                                    <span>{{
-                                        'WORKSPACE.SORT_LOWEST_RATED'
-                                            | translate
-                                    }}</span>
+                                    <span>{{ 'Lowest rated first' }}</span>
                                     @if (contentSortMode() === 'rating-asc') {
                                         <mat-icon>check</mat-icon>
                                     }
@@ -160,28 +147,23 @@
                                 <div class="refine-menu-divider"></div>
                             }
                             <div class="refine-menu-section-title">
-                                {{
-                                    'WORKSPACE.REFINE_RATING_SECTION'
-                                        | translate
-                                }}
+                                {{ 'Minimum rating' }}
                             </div>
                             <button mat-menu-item (click)="setMinRating(null)">
-                                <span>{{
-                                    'WORKSPACE.FILTER_RATING_ANY' | translate
-                                }}</span>
+                                <span>{{ 'Any rating' }}</span>
                                 @if (minRating() === null) {
                                     <mat-icon>check</mat-icon>
                                 }
                             </button>
-                            @for (threshold of ratingThresholds; track threshold) {
+                            @for (
+                                threshold of ratingThresholds;
+                                track threshold
+                            ) {
                                 <button
                                     mat-menu-item
                                     (click)="setMinRating(threshold)"
                                 >
-                                    <span>{{
-                                        'WORKSPACE.FILTER_RATING_MIN'
-                                            | translate: { value: threshold }
-                                    }}</span>
+                                    <span>{{ threshold }}.0 and higher</span>
                                     @if (minRating() === threshold) {
                                         <mat-icon>check</mat-icon>
                                     }
@@ -217,10 +199,8 @@
     }
 } @else {
     <app-playlist-error-view
-        [title]="'PORTALS.ERROR_VIEW.NO_CATEGORY_SELECTED.TITLE' | translate"
-        [description]="
-            'PORTALS.ERROR_VIEW.NO_CATEGORY_SELECTED.DESCRIPTION' | translate
-        "
+        [title]="'No category selected'"
+        [description]="'Please select a category to see the content'"
         [showActionButtons]="false"
         [viewType]="'EMPTY_CATEGORY'"
     />

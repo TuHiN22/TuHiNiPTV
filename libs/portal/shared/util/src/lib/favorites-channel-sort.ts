@@ -12,8 +12,7 @@ export type FavoritesChannelSortMode =
 export const DEFAULT_FAVORITES_CHANNEL_SORT_MODE: FavoritesChannelSortMode =
     'custom';
 
-export const FAVORITES_CHANNEL_SORT_STORAGE_KEY =
-    'favorites-channel-sort-mode';
+export const FAVORITES_CHANNEL_SORT_STORAGE_KEY = 'favorites-channel-sort-mode';
 
 export function isFavoritesChannelSortMode(
     value: unknown
@@ -46,13 +45,13 @@ export function getFavoritesChannelSortModeTranslationKey(
 ): string {
     switch (mode) {
         case 'name-asc':
-            return 'WORKSPACE.SORT_NAME_ASC';
+            return 'Name A-Z';
         case 'name-desc':
-            return 'WORKSPACE.SORT_NAME_DESC';
+            return 'Name Z-A';
         case 'date-desc':
-            return 'WORKSPACE.SORT_DATE_DESC';
+            return 'Date Added (Latest First)';
         default:
-            return 'WORKSPACE.SORT_CUSTOM';
+            return 'Custom order';
     }
 }
 

@@ -152,28 +152,5 @@ libs/portal/xtream/data-access/src/lib/
 │   └── electron-xtream-data-source.ts # Reads/passes hidden categories on save
 └── stores/xtream.store.ts             # Added reloadCategories method
 
-apps/web/src/assets/i18n/
-└── en.json                      # Added translation keys
-
 global.d.ts                      # TypeScript types for IPC methods
-```
-
-## Translation Keys
-
-```json
-{
-    "XTREAM": {
-        "CATEGORY_MANAGEMENT": {
-            "TITLE": "Manage Categories",
-            "LOADING": "Loading categories...",
-            "SELECTED": "Selected",
-            "SELECT_ALL": "Select All",
-            "DESELECT_ALL": "Deselect All",
-            "SEARCH_PLACEHOLDER": "Search categories...",
-            "NO_RESULTS": "No matching categories found",
-            "NO_CATEGORIES": "No categories available",
-            "SAVE": "Save"
-        }
-    }
-}
 ```

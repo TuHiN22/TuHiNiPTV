@@ -1,4 +1,7 @@
-import { PlaybackPositionData, XtreamSerieEpisode } from '@iptvnator/shared/interfaces';
+import {
+    PlaybackPositionData,
+    XtreamSerieEpisode,
+} from '@iptvnator/shared/interfaces';
 import {
     SERIES_QUICK_START_ACTION_KIND,
     formatSeriesEpisodeCode,
@@ -51,7 +54,7 @@ describe('getSeriesQuickStartAction', () => {
 
         expect(action).toEqual({
             kind: SERIES_QUICK_START_ACTION_KIND.PlayFirst,
-            labelKey: 'XTREAM.PLAY_FIRST_EPISODE',
+            labelKey: 'Play first episode',
             episodeLabel: 'S01E01 · Episode 1',
             icon: 'play_arrow',
             episode: firstEpisode,
@@ -87,7 +90,7 @@ describe('getSeriesQuickStartAction', () => {
         });
 
         expect(action?.kind).toBe(SERIES_QUICK_START_ACTION_KIND.Resume);
-        expect(action?.labelKey).toBe('XTREAM.RESUME_EPISODE');
+        expect(action?.labelKey).toBe('Resume episode');
         expect(action?.episodeLabel).toBe('S01E02 · Episode 2');
         expect(action?.episode).toBe(latestEpisode);
         expect(action?.position?.positionSeconds).toBe(30);
@@ -112,7 +115,7 @@ describe('getSeriesQuickStartAction', () => {
         });
 
         expect(action?.kind).toBe(SERIES_QUICK_START_ACTION_KIND.PlayNext);
-        expect(action?.labelKey).toBe('XTREAM.PLAY_NEXT_EPISODE');
+        expect(action?.labelKey).toBe('Play next episode');
         expect(action?.episodeLabel).toBe('S01E02 · Episode 2');
         expect(action?.episode).toBe(nextEpisode);
     });
@@ -168,7 +171,7 @@ describe('getSeriesQuickStartAction', () => {
 
         expect(action).toEqual({
             kind: SERIES_QUICK_START_ACTION_KIND.Completed,
-            labelKey: 'XTREAM.SERIES_WATCHED',
+            labelKey: 'Series watched',
             episodeLabel: 'S01E02 · Episode 2',
             icon: 'check_circle',
             episode: finalEpisode,

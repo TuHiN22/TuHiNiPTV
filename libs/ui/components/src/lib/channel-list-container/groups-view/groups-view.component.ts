@@ -18,7 +18,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslatePipe } from '@ngx-translate/core';
 import { resolveChannelEpgLookupKey } from '@iptvnator/m3u-state';
 import { Channel, EpgProgram } from '@iptvnator/shared/interfaces';
 import { buildChannelEpgMetadataMap } from '../epg-enrichment.util';
@@ -67,7 +66,6 @@ interface FilteredGroupView {
         ResizableDirective,
         ScrollingModule,
         TitleCasePipe,
-        TranslatePipe,
     ],
 })
 export class GroupsViewComponent {

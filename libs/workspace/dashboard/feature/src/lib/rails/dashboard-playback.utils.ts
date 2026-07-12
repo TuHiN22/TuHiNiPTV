@@ -59,14 +59,14 @@ export function formatRemainingLabel(
     );
     if (remaining < 60) {
         return {
-            key: 'WORKSPACE.DASHBOARD.REMAINING_SECONDS',
+            key: '{{seconds}}s left',
             params: { seconds: remaining },
         };
     }
     const totalMinutes = Math.round(remaining / 60);
     if (totalMinutes < 60) {
         return {
-            key: 'WORKSPACE.DASHBOARD.REMAINING_MINUTES',
+            key: '{{minutes}}m left',
             params: { minutes: totalMinutes },
         };
     }
@@ -74,12 +74,12 @@ export function formatRemainingLabel(
     const minutes = totalMinutes % 60;
     if (minutes === 0) {
         return {
-            key: 'WORKSPACE.DASHBOARD.REMAINING_HOURS',
+            key: '{{hours}}h left',
             params: { hours },
         };
     }
     return {
-        key: 'WORKSPACE.DASHBOARD.REMAINING_HOURS_MINUTES',
+        key: '{{hours}}h {{minutes}}m left',
         params: { hours, minutes },
     };
 }

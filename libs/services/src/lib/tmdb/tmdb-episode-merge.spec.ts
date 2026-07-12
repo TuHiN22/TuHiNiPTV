@@ -50,7 +50,7 @@ describe('mergeEpisodesWithTmdb', () => {
         expect(info.rating).toBe(8.1);
     });
 
-    it('recognizes localized and SxxEyy generic titles', () => {
+    it('recognizes non-English and SxxEyy generic titles', () => {
         const cases = ['Серия 4', 'S01E04', '4', ''];
         for (const title of cases) {
             const [merged] = mergeEpisodesWithTmdb(

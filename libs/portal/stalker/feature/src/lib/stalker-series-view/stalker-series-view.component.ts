@@ -12,7 +12,6 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FavoritesButtonComponent } from '../stalker-favorites-button/stalker-favorites-button.component';
 import {
     DetailActionsTemplateDirective,
@@ -93,7 +92,6 @@ import {
         PortalDetailShellComponent,
         PortalInlinePlayerComponent,
         SafePipe,
-        TranslatePipe,
         SeasonContainerComponent,
         MatIcon,
     ],
@@ -110,7 +108,6 @@ export class StalkerSeriesViewComponent implements OnDestroy {
     );
     private readonly downloadsService = inject(DownloadsService);
     private readonly snackBar = inject(MatSnackBar);
-    private readonly translateService = inject(TranslateService);
     readonly backClicked = output<void>();
     private readonly logger = createLogger('StalkerSeriesView');
     readonly inlinePlayback = signal<ResolvedPortalPlayback | null>(null);
@@ -631,13 +628,9 @@ export class StalkerSeriesViewComponent implements OnDestroy {
     }
 
     showCopyNotification(): void {
-        this.snackBar.open(
-            this.translateService.instant('PORTALS.STREAM_URL_COPIED'),
-            undefined,
-            {
-                duration: 2000,
-            }
-        );
+        this.snackBar.open('Stream URL copied to clipboard', undefined, {
+            duration: 2000,
+        });
     }
 
     handleExternalFallbackRequest(request: PlaybackFallbackRequest): void {
@@ -700,13 +693,12 @@ export class StalkerSeriesViewComponent implements OnDestroy {
         } catch (error) {
             this.logger.error('Failed to start inline series playback', error);
             const failure = classifyStalkerPlaybackFailure(error);
-            const errorMessage = this.translateService.instant(
+            const errorMessage =
                 failure === 'content-unavailable'
-                    ? 'PORTALS.CONTENT_NOT_AVAILABLE'
+                    ? 'This content is not available on this server'
                     : failure === 'stream-offline'
-                      ? 'PORTALS.STREAM_OFFLINE'
-                      : 'PORTALS.PLAYBACK_ERROR'
-            );
+                      ? 'STREAM is OFFLINE'
+                      : 'Failed to get playback URL';
             this.snackBar.open(errorMessage, undefined, {
                 duration: 3000,
             });

@@ -62,21 +62,21 @@ export function hasUsableXtreamVodMetadata(
 
     return Boolean(
         info.description ||
-            info.plot ||
-            info.movie_image ||
-            info.cover_big ||
-            info.genre ||
-            info.releasedate ||
-            info.duration ||
-            info.duration_secs ||
-            info.country ||
-            info.director ||
-            info.actors ||
-            info.cast ||
-            info.youtube_trailer ||
-            info.rating_imdb ||
-            info.rating_kinopoisk ||
-            info.backdrop_path?.length
+        info.plot ||
+        info.movie_image ||
+        info.cover_big ||
+        info.genre ||
+        info.releasedate ||
+        info.duration ||
+        info.duration_secs ||
+        info.country ||
+        info.director ||
+        info.actors ||
+        info.cast ||
+        info.youtube_trailer ||
+        info.rating_imdb ||
+        info.rating_kinopoisk ||
+        info.backdrop_path?.length
     );
 }
 
@@ -137,7 +137,7 @@ export function buildXtreamVodFallbackViewModel(
 
     const facts: XtreamVodFallbackFact[] = [
         {
-            labelKey: 'XTREAM.DETAIL_FALLBACK.STREAM_ID',
+            labelKey: 'Stream ID',
             monospace: true,
             value: String(streamId),
         },
@@ -145,14 +145,14 @@ export function buildXtreamVodFallbackViewModel(
 
     if (categoryName) {
         facts.push({
-            labelKey: 'XTREAM.DETAIL_FALLBACK.CATEGORY',
+            labelKey: 'Category',
             value: categoryName,
         });
     }
 
     if (format) {
         facts.push({
-            labelKey: 'XTREAM.DETAIL_FALLBACK.CONTAINER',
+            labelKey: 'Format',
             monospace: true,
             value: format,
         });
@@ -160,7 +160,7 @@ export function buildXtreamVodFallbackViewModel(
 
     if (sourceTitle && sourceTitle !== title) {
         facts.push({
-            labelKey: 'XTREAM.DETAIL_FALLBACK.SOURCE_TITLE',
+            labelKey: 'Source title',
             value: sourceTitle,
         });
     }

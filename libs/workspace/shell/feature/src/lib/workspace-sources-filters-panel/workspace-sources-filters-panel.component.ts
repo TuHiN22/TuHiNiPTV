@@ -12,7 +12,6 @@ import {
     selectActiveTypeFilters,
     selectAllPlaylistsMeta,
 } from '@iptvnator/m3u-state';
-import { TranslatePipe } from '@ngx-translate/core';
 
 type PlaylistFilterId = 'all' | 'm3u' | 'xtream' | 'stalker';
 
@@ -20,14 +19,13 @@ interface PlaylistFilterOption {
     id: PlaylistFilterId;
     icon: string;
     label?: string;
-    translationKey?: string;
 }
 
 const ALL_FILTERS = ['m3u', 'xtream', 'stalker'];
 
 @Component({
     selector: 'app-workspace-sources-filters-panel',
-    imports: [MatIcon, MatListModule, TranslatePipe],
+    imports: [MatIcon, MatListModule],
     templateUrl: './workspace-sources-filters-panel.component.html',
     styleUrl: './workspace-sources-filters-panel.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,28 +36,30 @@ export class WorkspaceSourcesFiltersPanelComponent {
     private readonly activeTypeFilters = this.store.selectSignal(
         selectActiveTypeFilters
     );
-    private readonly playlists = this.store.selectSignal(selectAllPlaylistsMeta);
+    private readonly playlists = this.store.selectSignal(
+        selectAllPlaylistsMeta
+    );
 
     readonly typeOptions: PlaylistFilterOption[] = [
         {
             id: 'all',
             icon: 'layers',
-            translationKey: 'WORKSPACE.SOURCES.ALL',
+            label: 'All',
         },
         {
             id: 'm3u',
             icon: 'playlist_play',
-            translationKey: 'HOME.PLAYLIST_TYPES.M3U',
+            label: 'M3U (local, url, text)',
         },
         {
             id: 'xtream',
             icon: 'cloud',
-            translationKey: 'HOME.PLAYLIST_TYPES.XTREAM',
+            label: 'Xtream',
         },
         {
             id: 'stalker',
             icon: 'router',
-            translationKey: 'HOME.PLAYLIST_TYPES.STALKER',
+            label: 'Stalker',
         },
     ];
 
@@ -87,8 +87,7 @@ export class WorkspaceSourcesFiltersPanelComponent {
     }
 
     selectType(filterId: PlaylistFilterId): void {
-        const selectedFilters =
-            filterId === 'all' ? ALL_FILTERS : [filterId];
+        const selectedFilters = filterId === 'all' ? ALL_FILTERS : [filterId];
         this.store.dispatch(
             FilterActions.setSelectedFilters({
                 selectedFilters,

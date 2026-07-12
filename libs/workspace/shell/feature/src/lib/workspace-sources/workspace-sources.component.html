@@ -19,7 +19,7 @@
                 <mat-icon class="sort-trigger__caret">arrow_drop_down</mat-icon>
             </button>
             <mat-menu #sortMenu="matMenu" xPosition="before">
-                @for (option of sortOptions; track option.translationKey) {
+                @for (option of sortOptions; track option.label) {
                     <button
                         mat-menu-item
                         type="button"
@@ -27,7 +27,7 @@
                         (click)="setSortOption(option)"
                     >
                         <mat-icon>{{ option.icon }}</mat-icon>
-                        <span>{{ option.translationKey | translate }}</span>
+                        <span>{{ option.label }}</span>
                         @if (isSortActive(option)) {
                             <mat-icon class="sort-menu__check">check</mat-icon>
                         }

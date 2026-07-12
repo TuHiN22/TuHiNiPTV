@@ -16,7 +16,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     GridListComponent,
     PlaylistErrorViewComponent,
@@ -55,7 +54,6 @@ interface CategoryContentItem {
         MatTooltip,
         NgComponentOutlet,
         PlaylistErrorViewComponent,
-        TranslatePipe,
     ],
 })
 export class CategoryContentViewComponent implements OnInit {
@@ -63,7 +61,6 @@ export class CategoryContentViewComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly hostElement = inject(ElementRef<HTMLElement>);
     private readonly router = inject(Router);
-    private readonly translate = inject(TranslateService);
     private hasAppliedInitialQueryParams = false;
     private previousSearchQuery: string | null = null;
     private readonly catalog = inject(
@@ -94,9 +91,7 @@ export class CategoryContentViewComponent implements OnInit {
     );
     readonly categoryItemSubtitle = computed(() => {
         if (this.isXtreamLoadingSubtitle()) {
-            return this.translate.instant(
-                'WORKSPACE.SHELL.XTREAM_IMPORT_LOADING'
-            );
+            return 'Fetching playlist data from source...';
         }
 
         const itemCount = this.categoryItemCount();
@@ -124,19 +119,19 @@ export class CategoryContentViewComponent implements OnInit {
     readonly activeSortLabelKey = computed(() => {
         switch (this.contentSortMode()) {
             case 'date-desc':
-                return 'WORKSPACE.SORT_DATE_DESC';
+                return 'Date Added (Latest First)';
             case 'date-asc':
-                return 'WORKSPACE.SORT_DATE_ASC';
+                return 'Date Added (Oldest First)';
             case 'name-asc':
-                return 'WORKSPACE.SORT_NAME_ASC';
+                return 'Name A-Z';
             case 'name-desc':
-                return 'WORKSPACE.SORT_NAME_DESC';
+                return 'Name Z-A';
             case 'rating-desc':
-                return 'WORKSPACE.SORT_TOP_RATED';
+                return 'Top rated';
             case 'rating-asc':
-                return 'WORKSPACE.SORT_LOWEST_RATED';
+                return 'Lowest rated first';
             default:
-                return 'WORKSPACE.SORT_CUSTOM';
+                return 'Custom order';
         }
     });
     readonly searchTerm = toSignal(

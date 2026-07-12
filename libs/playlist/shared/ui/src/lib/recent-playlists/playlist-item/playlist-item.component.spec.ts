@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslateModule } from '@ngx-translate/core';
 import { MockModule } from 'ng-mocks';
 import {
     PortalStatusService,
@@ -30,7 +29,6 @@ describe('PlaylistItemComponent', () => {
                 MockModule(MatIconModule),
                 MockModule(MatListModule),
                 MockModule(MatTooltipModule),
-                TranslateModule.forRoot(),
             ],
             providers: [
                 {
@@ -127,9 +125,7 @@ describe('PlaylistItemComponent', () => {
         fixture.detectChanges();
 
         expect(
-            (fixture.nativeElement as HTMLElement).querySelector(
-                '.refresh-btn'
-            )
+            (fixture.nativeElement as HTMLElement).querySelector('.refresh-btn')
         ).toBeNull();
     });
 
@@ -149,9 +145,7 @@ describe('PlaylistItemComponent', () => {
         fixture.detectChanges();
 
         expect(
-            (fixture.nativeElement as HTMLElement).querySelector(
-                '.refresh-btn'
-            )
+            (fixture.nativeElement as HTMLElement).querySelector('.refresh-btn')
         ).not.toBeNull();
     });
 
@@ -173,9 +167,7 @@ describe('PlaylistItemComponent', () => {
         fixture.detectChanges();
 
         expect(
-            (fixture.nativeElement as HTMLElement).querySelector(
-                '.refresh-btn'
-            )
+            (fixture.nativeElement as HTMLElement).querySelector('.refresh-btn')
         ).not.toBeNull();
 
         fixture.destroy();
@@ -195,9 +187,7 @@ describe('PlaylistItemComponent', () => {
         fixture.detectChanges();
 
         expect(
-            (fixture.nativeElement as HTMLElement).querySelector(
-                '.refresh-btn'
-            )
+            (fixture.nativeElement as HTMLElement).querySelector('.refresh-btn')
         ).toBeNull();
     });
 

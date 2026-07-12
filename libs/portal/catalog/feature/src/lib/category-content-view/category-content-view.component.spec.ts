@@ -8,8 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ReplaySubject, of } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import {
     PORTAL_CATALOG_DETAIL_COMPONENT,
     PORTAL_CATALOG_FACADE,
@@ -114,32 +113,6 @@ describe('CategoryContentViewComponent', () => {
             imports: [CategoryContentViewComponent, NoopAnimationsModule],
             providers: [
                 {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) =>
-                            key === 'WORKSPACE.SHELL.XTREAM_IMPORT_LOADING'
-                                ? 'Fetching playlist data from source...'
-                                : key,
-                        get: (key: string) =>
-                            of(
-                                key === 'WORKSPACE.SHELL.XTREAM_IMPORT_LOADING'
-                                    ? 'Fetching playlist data from source...'
-                                    : key
-                            ),
-                        stream: (key: string) =>
-                            of(
-                                key === 'WORKSPACE.SHELL.XTREAM_IMPORT_LOADING'
-                                    ? 'Fetching playlist data from source...'
-                                    : key
-                            ),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                    },
-                },
-                {
                     provide: PORTAL_CATALOG_FACADE,
                     useValue: catalog,
                 },
@@ -174,7 +147,6 @@ describe('CategoryContentViewComponent', () => {
                         MatMenuModule,
                         MatPaginatorModule,
                         MatTooltip,
-                        TranslatePipe,
                     ],
                 },
             })
@@ -225,9 +197,7 @@ describe('CategoryContentViewComponent', () => {
         expect(refineButton).not.toBeNull();
         expect(sortChip).not.toBeNull();
         expect(sortChip?.tagName).not.toBe('BUTTON');
-        expect(
-            fixture.nativeElement.querySelector('.sort-action')
-        ).toBeNull();
+        expect(fixture.nativeElement.querySelector('.sort-action')).toBeNull();
         expect(
             fixture.nativeElement.querySelector('.rating-filter-action')
         ).toBeNull();
@@ -236,10 +206,10 @@ describe('CategoryContentViewComponent', () => {
         fixture.detectChanges();
 
         const overlayText = document.body.textContent ?? '';
-        expect(overlayText).toContain('WORKSPACE.REFINE_SORT_SECTION');
-        expect(overlayText).toContain('WORKSPACE.SORT_DATE_DESC');
-        expect(overlayText).toContain('WORKSPACE.REFINE_RATING_SECTION');
-        expect(overlayText).toContain('WORKSPACE.FILTER_RATING_ANY');
+        expect(overlayText).toContain('Sort by');
+        expect(overlayText).toContain('Date Added (Latest First)');
+        expect(overlayText).toContain('Minimum rating');
+        expect(overlayText).toContain('Any rating');
     });
 
     it('shows active sort and rating chips and lets the rating chip clear the threshold', () => {
@@ -256,7 +226,7 @@ describe('CategoryContentViewComponent', () => {
             '.rating-refinement-chip'
         ) as HTMLButtonElement | null;
 
-        expect(sortChip?.textContent).toContain('WORKSPACE.SORT_TOP_RATED');
+        expect(sortChip?.textContent).toContain('Top rated');
         expect(ratingChip?.textContent).toContain('8');
 
         ratingChip?.click();
@@ -296,14 +266,15 @@ describe('CategoryContentViewComponent', () => {
 
         expect(
             sortChip?.querySelector('.refinement-chip-label-full')?.textContent
-        ).toContain('WORKSPACE.SORT_LABEL');
+        ).toContain('Sort: ');
         expect(
             sortChip?.querySelector('.refinement-chip-label-compact')
                 ?.textContent
-        ).toContain('WORKSPACE.SORT_NAME_ASC');
+        ).toContain('Name A-Z');
         expect(
-            ratingChip?.querySelector('.refinement-chip-label-full')?.textContent
-        ).toContain('WORKSPACE.FILTER_RATING');
+            ratingChip?.querySelector('.refinement-chip-label-full')
+                ?.textContent
+        ).toContain('Filter by rating');
         expect(
             ratingChip?.querySelector('.refinement-chip-label-compact')
                 ?.textContent

@@ -1,6 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { PlaylistActions } from '@iptvnator/m3u-state';
 import {
@@ -18,7 +17,6 @@ export class SettingsPlaylistResetFacade {
     private readonly runtime = inject(RuntimeCapabilitiesService);
     private readonly settingsSnackbar = inject(SettingsSnackbarService);
     private readonly store = inject(Store);
-    private readonly translate = inject(TranslateService);
 
     readonly isRemovingAllPlaylists = signal(false);
     readonly removeAllProgress = signal<DbOperationEvent | null>(null);
@@ -47,12 +45,12 @@ export class SettingsPlaylistResetFacade {
 
             this.store.dispatch(PlaylistActions.removeAllPlaylists());
             this.settingsSnackbar.open(
-                this.translate.instant('SETTINGS.PLAYLISTS_REMOVED')
+                'All playlists and playlist data were removed.'
             );
         } catch (error) {
             console.error('Error removing playlists:', error);
             this.settingsSnackbar.open(
-                this.translate.instant('SETTINGS.PLAYLISTS_REMOVE_FAILED')
+                'Could not delete playlists. Please try again.'
             );
         } finally {
             this.removeAllProgress.set(null);

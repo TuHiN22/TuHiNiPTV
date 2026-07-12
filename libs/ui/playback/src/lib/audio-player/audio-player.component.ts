@@ -19,7 +19,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Store } from '@ngrx/store';
-import { TranslatePipe } from '@ngx-translate/core';
 import { ChannelActions } from '@iptvnator/m3u-state';
 
 @Component({
@@ -70,12 +69,8 @@ import { ChannelActions } from '@iptvnator/m3u-state';
                     <button
                         mat-icon-button
                         class="skip-btn"
-                        [matTooltip]="
-                            'AUDIO_PLAYER.PREVIOUS_STATION' | translate
-                        "
-                        [attr.aria-label]="
-                            'AUDIO_PLAYER.PREVIOUS_STATION' | translate
-                        "
+                        [matTooltip]="'Previous station'"
+                        [attr.aria-label]="'Previous station'"
                         (click)="switchChannel('previous')"
                     >
                         <mat-icon>skip_previous</mat-icon>
@@ -84,17 +79,9 @@ import { ChannelActions } from '@iptvnator/m3u-state';
                     <button
                         class="play-btn"
                         mat-fab
-                        [matTooltip]="
-                            (playState() === 'play'
-                                ? 'AUDIO_PLAYER.PAUSE'
-                                : 'AUDIO_PLAYER.PLAY'
-                            ) | translate
-                        "
+                        [matTooltip]="playState() === 'play' ? 'Pause' : 'Play'"
                         [attr.aria-label]="
-                            (playState() === 'play'
-                                ? 'AUDIO_PLAYER.PAUSE'
-                                : 'AUDIO_PLAYER.PLAY'
-                            ) | translate
+                            playState() === 'play' ? 'Pause' : 'Play'
                         "
                         (click)="playState() === 'play' ? stop() : play()"
                     >
@@ -106,10 +93,8 @@ import { ChannelActions } from '@iptvnator/m3u-state';
                     <button
                         mat-icon-button
                         class="skip-btn"
-                        [matTooltip]="'AUDIO_PLAYER.NEXT_STATION' | translate"
-                        [attr.aria-label]="
-                            'AUDIO_PLAYER.NEXT_STATION' | translate
-                        "
+                        [matTooltip]="'Next station'"
+                        [attr.aria-label]="'Next station'"
                         (click)="switchChannel('next')"
                     >
                         <mat-icon>skip_next</mat-icon>
@@ -121,16 +106,10 @@ import { ChannelActions } from '@iptvnator/m3u-state';
                         mat-icon-button
                         class="vol-icon"
                         [matTooltip]="
-                            (isMuted() || volume() === 0
-                                ? 'AUDIO_PLAYER.UNMUTE'
-                                : 'AUDIO_PLAYER.MUTE'
-                            ) | translate
+                            isMuted() || volume() === 0 ? 'Unmute' : 'Mute'
                         "
                         [attr.aria-label]="
-                            (isMuted() || volume() === 0
-                                ? 'AUDIO_PLAYER.UNMUTE'
-                                : 'AUDIO_PLAYER.MUTE'
-                            ) | translate
+                            isMuted() || volume() === 0 ? 'Unmute' : 'Mute'
                         "
                         (click)="mute()"
                     >
@@ -141,14 +120,12 @@ import { ChannelActions } from '@iptvnator/m3u-state';
                         min="0"
                         max="1"
                         step="0.05"
-                        [matTooltip]="'AUDIO_PLAYER.VOLUME' | translate"
+                        [matTooltip]="'Volume'"
                     >
                         <input
                             matSliderThumb
                             [ngModel]="volume()"
-                            [attr.aria-label]="
-                                'AUDIO_PLAYER.VOLUME' | translate
-                            "
+                            [attr.aria-label]="'Volume'"
                             (ngModelChange)="setVolume($event)"
                         />
                     </mat-slider>
@@ -165,7 +142,6 @@ import { ChannelActions } from '@iptvnator/m3u-state';
         MatIconModule,
         MatSliderModule,
         MatTooltip,
-        TranslatePipe,
     ],
 })
 export class AudioPlayerComponent {
@@ -274,10 +250,7 @@ export class AudioPlayerComponent {
         this.playState.set('paused');
     }
 
-    setVolume(
-        value: number,
-        options: { emitChange?: boolean } = {}
-    ) {
+    setVolume(value: number, options: { emitChange?: boolean } = {}) {
         const clamped = Math.round(Math.max(0, Math.min(1, value)) * 100) / 100;
         this.volume.set(clamped);
         const audio = this.audioRef()?.nativeElement;

@@ -11,7 +11,6 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
-import { TranslatePipe } from '@ngx-translate/core';
 import { Channel, EpgProgram } from '@iptvnator/shared/interfaces';
 import { ChannelDetailsDialogComponent } from '../channel-details-dialog/channel-details-dialog.component';
 import { resolveChannelLogo } from '../channel-logo-fallback.util';
@@ -31,12 +30,7 @@ export interface RecentViewItem {
     templateUrl: './recent-view.component.html',
     styleUrls: ['./recent-view.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        ChannelListItemComponent,
-        MatIconModule,
-        MatMenuModule,
-        TranslatePipe,
-    ],
+    imports: [ChannelListItemComponent, MatIconModule, MatMenuModule],
 })
 export class RecentViewComponent {
     private readonly dialog = inject(MatDialog);

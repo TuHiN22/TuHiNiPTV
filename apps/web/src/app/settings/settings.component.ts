@@ -26,7 +26,6 @@ import {
 } from '@iptvnator/epg/data-access';
 import { SettingsContextService } from '@iptvnator/workspace/shell/util';
 import { Store } from '@ngrx/store';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DialogService } from '@iptvnator/ui/components';
 import {
     selectAllPlaylistsMeta,
@@ -40,7 +39,6 @@ import {
     ELECTRON_BRIDGE_APP_UPDATE_STATUSES,
     ElectronBridgeAppUpdateStatus,
     EpgViewMode,
-    Language,
     StreamFormat,
     Theme,
     VideoPlayer,
@@ -104,7 +102,6 @@ const APP_UPDATE_STATUS_LOAD_RETRY_DELAY_MS = 250;
         MatButtonModule,
         MatIconModule,
         ReactiveFormsModule,
-        TranslateModule,
         MatDialogModule,
         SettingsAboutSectionComponent,
         SettingsBackupSectionComponent,
@@ -133,7 +130,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
     private settingsService = inject(SettingsService);
     private settingsSnackbar = inject(SettingsSnackbarService);
     private store = inject(Store);
-    private translate = inject(TranslateService);
     private matDialog = inject(MatDialog);
     private readonly backupFacade = inject(SettingsBackupFacade);
     private readonly playlistResetFacade = inject(SettingsPlaylistResetFacade);
@@ -145,9 +141,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
     );
 
     @Input() isDialog = this.dialogData?.isDialog ?? false;
-    /** List with available languages as enum */
-    readonly languageEnum = Language;
-
     /** List with allowed formats as enum */
     readonly streamFormatEnum = StreamFormat;
 
@@ -176,7 +169,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
             ? [
                   {
                       id: VideoPlayer.EmbeddedMpv,
-                      labelKey: 'SETTINGS.PLAYER_EMBEDDED_MPV',
+                      labelKey: 'Embedded MPV (Experimental)',
                   },
               ]
             : []),
@@ -248,7 +241,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
         return buildRemoveAllProgressLabel({
             isRemovingAllPlaylists: this.isRemovingAllPlaylists(),
             progress: this.removeAllProgress(),
-            translate: (key, params) => this.translate.instant(key, params),
         });
     });
 
@@ -571,14 +563,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
         if (isOutdated) {
             this.updateMessage = `${
-                this.translate.instant(
-                    'SETTINGS.NEW_VERSION_AVAILABLE'
-                ) as string
+                'There is a new version available' as string
             }: ${currentVersion}`;
         } else {
-            this.updateMessage = this.translate.instant(
-                'SETTINGS.LATEST_VERSION'
-            );
+            this.updateMessage = 'You are using the latest version';
         }
     }
 
@@ -648,15 +636,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 }
             }
         }
-        this.translate.use(
-            this.settingsForm.value.language ?? Language.ENGLISH
-        );
         this.settingsService.changeTheme(
             this.settingsForm.value.theme ?? Theme.SystemTheme
         );
-        this.settingsSnackbar.open(
-            this.translate.instant('SETTINGS.SETTINGS_SAVED')
-        );
+        this.settingsSnackbar.open('Success! Configuration was saved.');
     }
 
     /**
@@ -724,10 +707,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
      */
     clearEpgData(): void {
         this.dialogService.openConfirmDialog({
-            title: this.translate.instant('SETTINGS.CLEAR_EPG_DIALOG.TITLE'),
-            message: this.translate.instant(
-                'SETTINGS.CLEAR_EPG_DIALOG.MESSAGE'
-            ),
+            title: 'Clear EPG data',
+            message:
+                'Are you sure you want to remove all EPG (Electronic Program Guide) data from the database? This will delete all cached program schedules.',
             onConfirm: async (): Promise<void> => {
                 if (
                     !this.epgBridge.supportsDataManagement ||
@@ -742,14 +724,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
                     if (result && result.success === false) {
                         throw new Error('Clear EPG returned success=false');
                     }
-                    this.settingsSnackbar.open(
-                        this.translate.instant('SETTINGS.EPG_DATA_CLEARED')
-                    );
+                    this.settingsSnackbar.open('EPG data has been cleared');
                     this.refreshAllEpg();
                 } catch (error) {
                     console.error('Failed to clear EPG data:', error);
                     this.settingsSnackbar.open(
-                        this.translate.instant('SETTINGS.EPG_DATA_CLEAR_FAILED')
+                        'Failed to clear EPG data. Please try again.'
                     );
                 } finally {
                     this.isClearingEpgData.set(false);

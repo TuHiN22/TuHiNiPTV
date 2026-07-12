@@ -6,7 +6,6 @@ import {
     output,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 import {
     CollectionContentType,
     UnifiedCollectionItem,
@@ -18,7 +17,7 @@ import { ContentCardComponent } from '../content-card/content-card.component';
     templateUrl: './unified-grid-tab.component.html',
     styleUrl: './unified-grid-tab.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ContentCardComponent, MatIconModule, TranslatePipe],
+    imports: [ContentCardComponent, MatIconModule],
 })
 export class UnifiedGridTabComponent {
     readonly items = input.required<UnifiedCollectionItem[]>();

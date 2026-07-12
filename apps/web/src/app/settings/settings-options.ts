@@ -18,17 +18,17 @@ export const SETTINGS_THEME_OPTIONS: ThemeOption[] = [
     {
         value: Theme.LightTheme,
         icon: 'light_mode',
-        labelKey: 'THEMES.LIGHT_THEME',
+        labelKey: 'Light',
     },
     {
         value: Theme.DarkTheme,
         icon: 'dark_mode',
-        labelKey: 'THEMES.DARK_THEME',
+        labelKey: 'Dark',
     },
     {
         value: Theme.SystemTheme,
         icon: 'desktop_windows',
-        labelKey: 'THEMES.SYSTEM_THEME',
+        labelKey: 'System',
     },
 ];
 
@@ -36,17 +36,17 @@ export const SETTINGS_COVER_SIZE_OPTIONS: CoverSizeOption[] = [
     {
         value: 'small' satisfies CoverSize,
         icon: 'view_module',
-        labelKey: 'SETTINGS.COVER_SIZE_SMALL',
+        labelKey: 'Small',
     },
     {
         value: 'medium' satisfies CoverSize,
         icon: 'view_comfy',
-        labelKey: 'SETTINGS.COVER_SIZE_MEDIUM',
+        labelKey: 'Medium',
     },
     {
         value: 'large' satisfies CoverSize,
         icon: 'view_quilt',
-        labelKey: 'SETTINGS.COVER_SIZE_LARGE',
+        labelKey: 'Large',
     },
 ];
 
@@ -54,49 +54,49 @@ export const SETTINGS_EPG_VIEW_MODE_OPTIONS: EpgViewModeOption[] = [
     {
         value: 'timeline' satisfies EpgViewMode,
         icon: 'view_timeline',
-        labelKey: 'SETTINGS.EPG_VIEW_MODE_TIMELINE',
+        labelKey: 'Timeline',
     },
     {
         value: 'list' satisfies EpgViewMode,
         icon: 'view_list',
-        labelKey: 'SETTINGS.EPG_VIEW_MODE_LIST',
+        labelKey: 'List',
     },
 ];
 
 export const SETTINGS_STARTUP_BEHAVIOR_OPTIONS: StartupBehaviorOption[] = [
     {
         value: StartupBehavior.FirstView,
-        labelKey: 'SETTINGS.STARTUP_BEHAVIOR_FIRST_VIEW',
+        labelKey: 'First available view',
     },
     {
         value: StartupBehavior.RestoreLastView,
-        labelKey: 'SETTINGS.STARTUP_BEHAVIOR_RESTORE_LAST_VIEW',
+        labelKey: 'Restore last view',
     },
 ];
 
 export const SETTINGS_OS_PLAYER_OPTIONS: SettingsPlayerOption[] = [
     {
         id: VideoPlayer.MPV,
-        labelKey: 'SETTINGS.PLAYER_MPV',
+        labelKey: 'MPV player',
     },
     {
         id: VideoPlayer.VLC,
-        labelKey: 'SETTINGS.PLAYER_VLC',
+        labelKey: 'VLC',
     },
 ];
 
 export const SETTINGS_EMBEDDED_PLAYER_OPTIONS: SettingsPlayerOption[] = [
     {
         id: VideoPlayer.Html5Player,
-        labelKey: 'SETTINGS.PLAYER_HTML5',
+        labelKey: 'HTML5 video player',
     },
     {
         id: VideoPlayer.VideoJs,
-        labelKey: 'SETTINGS.PLAYER_VIDEOJS',
+        labelKey: 'Video.js player',
     },
     {
         id: VideoPlayer.ArtPlayer,
-        labelKey: 'SETTINGS.PLAYER_ARTPLAYER',
+        labelKey: 'ArtPlayer',
     },
 ];
 
@@ -112,25 +112,25 @@ export function buildSettingsSectionNavItems({
     return [
         {
             id: 'general',
-            label: 'SETTINGS.NAV_GENERAL',
+            label: 'General',
             icon: 'tune',
             visible: true,
         },
         {
             id: 'playback',
-            label: 'SETTINGS.NAV_PLAYBACK',
+            label: 'Playback',
             icon: 'play_circle',
             visible: true,
         },
         {
             id: 'epg',
-            label: 'SETTINGS.NAV_EPG',
+            label: 'EPG',
             icon: 'calendar_month',
             visible: supportsEpg,
         },
         {
             id: 'dashboard',
-            label: 'SETTINGS.NAV_DASHBOARD',
+            label: 'Dashboard',
             icon: 'dashboard',
             visible: true,
         },
@@ -141,31 +141,31 @@ export function buildSettingsSectionNavItems({
             // name), which meant clicking the nav item silently no-op'd
             // because document.getElementById of that string returned null.
             id: 'remote-control',
-            label: 'SETTINGS.NAV_REMOTE',
+            label: 'Remote',
             icon: 'smartphone',
             visible: supportsRemoteControl,
         },
         {
             id: 'tmdb',
-            label: 'SETTINGS.NAV_TMDB',
+            label: 'Metadata',
             icon: 'movie',
             visible: true,
         },
         {
             id: 'backup',
-            label: 'SETTINGS.NAV_BACKUP',
+            label: 'Backup',
             icon: 'backup',
             visible: true,
         },
         {
             id: 'reset',
-            label: 'SETTINGS.NAV_RESET',
+            label: 'Reset',
             icon: 'delete_sweep',
             visible: true,
         },
         {
             id: 'about',
-            label: 'SETTINGS.NAV_ABOUT',
+            label: 'About',
             icon: 'info',
             visible: true,
         },

@@ -17,7 +17,6 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DomSanitizer } from '@angular/platform-browser';
-import { TranslatePipe } from '@ngx-translate/core';
 import { marked } from 'marked';
 import {
     ElectronBridgeAppUpdateReleaseNotes,
@@ -55,12 +54,11 @@ function decorateReleaseNotesHtml(html: string): string {
         MatIconModule,
         MatProgressSpinnerModule,
         DatePipe,
-        TranslatePipe,
     ],
     encapsulation: ViewEncapsulation.None,
     template: `
         <h2 mat-dialog-title>
-            {{ 'SETTINGS.APP_UPDATE_RELEASE_NOTES' | translate }}
+            {{ 'What's new' }}
         </h2>
 
         <mat-dialog-content class="release-notes-dialog mat-typography">
@@ -76,7 +74,9 @@ function decorateReleaseNotesHtml(html: string): string {
                 </button>
 
                 <div class="release-notes-dialog__version">
-                    <strong>{{ notes()?.releaseName || notes()?.tagName }}</strong>
+                    <strong>{{
+                        notes()?.releaseName || notes()?.tagName
+                    }}</strong>
                     @if (notes()?.publishedAt; as publishedAt) {
                         <span>{{ publishedAt | date: 'mediumDate' }}</span>
                     }
@@ -112,11 +112,11 @@ function decorateReleaseNotesHtml(html: string): string {
             @if (notes()?.htmlUrl; as htmlUrl) {
                 <button mat-button type="button" (click)="openRelease(htmlUrl)">
                     <mat-icon>open_in_new</mat-icon>
-                    {{ 'SETTINGS.APP_UPDATE_OPEN_RELEASE' | translate }}
+                    {{ 'Open GitHub release' }}
                 </button>
             }
             <button mat-flat-button type="button" (click)="close()">
-                {{ 'CLOSE' | translate }}
+                {{ 'Close' }}
             </button>
         </mat-dialog-actions>
     `,
@@ -210,9 +210,8 @@ function decorateReleaseNotesHtml(html: string): string {
     ],
 })
 export class AppUpdateReleaseNotesDialogComponent implements OnInit {
-    private readonly data = inject<AppUpdateReleaseNotesDialogData>(
-        MAT_DIALOG_DATA
-    );
+    private readonly data =
+        inject<AppUpdateReleaseNotesDialogData>(MAT_DIALOG_DATA);
     private readonly dialogRef = inject(
         MatDialogRef<AppUpdateReleaseNotesDialogComponent>
     );
@@ -271,7 +270,9 @@ export class AppUpdateReleaseNotesDialogComponent implements OnInit {
                 await window.electron.getAppUpdateReleaseNotes(request)
             );
         } catch (error) {
-            this.error.set(error instanceof Error ? error.message : String(error));
+            this.error.set(
+                error instanceof Error ? error.message : String(error)
+            );
         } finally {
             this.loading.set(false);
         }

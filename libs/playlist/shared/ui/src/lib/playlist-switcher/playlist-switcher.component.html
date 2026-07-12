@@ -24,10 +24,8 @@
             [disabled]="isRefreshingActivePlaylist()"
             (click)="onRefreshClick($event)"
             (mousedown)="$event.stopPropagation()"
-            [matTooltip]="'WORKSPACE.SHELL.REFRESH_PLAYLIST' | translate"
-            [attr.aria-label]="
-                'WORKSPACE.SHELL.REFRESH_PLAYLIST' | translate
-            "
+            [matTooltip]="'Refresh playlist'"
+            [attr.aria-label]="'Refresh playlist'"
         >
             <mat-icon
                 class="trigger-refresh-icon"
@@ -52,9 +50,7 @@
 >
     <div class="menu-header">
         <mat-icon class="menu-header-icon">playlist_play</mat-icon>
-        <span class="menu-header-title">{{
-            'HOME.PLAYLISTS.MY_PLAYLISTS' | translate
-        }}</span>
+        <span class="menu-header-title">{{ 'My playlists' }}</span>
         @if (hasSearchToggle()) {
             <button
                 mat-icon-button
@@ -62,9 +58,7 @@
                 class="search-toggle-btn"
                 [class.is-active]="searchExpanded()"
                 (click)="toggleSearchField($event)"
-                [attr.aria-label]="
-                    'HOME.PLAYLISTS.SEARCH_PLAYLISTS' | translate
-                "
+                [attr.aria-label]="'Search playlists by title'"
             >
                 <mat-icon>search</mat-icon>
             </button>
@@ -72,26 +66,26 @@
     </div>
 
     @if (showSearchField()) {
-    <div class="search-container" (click)="$event.stopPropagation()">
-        <mat-icon class="search-icon">search</mat-icon>
-        <input
-            #searchInput
-            type="text"
-            class="search-input"
-            [placeholder]="'HOME.PLAYLISTS.SEARCH_PLAYLISTS' | translate"
-            [ngModel]="searchQuery()"
-            (ngModelChange)="setSearchQuery($event)"
-        />
-        @if (searchQuery()) {
-            <button
-                mat-icon-button
-                class="clear-btn"
-                (click)="setSearchQuery('')"
-            >
-                <mat-icon>close</mat-icon>
-            </button>
-        }
-    </div>
+        <div class="search-container" (click)="$event.stopPropagation()">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input
+                #searchInput
+                type="text"
+                class="search-input"
+                [placeholder]="'Search playlists by title'"
+                [ngModel]="searchQuery()"
+                (ngModelChange)="setSearchQuery($event)"
+            />
+            @if (searchQuery()) {
+                <button
+                    mat-icon-button
+                    class="clear-btn"
+                    (click)="setSearchQuery('')"
+                >
+                    <mat-icon>close</mat-icon>
+                </button>
+            }
+        </div>
     }
 
     @if (showTypeFilters()) {
@@ -197,7 +191,7 @@
         } @empty {
             <div class="empty-state">
                 <mat-icon>playlist_add</mat-icon>
-                <span>{{ 'HOME.PLAYLISTS.NO_PLAYLISTS' | translate }}</span>
+                <span>{{ 'No playlists were added' }}</span>
             </div>
         }
     </div>
@@ -210,9 +204,7 @@
                     (click)="requestAddPlaylist()"
                 >
                     <mat-icon>add</mat-icon>
-                    <span>{{
-                        'WORKSPACE.SHELL.ADD_PLAYLIST' | translate
-                    }}</span>
+                    <span>{{ 'Add playlist' }}</span>
                 </button>
             }
             @if (showAccountInfo()) {
@@ -221,9 +213,7 @@
                     (click)="requestAccountInfo()"
                 >
                     <mat-icon>person</mat-icon>
-                    <span>{{
-                        'WORKSPACE.SHELL.ACCOUNT_INFO' | translate
-                    }}</span>
+                    <span>{{ 'Account info' }}</span>
                 </button>
             }
         </div>
@@ -234,14 +224,15 @@
     <ng-template matMenuContent let-playlist="playlist">
         <button mat-menu-item (click)="openPlaylistInfoFor(playlist, $event)">
             <mat-icon>info</mat-icon>
-            <span>{{ 'WORKSPACE.SHELL.PLAYLIST_INFO' | translate }}</span>
+            <span>{{ 'Playlist info' }}</span>
         </button>
         @if (canRefreshPlaylist(playlist)) {
-            <button mat-menu-item (click)="refreshPlaylistFor(playlist, $event)">
+            <button
+                mat-menu-item
+                (click)="refreshPlaylistFor(playlist, $event)"
+            >
                 <mat-icon>sync</mat-icon>
-                <span>{{
-                    'WORKSPACE.SHELL.REFRESH_PLAYLIST' | translate
-                }}</span>
+                <span>{{ 'Refresh playlist' }}</span>
             </button>
         }
         <mat-divider />
@@ -251,7 +242,7 @@
             (click)="removePlaylistFor(playlist, $event)"
         >
             <mat-icon>delete</mat-icon>
-            <span>{{ 'HOME.PLAYLISTS.REMOVE_DIALOG.TITLE' | translate }}</span>
+            <span>{{ 'Remove playlist' }}</span>
         </button>
     </ng-template>
 </mat-menu>

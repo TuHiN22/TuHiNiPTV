@@ -2,17 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { TmdbApiService } from './tmdb-api.service';
 import { TmdbCacheService } from './tmdb-cache.service';
 import { TMDB_DETAILS_CACHE_TTL_MS } from './tmdb-config';
-import {
-    fillSeasonFromFallback,
-    seasonNeedsTextFallback,
-} from './tmdb-language-fallback';
-import { buildDetailsLookupKey } from './tmdb-matcher';
 import { TmdbRuntimeService } from './tmdb-runtime.service';
-import { TmdbDetails, TmdbEpisode, TmdbSeasonDetails } from './tmdb.types';
+import { TmdbEpisode, TmdbSeasonDetails } from './tmdb.types';
 
 /**
  * Season payloads (overview + episode list with names, overviews, stills,
- * air dates) in the app language. Fetched lazily when a season is opened
+ * air dates) in English. Fetched lazily when a season is opened
  * and cached like details payloads. Returns `null` when enrichment is off
  * or the request fails — season data then stays provider-only.
  */
@@ -39,56 +34,7 @@ export class TmdbSeasonService {
             return null;
         }
 
-        const season = await this.fetchSeason(
-            tmdbId,
-            seasonNumber,
-            this.runtime.language()
-        );
-        if (!season || !seasonNeedsTextFallback(season)) {
-            return season;
-        }
-
-        // No usable text in the app language — retry once in the show's
-        // original language (read from the already-cached show details)
-        // and fill the missing overviews/names.
-        const fallbackLanguage = await this.originalShowLanguage(tmdbId);
-        if (
-            !fallbackLanguage ||
-            this.runtime
-                .language()
-                .toLowerCase()
-                .startsWith(fallbackLanguage.toLowerCase())
-        ) {
-            return season;
-        }
-        const fallback = await this.fetchSeason(
-            tmdbId,
-            seasonNumber,
-            fallbackLanguage
-        );
-        return fillSeasonFromFallback(season, fallback);
-    }
-
-    /**
-     * The show's original_language from the cached TV details row. Season
-     * fetches always happen after a show-level match, so the row exists;
-     * null when it doesn't (then no fallback is attempted).
-     */
-    private async originalShowLanguage(tmdbId: number): Promise<string | null> {
-        try {
-            const cached = await this.cache.get(
-                'tv',
-                buildDetailsLookupKey(tmdbId),
-                this.runtime.language()
-            );
-            if (!cached?.payload) {
-                return null;
-            }
-            const details = JSON.parse(cached.payload) as TmdbDetails;
-            return details.original_language?.trim() || null;
-        } catch {
-            return null;
-        }
+        return this.fetchSeason(tmdbId, seasonNumber, this.runtime.language());
     }
 
     private async fetchSeason(

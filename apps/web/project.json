@@ -117,12 +117,6 @@
             },
             "defaultConfiguration": "development"
         },
-        "extract-i18n": {
-            "executor": "@angular/build:extract-i18n",
-            "options": {
-                "buildTarget": "web:build"
-            }
-        },
         "lint": {
             "executor": "@nx/eslint:lint"
         },

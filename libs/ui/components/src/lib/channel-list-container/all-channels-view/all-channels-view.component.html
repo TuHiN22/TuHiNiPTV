@@ -1,6 +1,6 @@
 <header class="all-channels-header">
     <div class="all-channels-header__top">
-        <h2>{{ 'CHANNELS.ALL_CHANNELS' | translate }}</h2>
+        <h2>{{ 'All channels' }}</h2>
         <button
             type="button"
             mat-icon-button
@@ -15,8 +15,8 @@
             type="button"
             mat-icon-button
             class="all-channels-sidebar-toggle"
-            [attr.aria-label]="'LAYOUT.HIDE_CHANNELS_LIST' | translate"
-            [matTooltip]="'LAYOUT.TOGGLE_SIDEBAR_TOOLTIP' | translate"
+            [attr.aria-label]="'Hide channels list'"
+            [matTooltip]="'Toggle channels list (⌘/Ctrl+B)'"
             (click)="sidebarToggleRequested.emit()"
         >
             <mat-icon>chevron_left</mat-icon>
@@ -54,10 +54,10 @@
         <div class="no-results">
             <mat-icon class="no-results-icon">search_off</mat-icon>
             <div class="no-results-title">
-                {{ 'CHANNELS.NO_SEARCH_RESULTS' | translate }}
+                {{ 'No channels found' }}
             </div>
             <div class="no-results-hint">
-                {{ 'CHANNELS.TRY_DIFFERENT_SEARCH' | translate }}
+                {{ 'Try a different search term' }}
             </div>
         </div>
     } @else {
@@ -71,12 +71,7 @@
                     index as i;
                     trackBy: trackByFn
                 "
-                [name]="
-                    i +
-                    1 +
-                    '. ' +
-                    (channel?.name || 'CHANNELS.UNNAMED_CHANNEL' | translate)
-                "
+                [name]="i + 1 + '. ' + (channel?.name || 'Unnamed Channel')"
                 [logo]="getLogoForChannel(channel)"
                 [showEpg]="shouldShowEpg()"
                 [showDetailsContextMenu]="true"
@@ -112,6 +107,6 @@
 <mat-menu #channelContextMenu="matMenu">
     <button mat-menu-item (click)="openChannelDetails()">
         <mat-icon>info</mat-icon>
-        <span>{{ 'CHANNELS.SHOW_DETAILS' | translate }}</span>
+        <span>{{ 'Show channel details' }}</span>
     </button>
 </mat-menu>

@@ -1,5 +1,5 @@
 @if (isDialog) {
-    <h2 mat-dialog-title>{{ 'SETTINGS.GENERAL' | translate }}</h2>
+    <h2 mat-dialog-title>{{ 'General' }}</h2>
 }
 
 <div
@@ -22,11 +22,8 @@
         @if (!isDialog) {
             <!-- Reserved hook so the page test selector still resolves,
                  even though there's no visible chrome here. -->
-            <span
-                class="visually-hidden"
-                data-test-id="settings-page-header"
-            >
-                {{ 'SETTINGS.TITLE' | translate }}
+            <span class="visually-hidden" data-test-id="settings-page-header">
+                {{ 'Settings' }}
             </span>
         }
 
@@ -34,7 +31,6 @@
             <app-settings-general-section
                 [form]="settingsForm"
                 [activeSection]="activeSection()"
-                [languageEnum]="languageEnum"
                 [themeOptions]="themeOptions"
                 [coverSizeOptions]="coverSizeOptions"
                 [startupBehaviorOptions]="startupBehaviorOptions"
@@ -48,8 +44,12 @@
                 [players]="players()"
                 [streamFormatEnum]="streamFormatEnum"
                 [isDesktop]="isDesktop"
-                [supportsManagedExternalPlayers]="supportsManagedExternalPlayers"
-                [supportsExternalPlayerPathSettings]="supportsExternalPlayerPathSettings"
+                [supportsManagedExternalPlayers]="
+                    supportsManagedExternalPlayers
+                "
+                [supportsExternalPlayerPathSettings]="
+                    supportsExternalPlayerPathSettings
+                "
                 (selectRecordingFolder)="selectRecordingFolder()"
             />
 
@@ -129,7 +129,7 @@
                         data-test-id="back-to-home"
                     >
                         <mat-icon>close</mat-icon>
-                        {{ 'CLOSE' | translate }}
+                        {{ 'Close' }}
                     </button>
                 }
                 <button
@@ -140,7 +140,7 @@
                     data-test-id="save-settings"
                 >
                     <mat-icon>save</mat-icon>
-                    {{ 'SETTINGS.SAVE_CHANGES' | translate }}
+                    {{ 'Save changes' }}
                 </button>
             </footer>
         </div>

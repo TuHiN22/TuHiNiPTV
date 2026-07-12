@@ -1,7 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 import type { PlaylistType } from '../../add-playlist-menu/playlist-type';
 
 export type EmptyStateType =
@@ -29,23 +28,23 @@ interface SourceCard {
 const FEATURE_CARDS: readonly FeatureCard[] = [
     {
         icon: 'live_tv',
-        titleKey: 'HOME.PLAYLISTS.FEATURE_LIVE_TITLE',
-        descKey: 'HOME.PLAYLISTS.FEATURE_LIVE_DESC',
+        titleKey: 'Live TV',
+        descKey: 'Stream live channels with full schedule.',
     },
     {
         icon: 'movie',
-        titleKey: 'HOME.PLAYLISTS.FEATURE_VOD_TITLE',
-        descKey: 'HOME.PLAYLISTS.FEATURE_VOD_DESC',
+        titleKey: 'Movies & Series',
+        descKey: 'On-demand library with covers and details.',
     },
     {
         icon: 'event_note',
-        titleKey: 'HOME.PLAYLISTS.FEATURE_EPG_TITLE',
-        descKey: 'HOME.PLAYLISTS.FEATURE_EPG_DESC',
+        titleKey: 'EPG & Catch-up',
+        descKey: 'Program guide and time-shifted playback.',
     },
     {
         icon: 'download_for_offline',
-        titleKey: 'HOME.PLAYLISTS.FEATURE_OFFLINE_TITLE',
-        descKey: 'HOME.PLAYLISTS.FEATURE_OFFLINE_DESC',
+        titleKey: 'Offline downloads',
+        descKey: 'Save movies and episodes for later.',
         electronOnly: true,
     },
 ];
@@ -54,39 +53,26 @@ const SOURCE_CARDS: readonly SourceCard[] = [
     {
         type: 'url',
         icon: 'folder_open',
-        nameKey: 'HOME.PLAYLISTS.FEATURE_M3U',
-        needsKey: 'HOME.PLAYLISTS.SOURCE_M3U_NEEDS',
-        addLabelKey: 'HOME.PLAYLISTS.SOURCE_M3U_ADD',
-        contentKeys: [
-            'HOME.PLAYLISTS.CONTENT_LIVE',
-            'HOME.PLAYLISTS.CONTENT_EPG',
-        ],
+        nameKey: 'M3U/M3U8 Files',
+        needsKey: 'Local file or URL pointing to an M3U/M3U8 playlist.',
+        addLabelKey: 'Add M3U',
+        contentKeys: ['Live', 'EPG'],
     },
     {
         type: 'xtream',
         icon: 'cloud',
-        nameKey: 'HOME.PLAYLISTS.FEATURE_XTREAM',
-        needsKey: 'HOME.PLAYLISTS.SOURCE_XTREAM_NEEDS',
-        addLabelKey: 'HOME.PLAYLISTS.SOURCE_XTREAM_ADD',
-        contentKeys: [
-            'HOME.PLAYLISTS.CONTENT_LIVE',
-            'HOME.PLAYLISTS.CONTENT_VOD',
-            'HOME.PLAYLISTS.CONTENT_SERIES',
-            'HOME.PLAYLISTS.CONTENT_EPG',
-        ],
+        nameKey: 'Xtream Codes',
+        needsKey: 'Username, password and server URL from your provider.',
+        addLabelKey: 'Add Xtream',
+        contentKeys: ['Live', 'Movies', 'Series', 'EPG'],
     },
     {
         type: 'stalker',
         icon: 'cast',
-        nameKey: 'HOME.PLAYLISTS.FEATURE_STALKER',
-        needsKey: 'HOME.PLAYLISTS.SOURCE_STALKER_NEEDS',
-        addLabelKey: 'HOME.PLAYLISTS.SOURCE_STALKER_ADD',
-        contentKeys: [
-            'HOME.PLAYLISTS.CONTENT_LIVE',
-            'HOME.PLAYLISTS.CONTENT_VOD',
-            'HOME.PLAYLISTS.CONTENT_SERIES',
-            'HOME.PLAYLISTS.CONTENT_EPG',
-        ],
+        nameKey: 'Stalker Portal',
+        needsKey: 'Portal URL and MAC address (Ministra-compatible).',
+        addLabelKey: 'Add Stalker',
+        contentKeys: ['Live', 'Movies', 'Series', 'EPG'],
     },
 ];
 
@@ -100,7 +86,7 @@ const SOURCE_CARDS: readonly SourceCard[] = [
         './empty-state.responsive.scss',
         './empty-state.themes.scss',
     ],
-    imports: [MatButtonModule, MatIcon, TranslatePipe],
+    imports: [MatButtonModule, MatIcon],
 })
 export class EmptyStateComponent {
     readonly type = input.required<EmptyStateType>();

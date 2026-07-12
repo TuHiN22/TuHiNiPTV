@@ -1,4 +1,7 @@
-import { XtreamVodDetails, XtreamVodStream } from '@iptvnator/shared/interfaces';
+import {
+    XtreamVodDetails,
+    XtreamVodStream,
+} from '@iptvnator/shared/interfaces';
 import {
     buildXtreamVodFallbackViewModel,
     hasUsableXtreamVodMetadata,
@@ -78,16 +81,16 @@ describe('vod-details-fallback.util', () => {
             added: '2024-07-03',
             facts: [
                 {
-                    labelKey: 'XTREAM.DETAIL_FALLBACK.STREAM_ID',
+                    labelKey: 'Stream ID',
                     monospace: true,
                     value: '650020',
                 },
                 {
-                    labelKey: 'XTREAM.DETAIL_FALLBACK.CATEGORY',
+                    labelKey: 'Category',
                     value: 'DE | DISNEY',
                 },
                 {
-                    labelKey: 'XTREAM.DETAIL_FALLBACK.CONTAINER',
+                    labelKey: 'Format',
                     monospace: true,
                     value: 'MP4',
                 },
@@ -112,7 +115,7 @@ describe('vod-details-fallback.util', () => {
             added: undefined,
             facts: [
                 {
-                    labelKey: 'XTREAM.DETAIL_FALLBACK.STREAM_ID',
+                    labelKey: 'Stream ID',
                     monospace: true,
                     value: '650021',
                 },
@@ -153,16 +156,16 @@ describe('vod-details-fallback.util', () => {
             added: '2025-04-07',
             facts: [
                 {
-                    labelKey: 'XTREAM.DETAIL_FALLBACK.STREAM_ID',
+                    labelKey: 'Stream ID',
                     monospace: true,
                     value: '20000',
                 },
                 {
-                    labelKey: 'XTREAM.DETAIL_FALLBACK.CATEGORY',
+                    labelKey: 'Category',
                     value: 'Action',
                 },
                 {
-                    labelKey: 'XTREAM.DETAIL_FALLBACK.CONTAINER',
+                    labelKey: 'Format',
                     monospace: true,
                     value: 'AVI',
                 },

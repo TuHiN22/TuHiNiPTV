@@ -8,7 +8,6 @@ import {
     output,
 } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
-import { TranslatePipe } from '@ngx-translate/core';
 import { PlaylistErrorViewComponent } from '../playlist-error-view/playlist-error-view.component';
 
 interface CategoryViewItem {
@@ -21,7 +20,7 @@ interface CategoryViewItem {
 
 @Component({
     selector: 'app-category-view',
-    imports: [MatListModule, PlaylistErrorViewComponent, TranslatePipe],
+    imports: [MatListModule, PlaylistErrorViewComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './category-view.component.html',
     styleUrls: ['./category-view.component.scss'],

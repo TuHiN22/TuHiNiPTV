@@ -2,7 +2,6 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
 import { XtreamSerieEpisode } from '@iptvnator/shared/interfaces';
 import { DownloadsService } from '@iptvnator/services';
 import { of } from 'rxjs';
@@ -59,11 +58,7 @@ describe('SeasonContainerComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                NoopAnimationsModule,
-                SeasonContainerComponent,
-                TranslateModule.forRoot(),
-            ],
+            imports: [NoopAnimationsModule, SeasonContainerComponent],
             providers: [
                 {
                     provide: DownloadsService,
@@ -94,7 +89,7 @@ describe('SeasonContainerComponent', () => {
             fixture.nativeElement.querySelector('.empty-state-panel')
         ).not.toBeNull();
         expect(fixture.nativeElement.textContent).toContain(
-            'PORTALS.NO_EPISODES_AVAILABLE'
+            'No episodes available'
         );
         expect(
             fixture.nativeElement.querySelector('app-season-tabs')
@@ -137,7 +132,7 @@ describe('SeasonContainerComponent', () => {
         fixture.detectChanges();
 
         expect(fixture.nativeElement.textContent).toContain(
-            'PORTALS.SEASON_EMPTY'
+            'This season is empty'
         );
         expect(fixture.nativeElement.querySelector('.view-toggle')).toBeNull();
     });
@@ -149,9 +144,8 @@ describe('SeasonContainerComponent', () => {
         });
         fixture.detectChanges();
 
-        const pills = fixture.nativeElement.querySelectorAll(
-            '.season-tabs__pill'
-        );
+        const pills =
+            fixture.nativeElement.querySelectorAll('.season-tabs__pill');
         (pills[1] as HTMLButtonElement).click();
         fixture.detectChanges();
 
@@ -220,9 +214,8 @@ describe('SeasonContainerComponent', () => {
         });
         fixture.detectChanges();
 
-        const pills = fixture.nativeElement.querySelectorAll(
-            '.season-tabs__pill'
-        );
+        const pills =
+            fixture.nativeElement.querySelectorAll('.season-tabs__pill');
         (pills[1] as HTMLButtonElement).click();
         fixture.detectChanges();
         expect(component.selectedSeason()).toBe('2');
@@ -272,9 +265,8 @@ describe('SeasonContainerComponent', () => {
             )
         ).toBeNull();
 
-        const pills = fixture.nativeElement.querySelectorAll(
-            '.season-tabs__pill'
-        );
+        const pills =
+            fixture.nativeElement.querySelectorAll('.season-tabs__pill');
         (pills[1] as HTMLButtonElement).click();
         fixture.detectChanges();
 

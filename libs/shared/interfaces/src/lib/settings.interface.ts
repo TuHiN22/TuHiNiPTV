@@ -1,4 +1,3 @@
-import { Language } from './language.enum';
 import { StreamFormat } from './stream-format.enum';
 import { Theme } from './theme.enum';
 import { TmdbSettings } from './tmdb.interface';
@@ -81,7 +80,6 @@ export interface Settings {
     epgUrl: string[];
     streamFormat: StreamFormat;
     openStreamOnDoubleClick: boolean;
-    language: Language;
     showCaptions: boolean;
     showDashboard: boolean;
     startupBehavior: StartupBehavior;

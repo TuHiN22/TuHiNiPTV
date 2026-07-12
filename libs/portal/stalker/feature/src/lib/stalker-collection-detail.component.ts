@@ -10,7 +10,6 @@ import {
     untracked,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
 import { PortalDetailShellComponent } from '@iptvnator/ui/components';
 import {
     buildStalkerStateItem,
@@ -116,7 +115,6 @@ export class StalkerCollectionDetailComponent {
     private readonly playbackPositions = inject(PORTAL_PLAYBACK_POSITIONS);
     private readonly portalPlayer = inject(PORTAL_PLAYER);
     private readonly snackBar = inject(MatSnackBar);
-    private readonly translateService = inject(TranslateService);
     private readonly logger = createLogger('StalkerCollectionDetail');
     private readonly originalState = this.captureStoreState();
     private readonly favoritesRefresh = createRefreshTrigger();
@@ -155,7 +153,6 @@ export class StalkerCollectionDetailComponent {
         playbackPositions: this.playbackPositions,
         portalPlayer: this.portalPlayer,
         snackBar: this.snackBar,
-        translateService: this.translateService,
         logger: this.logger,
         playbackErrorLogMessage: 'Failed to start collection VOD playback',
     });

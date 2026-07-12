@@ -3,7 +3,6 @@ import type { WritableSignal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
 import {
     XtreamApiService,
     XtreamStore,
@@ -37,11 +36,7 @@ describe('AccountInfoComponent', () => {
         currentPlaylist = signal(null);
 
         await TestBed.configureTestingModule({
-            imports: [
-                AccountInfoComponent,
-                NoopAnimationsModule,
-                TranslateModule.forRoot(),
-            ],
+            imports: [AccountInfoComponent, NoopAnimationsModule],
             providers: [
                 {
                     provide: MAT_DIALOG_DATA,

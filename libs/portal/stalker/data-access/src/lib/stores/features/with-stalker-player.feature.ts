@@ -2,7 +2,6 @@ import { inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { signalStoreFeature, withMethods } from '@ngrx/signals';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { PORTAL_PLAYER, createLogger } from '@iptvnator/portal/shared/util';
 import { DataService, PlaylistsService } from '@iptvnator/services';
 import {
@@ -56,7 +55,6 @@ export function withStalkerPlayer() {
                 playerService = inject(PORTAL_PLAYER),
                 stalkerSession = inject(StalkerSessionService),
                 snackBar = inject(MatSnackBar),
-                translate = inject(TranslateService),
                 ngrxStore = inject(Store)
             ) => {
                 const storeState = store as typeof store &
@@ -431,13 +429,12 @@ export function withStalkerPlayer() {
                             logger.error('Failed to get playback URL', error);
                             const failure =
                                 classifyStalkerPlaybackFailure(error);
-                            const errorMessage = translate.instant(
+                            const errorMessage =
                                 failure === 'content-unavailable'
-                                    ? 'PORTALS.CONTENT_NOT_AVAILABLE'
+                                    ? 'This content is not available on this server'
                                     : failure === 'stream-offline'
-                                      ? 'PORTALS.STREAM_OFFLINE'
-                                      : 'PORTALS.PLAYBACK_ERROR'
-                            );
+                                      ? 'STREAM is OFFLINE'
+                                      : 'Failed to get playback URL';
 
                             snackBar.open(errorMessage, undefined, {
                                 duration: 3000,

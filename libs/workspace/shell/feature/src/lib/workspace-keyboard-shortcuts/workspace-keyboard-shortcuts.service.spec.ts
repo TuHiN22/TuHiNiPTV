@@ -92,9 +92,7 @@ describe('WorkspaceKeyboardShortcutsService', () => {
             .flatMap((group) => group.items)
             .find((item) => item.id === 'open-command-palette');
 
-        expect(dialogData.platformLabelKey).toBe(
-            'WORKSPACE.SHORTCUTS.PLATFORM.OTHER'
-        );
+        expect(dialogData.platformLabelKey).toBe('Windows/Linux layout');
         expect(commandPaletteShortcut?.chords[0].keys[0].label).toBe('Ctrl');
     });
 

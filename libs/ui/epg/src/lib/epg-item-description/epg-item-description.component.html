@@ -10,7 +10,7 @@
             type="button"
             class="epg-dialog__close"
             mat-dialog-close
-            [attr.aria-label]="'HOME.PLAYLISTS.INFO_DIALOG.CLOSE' | translate"
+            [attr.aria-label]="'Close'"
         >
             <mat-icon>close</mat-icon>
         </button>
@@ -29,7 +29,9 @@
 
     <div class="epg-dialog__body">
         <div class="epg-dialog__meta">
-            <span>{{ startMs | date: 'EEE d MMM' : '' : currentLocale() }}</span>
+            <span>{{
+                startMs | date: 'EEE d MMM' : '' : currentLocale()
+            }}</span>
             <span class="epg-dialog__dot"></span>
             <span
                 >{{ startMs | date: 'HH:mm' }} –
@@ -55,18 +57,13 @@
             <div class="epg-dialog__tags">
                 @if (epgProgram.episodeNum) {
                     <span class="epg-dialog__tag">
-                        <small>{{
-                            'EPG.PROGRAM_DIALOG.EPISODE' | translate
-                        }}</small>
+                        <small>{{ 'Episode' }}</small>
                         {{ epgProgram.episodeNum }}
                     </span>
                 }
                 @if (epgProgram.rating) {
                     <span class="epg-dialog__tag epg-dialog__tag--rating">
-                        <small>{{
-                            'EPG.PROGRAM_DIALOG.PARENTAL_RATING_SYSTEM'
-                                | translate
-                        }}</small>
+                        <small>{{ 'Rating' }}</small>
                         {{ epgProgram.rating }}
                     </span>
                 }
@@ -81,7 +78,7 @@
                     [mat-dialog-close]="'live'"
                 >
                     <mat-icon>play_arrow</mat-icon>
-                    {{ 'EPG.TIMELINE.WATCH_LIVE' | translate }}
+                    {{ 'Watch live' }}
                 </button>
             } @else if (primaryAction === 'timeshift') {
                 <button
@@ -90,12 +87,12 @@
                     [mat-dialog-close]="'timeshift'"
                 >
                     <mat-icon>replay</mat-icon>
-                    {{ 'EPG.TIMELINE.WATCH_FROM_START' | translate }}
+                    {{ 'Watch from start' }}
                 </button>
             }
             @if (archiveUnavailableNote) {
                 <span class="epg-dialog__note">{{
-                    'EPG.TIMELINE.ARCHIVE_UNAVAILABLE_NOTE' | translate
+                    'Playback unavailable — this provider does not expose an archive.'
                 }}</span>
             }
             <span class="epg-dialog__spacer"></span>
@@ -104,7 +101,7 @@
                 class="epg-dialog__btn epg-dialog__btn--ghost"
                 mat-dialog-close
             >
-                {{ 'HOME.PLAYLISTS.INFO_DIALOG.CLOSE' | translate }}
+                {{ 'Close' }}
             </button>
         </div>
     </div>

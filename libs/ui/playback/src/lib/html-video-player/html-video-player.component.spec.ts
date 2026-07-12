@@ -1,7 +1,6 @@
 import { SimpleChange } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { DataService } from '@iptvnator/services';
 import { Channel } from '@iptvnator/shared/interfaces';
 import { HtmlVideoPlayerComponent } from './html-video-player.component';
@@ -43,7 +42,7 @@ describe('HtmlVideoPlayerComponent', () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [HtmlVideoPlayerComponent, TranslateModule.forRoot()],
+            imports: [HtmlVideoPlayerComponent],
             providers: [{ provide: DataService, useValue: dataServiceMock }],
         }).compileComponents();
     }));
@@ -181,9 +180,7 @@ describe('HtmlVideoPlayerComponent', () => {
         const sources = Array.from(video.querySelectorAll('source'));
         const [source] = sources;
         expect(sources).toHaveLength(1);
-        expect(source?.src).toBe(
-            'https://stream.example/series/s01e02.mp4'
-        );
+        expect(source?.src).toBe('https://stream.example/series/s01e02.mp4');
         expect(source?.type).toBe('video/mp4');
         expect(loadSpy).toHaveBeenCalledTimes(2);
         expect(playSpy).toHaveBeenCalledTimes(2);

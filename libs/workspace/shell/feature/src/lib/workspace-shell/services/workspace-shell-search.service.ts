@@ -1,9 +1,7 @@
 import { computed, inject, Injectable } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { startWith } from 'rxjs';
 import { StalkerStore } from '@iptvnator/portal/stalker/data-access';
+import { interpolateText } from '@iptvnator/portal/shared/util';
 import { XtreamStore } from '@iptvnator/portal/xtream/data-access';
 import { RuntimeCapabilitiesService } from '@iptvnator/services';
 import { WorkspaceSearchCapability } from '@iptvnator/workspace/shell/util';
@@ -24,21 +22,13 @@ export class WorkspaceShellSearchService {
     private readonly router = inject(Router);
     private readonly xtreamStore = inject(XtreamStore);
     private readonly stalkerStore = inject(StalkerStore);
-    private readonly translate = inject(TranslateService);
     private readonly runtime = inject(RuntimeCapabilitiesService);
     private readonly routeState = inject(WorkspaceShellRouteStateService);
     private readonly searchSync = inject(WorkspaceShellSearchSyncService);
 
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
-
     readonly searchQuery = this.searchSync.searchQuery;
     readonly appliedSearchQuery = this.searchSync.appliedSearchQuery;
     readonly searchCapability = computed<WorkspaceSearchCapability>(() => {
-        this.languageTick();
-
         const route = this.routeState.currentRoute();
         const context = route.context;
         const section = route.section;
@@ -70,7 +60,7 @@ export class WorkspaceShellSearchService {
                 searchMode: dashboardContext ? 'advanced-only' : 'none',
                 placeholderKey: SEARCH_PLAYLIST_PLACEHOLDER,
                 scopeLabel: dashboardContext
-                    ? this.translateText('WORKSPACE.SHELL.RAIL_SEARCH')
+                    ? this.formatText('Advanced search')
                     : '',
                 statusLabel: '',
                 minLength: dashboardContext ? 1 : 0,
@@ -98,10 +88,8 @@ export class WorkspaceShellSearchService {
                 context: null,
                 section: null,
                 searchMode: hasSearchablePlaylists ? 'remote-search' : 'none',
-                placeholderKey: 'WORKSPACE.SHELL.SEARCH_GLOBAL_PLACEHOLDER',
-                scopeLabel: this.translateText(
-                    'WORKSPACE.SHELL.RAIL_GLOBAL_SEARCH'
-                ),
+                placeholderKey: 'Search all playlists...',
+                scopeLabel: this.formatText('Global search'),
                 statusLabel: '',
                 minLength: hasSearchablePlaylists ? 2 : 0,
                 advancedRouteTarget: null,
@@ -146,13 +134,13 @@ export class WorkspaceShellSearchService {
                 kind: route.kind,
                 context,
                 section,
-                translate: (key, params) => this.translateText(key, params),
+                formatText: (key, params) => this.formatText(key, params),
                 xtreamCategory: this.xtreamStore.getSelectedCategory(),
                 stalkerCategoryName:
                     this.stalkerStore.getSelectedCategoryName(),
             }),
             statusLabel: isDegradedStalkerItv
-                ? this.translateText(SEARCH_LOADED_ONLY_STATUS)
+                ? this.formatText(SEARCH_LOADED_ONLY_STATUS)
                 : '',
             minLength: route.searchMode === 'remote-search' ? 3 : 1,
             advancedRouteTarget: null,
@@ -238,10 +226,10 @@ export class WorkspaceShellSearchService {
         }
     }
 
-    private translateText(
+    private formatText(
         key: string,
         params?: Record<string, string | number>
     ): string {
-        return this.translate.instant(key, params);
+        return interpolateText(key, params);
     }
 }

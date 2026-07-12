@@ -3,17 +3,17 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
-import { getM3uArchiveDays, isM3uCatchupPlaybackSupported } from '@iptvnator/shared/m3u-utils';
+import {
+    getM3uArchiveDays,
+    isM3uCatchupPlaybackSupported,
+} from '@iptvnator/shared/m3u-utils';
 import { Channel } from '@iptvnator/shared/interfaces';
 
 interface ChannelDetailField {
     readonly empty?: boolean;
     readonly labelKey: string;
     readonly monospace?: boolean;
-    readonly translateParams?: Record<string, number>;
-    readonly value?: string;
-    readonly valueKey?: string;
+    readonly value: string;
 }
 
 interface HeroStat {
@@ -21,9 +21,7 @@ interface HeroStat {
     readonly icon: string;
     readonly labelKey: string;
     readonly mono?: boolean;
-    readonly translateParams?: Record<string, number>;
-    readonly value?: string;
-    readonly valueKey?: string;
+    readonly value: string;
 }
 
 @Component({
@@ -31,7 +29,7 @@ interface HeroStat {
     templateUrl: './channel-details-dialog.component.html',
     styleUrls: ['./channel-details-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ClipboardModule, MatButtonModule, MatDialogModule, MatIconModule, TranslatePipe],
+    imports: [ClipboardModule, MatButtonModule, MatDialogModule, MatIconModule],
 })
 export class ChannelDetailsDialogComponent {
     readonly channel = inject<Channel>(MAT_DIALOG_DATA);
@@ -60,87 +58,47 @@ export class ChannelDetailsDialogComponent {
     readonly heroStats: HeroStat[] = [
         {
             icon: 'tag',
-            labelKey: 'CHANNELS.DETAILS_DIALOG.CHANNEL_ID',
-            value: this.channel.id?.trim() || undefined,
-            valueKey: this.channel.id?.trim()
-                ? undefined
-                : 'CHANNELS.DETAILS_DIALOG.EMPTY',
+            labelKey: 'Channel ID',
+            value: this.channel.id?.trim() || 'Not provided',
             mono: true,
             empty: !this.channel.id?.trim(),
         },
         {
             icon: 'folder',
-            labelKey: 'CHANNELS.DETAILS_DIALOG.GROUP',
-            value: this.channel.group?.title?.trim() || undefined,
-            valueKey: this.channel.group?.title?.trim()
-                ? undefined
-                : 'CHANNELS.DETAILS_DIALOG.EMPTY',
+            labelKey: 'Group',
+            value: this.channel.group?.title?.trim() || 'Not provided',
             empty: !this.channel.group?.title?.trim(),
         },
         this.createArchiveHeroStat(),
         {
             icon: 'schedule',
-            labelKey: 'CHANNELS.DETAILS_DIALOG.TIMESHIFT',
-            value: this.channel.timeshift?.trim() || undefined,
-            valueKey: this.channel.timeshift?.trim()
-                ? undefined
-                : 'CHANNELS.DETAILS_DIALOG.NOT_AVAILABLE',
+            labelKey: 'Timeshift',
+            value: this.channel.timeshift?.trim() || 'Not available',
             empty: !this.channel.timeshift?.trim(),
         },
     ];
 
     readonly streamFields: ChannelDetailField[] = [
-        this.field(
-            'CHANNELS.DETAILS_DIALOG.EPG_PARAMS',
-            this.channel.epgParams,
-            true
-        ),
-        this.field(
-            'CHANNELS.DETAILS_DIALOG.TVG_LOGO',
-            this.channel.tvg?.logo,
-            true
-        ),
+        this.field('EPG params', this.channel.epgParams, true),
+        this.field('TVG logo', this.channel.tvg?.logo, true),
     ];
 
     readonly tvgFields: ChannelDetailField[] = [
-        this.field('CHANNELS.DETAILS_DIALOG.TVG_ID', this.channel.tvg?.id, true),
-        this.field('CHANNELS.DETAILS_DIALOG.TVG_NAME', this.channel.tvg?.name),
-        this.field(
-            'CHANNELS.DETAILS_DIALOG.TVG_URL',
-            this.channel.tvg?.url,
-            true
-        ),
-        this.field('CHANNELS.DETAILS_DIALOG.TVG_REC', this.channel.tvg?.rec),
+        this.field('TVG ID', this.channel.tvg?.id, true),
+        this.field('TVG name', this.channel.tvg?.name),
+        this.field('TVG URL', this.channel.tvg?.url, true),
+        this.field('TVG rec', this.channel.tvg?.rec),
     ];
 
     readonly catchupFields: ChannelDetailField[] = [
-        this.field(
-            'CHANNELS.DETAILS_DIALOG.CATCHUP_SOURCE',
-            this.channel.catchup?.source,
-            true
-        ),
-        this.field(
-            'CHANNELS.DETAILS_DIALOG.CATCHUP_DAYS',
-            this.channel.catchup?.days
-        ),
+        this.field('Catchup source', this.channel.catchup?.source, true),
+        this.field('Catchup days', this.channel.catchup?.days),
     ];
 
     readonly httpFields: ChannelDetailField[] = [
-        this.field(
-            'CHANNELS.DETAILS_DIALOG.HTTP_ORIGIN',
-            this.channel.http?.origin,
-            true
-        ),
-        this.field(
-            'CHANNELS.DETAILS_DIALOG.HTTP_REFERRER',
-            this.channel.http?.referrer,
-            true
-        ),
-        this.field(
-            'CHANNELS.DETAILS_DIALOG.HTTP_USER_AGENT',
-            this.channel.http?.['user-agent'],
-            true
-        ),
+        this.field('Origin', this.channel.http?.origin, true),
+        this.field('Referrer', this.channel.http?.referrer, true),
+        this.field('User-Agent', this.channel.http?.['user-agent'], true),
     ];
 
     private createArchiveHeroStat(): HeroStat {
@@ -148,19 +106,16 @@ export class ChannelDetailsDialogComponent {
             return {
                 empty: true,
                 icon: 'history',
-                labelKey: 'CHANNELS.DETAILS_DIALOG.WINDOW',
-                valueKey: 'CHANNELS.DETAILS_DIALOG.NOT_AVAILABLE',
+                labelKey: 'Archive window',
+                value: 'Not available',
             };
         }
 
         return {
             icon: 'history',
-            labelKey: 'CHANNELS.DETAILS_DIALOG.WINDOW',
-            translateParams: { count: this.archiveDays },
-            valueKey:
-                this.archiveDays === 1
-                    ? 'CHANNELS.DETAILS_DIALOG.DAYS_ONE'
-                    : 'CHANNELS.DETAILS_DIALOG.DAYS_OTHER',
+            labelKey: 'Archive window',
+            value:
+                this.archiveDays === 1 ? '1 day' : `${this.archiveDays} days`,
         };
     }
 
@@ -176,7 +131,7 @@ export class ChannelDetailsDialogComponent {
                 empty: true,
                 labelKey,
                 monospace,
-                valueKey: 'CHANNELS.DETAILS_DIALOG.EMPTY',
+                value: 'Not provided',
             };
         }
 

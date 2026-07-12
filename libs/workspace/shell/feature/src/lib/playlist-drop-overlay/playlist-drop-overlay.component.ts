@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 
 export type PlaylistDropOverlayState =
     | { kind: 'idle' }
@@ -12,7 +11,7 @@ export type PlaylistDropOverlayState =
     templateUrl: './playlist-drop-overlay.component.html',
     styleUrl: './playlist-drop-overlay.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatIcon, TranslatePipe],
+    imports: [MatIcon],
     host: {
         '[class.is-visible]': 'isVisible()',
         '[attr.aria-hidden]': '!isVisible()',
@@ -30,11 +29,11 @@ export class PlaylistDropOverlayComponent {
         if (current.kind !== 'rejected') return '';
         switch (current.reason) {
             case 'unsupported':
-                return 'WORKSPACE.SHELL.DROP_OVERLAY_REJECTED_UNSUPPORTED';
+                return 'Unsupported file type';
             case 'empty':
-                return 'WORKSPACE.SHELL.DROP_OVERLAY_REJECTED_EMPTY';
+                return 'That file is empty';
             case 'read-error':
-                return 'WORKSPACE.SHELL.DROP_OVERLAY_REJECTED_READ_ERROR';
+                return 'Could not read that file';
         }
     };
 }

@@ -8,7 +8,6 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatTooltip } from '@angular/material/tooltip';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     EpgImportProgress,
     EpgProgressService,
@@ -23,7 +22,7 @@ interface EpgTrustConfirmDialogData {
 
 @Component({
     selector: 'app-epg-trust-confirm-dialog',
-    imports: [MatButtonModule, MatDialogModule, TranslatePipe],
+    imports: [MatButtonModule, MatDialogModule],
     template: `
         <h2 mat-dialog-title>{{ data.title }}</h2>
         <mat-dialog-content class="mat-typography">
@@ -31,7 +30,7 @@ interface EpgTrustConfirmDialogData {
         </mat-dialog-content>
         <mat-dialog-actions align="end">
             <button mat-button mat-dialog-close cdkFocusInitial>
-                {{ 'CANCEL' | translate }}
+                {{ 'Cancel' }}
             </button>
             <button mat-flat-button color="primary" [mat-dialog-close]="true">
                 {{ data.confirmLabel }}
@@ -52,7 +51,6 @@ class EpgTrustConfirmDialogComponent {
         MatIconModule,
         MatTooltip,
         MatProgressBar,
-        TranslatePipe,
     ],
     templateUrl: './epg-progress-panel.component.html',
     styleUrl: './epg-progress-panel.component.scss',
@@ -60,7 +58,6 @@ class EpgTrustConfirmDialogComponent {
 export class EpgProgressPanelComponent {
     private readonly epgProgress = inject(EpgProgressService);
     private readonly dialog = inject(MatDialog);
-    private readonly translate = inject(TranslateService);
 
     readonly imports = this.epgProgress.imports;
     readonly isVisible = this.epgProgress.isVisible;
@@ -138,13 +135,10 @@ export class EpgProgressPanelComponent {
             item.errorCode ===
             ELECTRON_BRIDGE_SECURITY_ERROR_CODES.EpgPrivateNetworkBlocked
         ) {
-            return this.translateWithFallback(
-                'EPG.ALLOW_PRIVATE_SOURCE',
-                'Allow source'
-            );
+            return 'Allow source';
         }
 
-        return this.translateWithFallback('EPG.TRUST_TLS_HOST', 'Trust host');
+        return 'Trust host';
     }
 
     confirmTrust(item: EpgImportProgress): void {
@@ -154,18 +148,10 @@ export class EpgProgressPanelComponent {
         ) {
             this.openTrustDialog(
                 {
-                    title: this.translateWithFallback(
-                        'EPG.ALLOW_PRIVATE_SOURCE_TITLE',
-                        'Allow private-network EPG source?'
-                    ),
-                    message: this.translateWithFallback(
-                        'EPG.ALLOW_PRIVATE_SOURCE_WARNING',
-                        'Only allow this if you trust the EPG source. TuHiN iPTV will let this exact EPG URL connect to private or local network addresses.'
-                    ),
-                    confirmLabel: this.translateWithFallback(
-                        'EPG.ALLOW_PRIVATE_SOURCE',
-                        'Allow source'
-                    ),
+                    title: 'Allow private-network EPG source?',
+                    message:
+                        'Only allow this if you trust the EPG source. TuHiN iPTV will let this exact EPG URL connect to private or local network addresses.',
+                    confirmLabel: 'Allow source',
                 },
                 () => {
                     void this.epgProgress.trustPrivateNetworkSourceAndRetry(
@@ -178,18 +164,10 @@ export class EpgProgressPanelComponent {
 
         this.openTrustDialog(
             {
-                title: this.translateWithFallback(
-                    'EPG.TRUST_TLS_HOST_TITLE',
-                    'Trust invalid certificate?'
-                ),
-                message: this.translateWithFallback(
-                    'EPG.TRUST_TLS_HOST_WARNING',
-                    'Only continue if you trust this host. TuHiN iPTV will allow invalid TLS certificates for this host, but other hosts still require valid certificates.'
-                ),
-                confirmLabel: this.translateWithFallback(
-                    'EPG.TRUST_TLS_HOST',
-                    'Trust host'
-                ),
+                title: 'Trust invalid certificate?',
+                message:
+                    'Only continue if you trust this host. TuHiN iPTV will allow invalid TLS certificates for this host, but other hosts still require valid certificates.',
+                confirmLabel: 'Trust host',
             },
             () => {
                 void this.epgProgress.trustInsecureTlsHostAndRetry(
@@ -215,10 +193,5 @@ export class EpgProgressPanelComponent {
                     onConfirm();
                 }
             });
-    }
-
-    private translateWithFallback(key: string, fallback: string): string {
-        const translated = this.translate.instant(key);
-        return translated === key ? fallback : translated;
     }
 }

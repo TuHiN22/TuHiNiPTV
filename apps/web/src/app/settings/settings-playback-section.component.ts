@@ -7,7 +7,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { TranslateModule } from '@ngx-translate/core';
 import { StreamFormat, VideoPlayer } from '@iptvnator/shared/interfaces';
 import { SettingsPlayerOption } from './settings.models';
 
@@ -22,7 +21,6 @@ import { SettingsPlayerOption } from './settings.models';
         MatInputModule,
         MatSelectModule,
         ReactiveFormsModule,
-        TranslateModule,
     ],
     templateUrl: './settings-playback-section.component.html',
     encapsulation: ViewEncapsulation.None,

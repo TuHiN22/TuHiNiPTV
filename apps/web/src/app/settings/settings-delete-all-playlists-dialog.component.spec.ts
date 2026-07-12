@@ -1,20 +1,17 @@
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SettingsDeleteAllPlaylistsDialogComponent } from './settings-delete-all-playlists-dialog.component';
 
 describe('SettingsDeleteAllPlaylistsDialogComponent', () => {
     let component: SettingsDeleteAllPlaylistsDialogComponent;
     let fixture: ComponentFixture<SettingsDeleteAllPlaylistsDialogComponent>;
-    let translate: TranslateService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
                 SettingsDeleteAllPlaylistsDialogComponent,
                 NoopAnimationsModule,
-                TranslateModule.forRoot(),
             ],
             providers: [
                 {
@@ -30,38 +27,6 @@ describe('SettingsDeleteAllPlaylistsDialogComponent', () => {
                 },
             ],
         }).compileComponents();
-
-        translate = TestBed.inject(TranslateService);
-        translate.setTranslation(
-            'en',
-            {
-                CANCEL: 'Cancel',
-                HOME: {
-                    PLAYLIST_TYPES: {
-                        M3U: 'M3U',
-                        XTREAM: 'Xtream',
-                        STALKER: 'Stalker',
-                    },
-                },
-                SETTINGS: {
-                    REMOVE_DIALOG: {
-                        TITLE: 'Delete all playlists?',
-                        MESSAGE: 'Delete all {{count}} playlists from the app.',
-                        SUMMARY_TITLE: 'Playlist sources',
-                        CONSEQUENCES_TITLE: 'This also removes',
-                        CONSEQUENCE_FAVORITES: 'Favorites',
-                        CONSEQUENCE_RECENTLY_VIEWED: 'Recently viewed history',
-                        CONSEQUENCE_PLAYBACK: 'Playback positions',
-                        CONSEQUENCE_DOWNLOADS: 'Download history',
-                        CONSEQUENCE_XTREAM_CACHE: 'Xtream cache',
-                        BACKUP_HINT: 'Use Export first if you need a backup.',
-                        CONFIRM: 'Delete everything',
-                    },
-                },
-            },
-            true
-        );
-        translate.use('en');
 
         fixture = TestBed.createComponent(
             SettingsDeleteAllPlaylistsDialogComponent
@@ -83,7 +48,9 @@ describe('SettingsDeleteAllPlaylistsDialogComponent', () => {
         expect(text).toContain('Xtream');
         expect(text).toContain('Stalker');
         expect(text).toContain('Favorites');
-        expect(text).toContain('Use Export first if you need a backup.');
+        expect(text).toContain(
+            'Use Export first if you want a restorable backup before deleting.'
+        );
     });
 
     it('renders cancel and confirm actions', () => {

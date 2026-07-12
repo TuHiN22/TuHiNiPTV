@@ -18,7 +18,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { PlaylistContextFacade } from '@iptvnator/playlist/shared/util';
 import {
     PlaylistActions,
@@ -85,7 +84,6 @@ export class RecentPlaylistsComponent {
     private readonly sortService = inject(SortService);
     private readonly store = inject(Store);
     private readonly runtime = inject(RuntimeCapabilitiesService);
-    private readonly translate = inject(TranslateService);
     private readonly playlistContext = inject(PlaylistContextFacade);
     private readonly playlistDeleteAction = inject(PlaylistDeleteActionService);
     private readonly pendingRestoreService = inject(
@@ -242,10 +240,9 @@ export class RecentPlaylistsComponent {
         }
 
         this.dialogService.openConfirmDialog({
-            title: this.translate.instant('HOME.PLAYLISTS.REMOVE_DIALOG.TITLE'),
-            message: this.translate.instant(
-                'HOME.PLAYLISTS.REMOVE_DIALOG.MESSAGE'
-            ),
+            title: 'Remove playlist',
+            message:
+                'Are you sure you want to delete this playlist completely?',
             onConfirm: () => {
                 this.removePlaylist(item);
             },
@@ -275,9 +272,7 @@ export class RecentPlaylistsComponent {
                     PlaylistActions.removePlaylist({ playlistId: item._id })
                 );
                 this.snackBar.open(
-                    this.translate.instant(
-                        'HOME.PLAYLISTS.REMOVE_DIALOG.SUCCESS'
-                    ),
+                    'Playlist was removed successfully',
                     undefined,
                     {
                         duration: 2000,
@@ -327,12 +322,9 @@ export class RecentPlaylistsComponent {
         }
 
         this.dialogService.openConfirmDialog({
-            title: this.translate.instant(
-                'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.TITLE'
-            ),
-            message: this.translate.instant(
-                'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.MESSAGE'
-            ),
+            title: 'Refresh Xtream Playlist',
+            message:
+                'This will delete the local Xtream cache and re-import categories and streams from the remote server. Favorites, recently viewed items, hidden category visibility, and playback progress are restored after a successful re-import when matching content still exists. If the server cannot be reached, the restore remains pending until a later successful refresh. Continue?',
             width: '400px',
             onConfirm: async () => {
                 if (
@@ -350,9 +342,7 @@ export class RecentPlaylistsComponent {
                     // Show immediate feedback — deletion can take several seconds
                     // for large playlists.
                     this.snackBar.open(
-                        this.translate.instant(
-                            'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.STARTED'
-                        ),
+                        'Refresh started. Navigating to playlist...',
                         undefined,
                         { duration: 2000 }
                     );
@@ -404,9 +394,7 @@ export class RecentPlaylistsComponent {
                             error
                         );
                         this.snackBar.open(
-                            this.translate.instant(
-                                'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.ERROR'
-                            ),
+                            'Failed to refresh playlist. Please try again.',
                             undefined,
                             { duration: 3000 }
                         );
@@ -468,9 +456,7 @@ export class RecentPlaylistsComponent {
 
             this.clearBusyOperation(item._id);
             this.snackBar.open(
-                this.translate.instant(
-                    'HOME.PLAYLISTS.PLAYLIST_UPDATE_SUCCESS'
-                ),
+                'Success! The playlist was successfully updated.',
                 undefined,
                 { duration: 2000 }
             );
@@ -479,7 +465,7 @@ export class RecentPlaylistsComponent {
                 console.error('Error refreshing playlist:', error);
                 this.snackBar.open(
                     this.getPlaylistRefreshErrorMessage(error, item),
-                    this.translate.instant('CLOSE'),
+                    'Close',
                     { duration: 5000 }
                 );
             }
@@ -637,85 +623,49 @@ export class RecentPlaylistsComponent {
     private translateDeletePhase(phase?: string): string {
         switch (phase) {
             case 'deleting-favorites':
-                return this.translate.instant(
-                    'HOME.PLAYLISTS.REMOVE_DIALOG.DELETING_FAVORITES'
-                );
+                return 'Removing favorites...';
             case 'deleting-recently-viewed':
-                return this.translate.instant(
-                    'HOME.PLAYLISTS.REMOVE_DIALOG.DELETING_RECENT'
-                );
+                return 'Removing recently viewed...';
             case 'deleting-playback-positions':
-                return this.translate.instant(
-                    'HOME.PLAYLISTS.REMOVE_DIALOG.DELETING_PROGRESS'
-                );
+                return 'Removing playback progress...';
             case 'deleting-downloads':
-                return this.translate.instant(
-                    'HOME.PLAYLISTS.REMOVE_DIALOG.DELETING_DOWNLOADS'
-                );
+                return 'Removing downloads...';
             case 'deleting-content':
-                return this.translate.instant(
-                    'HOME.PLAYLISTS.REMOVE_DIALOG.DELETING_CONTENT'
-                );
+                return 'Removing cached content...';
             case 'deleting-categories':
-                return this.translate.instant(
-                    'HOME.PLAYLISTS.REMOVE_DIALOG.DELETING_CATEGORIES'
-                );
+                return 'Removing categories...';
             case 'deleting-playlist':
-                return this.translate.instant(
-                    'HOME.PLAYLISTS.REMOVE_DIALOG.DELETING_PLAYLIST'
-                );
+                return 'Removing playlist record...';
             default:
-                return this.translate.instant(
-                    'HOME.PLAYLISTS.REMOVE_DIALOG.IN_PROGRESS'
-                );
+                return 'Removing playlist...';
         }
     }
 
     private translateRefreshPhase(phase?: string): string {
         switch (phase) {
             case 'collecting-user-data':
-                return this.translate.instant(
-                    'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.COLLECTING_DATA'
-                );
+                return 'Collecting favorites and recently viewed...';
             case 'deleting-content':
-                return this.translate.instant(
-                    'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.DELETING_CONTENT'
-                );
+                return 'Removing cached content...';
             case 'deleting-categories':
-                return this.translate.instant(
-                    'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.DELETING_CATEGORIES'
-                );
+                return 'Removing cached categories...';
             default:
-                return this.translate.instant(
-                    'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.IN_PROGRESS'
-                );
+                return 'Refreshing playlist...';
         }
     }
 
     private translatePlaylistRefreshPhase(phase?: string): string {
         switch (phase) {
             case 'fetching':
-                return this.translateWithFallback(
-                    'HOME.PLAYLISTS.REFRESH_FETCHING',
-                    'Fetching playlist...'
-                );
+                return 'Fetching playlist...';
             case 'reading-file':
-                return this.translateWithFallback(
-                    'HOME.PLAYLISTS.REFRESH_READING_FILE',
-                    'Reading playlist file...'
-                );
+                return 'Reading playlist file...';
             case 'parsing':
-                return this.translateWithFallback(
-                    'HOME.PLAYLISTS.REFRESH_PARSING',
-                    'Parsing playlist...'
-                );
+                return 'Parsing playlist...';
             case 'saving':
-                return this.translateWithFallback(
-                    'HOME.PLAYLISTS.REFRESH_SAVING',
-                    'Saving playlist...'
-                );
+                return 'Saving playlist...';
             default:
-                return this.translate.instant('HOME.PLAYLISTS.REFRESH');
+                return 'Refresh playlist';
         }
     }
 
@@ -729,25 +679,14 @@ export class RecentPlaylistsComponent {
             );
 
             if (/(ENOENT|no such file or directory|not found)/i.test(message)) {
-                return this.translateWithFallback(
-                    'HOME.PLAYLISTS.PLAYLIST_UPDATE_FILE_NOT_FOUND',
-                    'Playlist refresh failed. The local file is no longer available. Check the file path or re-import the playlist.'
-                );
+                return 'Playlist refresh failed. The local file is no longer available. Check the file path or re-import the playlist.';
             }
 
             if (/(EACCES|EPERM|permission denied)/i.test(message)) {
-                return this.translateWithFallback(
-                    'HOME.PLAYLISTS.PLAYLIST_UPDATE_FILE_ACCESS_ERROR',
-                    'Playlist refresh failed. The app can no longer access the local file.'
-                );
+                return 'Playlist refresh failed. The app can no longer access the local file.';
             }
         }
 
-        return this.translate.instant('HOME.PLAYLISTS.PLAYLIST_UPDATE_ERROR');
-    }
-
-    private translateWithFallback(key: string, fallback: string): string {
-        const translated = this.translate.instant(key);
-        return translated === key ? fallback : translated;
+        return 'Error updating playlist details.';
     }
 }

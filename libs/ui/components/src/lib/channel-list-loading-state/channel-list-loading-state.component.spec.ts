@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { ChannelListLoadingStateComponent } from './channel-list-loading-state.component';
 
 describe('ChannelListLoadingStateComponent', () => {
@@ -8,10 +7,7 @@ describe('ChannelListLoadingStateComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ChannelListLoadingStateComponent,
-                TranslateModule.forRoot(),
-            ],
+            imports: [ChannelListLoadingStateComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ChannelListLoadingStateComponent);

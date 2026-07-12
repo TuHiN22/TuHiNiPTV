@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { PlaylistFileImportService } from '@iptvnator/playlist/shared/util';
 import { FileUploadComponent } from './file-upload.component';
 
@@ -22,7 +21,7 @@ describe('FileUploadComponent', () => {
         };
 
         await TestBed.configureTestingModule({
-            imports: [FileUploadComponent, TranslateModule.forRoot()],
+            imports: [FileUploadComponent],
             providers: [
                 {
                     provide: PlaylistFileImportService,

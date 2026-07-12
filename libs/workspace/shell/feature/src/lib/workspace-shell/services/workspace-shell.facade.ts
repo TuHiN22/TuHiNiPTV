@@ -1,10 +1,8 @@
 import { computed, DestroyRef, inject, Injectable } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { startWith } from 'rxjs';
 import {
     PORTAL_EXTERNAL_PLAYBACK,
+    interpolateText,
     WorkspaceHeaderContextService,
     WorkspaceResolvedCommandItem,
 } from '@iptvnator/portal/shared/util';
@@ -32,7 +30,6 @@ export class WorkspaceShellFacade {
     private readonly destroyRef = inject(DestroyRef);
     readonly externalPlayback = inject(PORTAL_EXTERNAL_PLAYBACK);
     private readonly settingsStore = inject(SettingsStore);
-    private readonly translate = inject(TranslateService);
     private readonly commandPalette = inject(
         WorkspaceShellCommandPaletteService
     );
@@ -43,11 +40,6 @@ export class WorkspaceShellFacade {
     private readonly header = inject(WorkspaceShellHeaderService);
     private readonly xtreamImport = inject(WorkspaceShellXtreamImportService);
     readonly headerContext = inject(WorkspaceHeaderContextService);
-
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
     private readonly onDocumentKeydown = (event: KeyboardEvent): void => {
         if (!(event.ctrlKey || event.metaKey)) {
             return;
@@ -75,7 +67,6 @@ export class WorkspaceShellFacade {
     readonly currentSection = this.routeState.currentSection;
     readonly commandPaletteCommands = computed<WorkspaceResolvedCommandItem[]>(
         () => {
-            this.languageTick();
             return this.commandPalette.buildPaletteCommands(
                 this.makeCommandBuilderContext()
             );
@@ -226,7 +217,7 @@ export class WorkspaceShellFacade {
             canRefreshPlaylist: this.canRefreshPlaylist(),
             supportsDownloads: this.supportsDownloads,
             showDashboard: this.showDashboard(),
-            translate: (key, params) => this.translateText(key, params),
+            formatText: (key, params) => this.formatText(key, params),
             router: this.router,
             actions: this.commandBuilderActions,
         };
@@ -246,10 +237,10 @@ export class WorkspaceShellFacade {
             this.header.openAddPlaylistDialog(kind),
     };
 
-    private translateText(
+    private formatText(
         key: string,
         params?: Record<string, string | number>
     ): string {
-        return this.translate.instant(key, params);
+        return interpolateText(key, params);
     }
 }

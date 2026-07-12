@@ -6,15 +6,13 @@ import {
     inject,
     signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import {
     PlaylistActions,
     selectAllPlaylistsMeta,
     selectPlaylistsLoadingFlag,
 } from '@iptvnator/m3u-state';
-import { firstValueFrom, startWith } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import {
     DatabaseService,
     GlobalRecentlyAddedKind,
@@ -50,6 +48,7 @@ import {
 import {
     PORTAL_PLAYBACK_POSITIONS,
     WorkspaceNavigationTarget,
+    interpolateText,
 } from '@iptvnator/portal/shared/util';
 import type { PlaybackPositionData } from '@iptvnator/shared/interfaces';
 import {
@@ -115,13 +114,8 @@ export class DashboardDataService {
     private readonly playlistsService = inject(PlaylistsService);
     private readonly runtime = inject(RuntimeCapabilitiesService);
     private readonly ngZone = inject(NgZone);
-    private readonly translate = inject(TranslateService);
     private readonly playbackPositions = inject(PORTAL_PLAYBACK_POSITIONS);
     private readonly favoritesAutoRefreshEnabled = signal(false);
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
 
     private readonly xtreamGlobalRecentItems = signal<GlobalRecentItem[]>([]);
     private readonly xtreamRecentlyAddedItemsState = signal<
@@ -233,12 +227,9 @@ export class DashboardDataService {
 
     readonly playlistBackedGlobalRecentItems = computed<GlobalRecentItem[]>(
         () => {
-            this.languageTick();
             return buildPlaylistRecentItems(this.playlists(), {
-                stalker: this.translateText(
-                    'WORKSPACE.DASHBOARD.STALKER_PORTAL'
-                ),
-                m3u: this.translateText('WORKSPACE.DASHBOARD.M3U'),
+                stalker: this.formatText('Stalker Portal'),
+                m3u: this.formatText('M3U'),
             });
         }
     );
@@ -395,10 +386,9 @@ export class DashboardDataService {
     }
 
     readonly stalkerGlobalFavorites = computed<DashboardFavoriteItem[]>(() => {
-        this.languageTick();
         return buildStalkerFavoriteItems(
             this.playlists(),
-            this.translateText('WORKSPACE.DASHBOARD.STALKER_PORTAL')
+            this.formatText('Stalker Portal')
         );
     });
 
@@ -853,37 +843,32 @@ export class DashboardDataService {
     }
 
     getPlaylistProvider(playlist: PlaylistMeta): string {
-        this.languageTick();
-
         if (playlist.serverUrl) {
-            return this.translateText('WORKSPACE.DASHBOARD.XTREAM');
+            return this.formatText('Xtream');
         }
 
         if (playlist.macAddress) {
-            return this.translateText('WORKSPACE.DASHBOARD.STALKER');
+            return this.formatText('Stalker');
         }
 
-        return this.translateText('WORKSPACE.DASHBOARD.M3U');
+        return this.formatText('M3U');
     }
 
     getRecentItemProviderLabel(item: GlobalRecentItem): string {
-        this.languageTick();
-
         if (item.source === 'stalker') {
-            return this.translateText('WORKSPACE.DASHBOARD.STALKER');
+            return this.formatText('Stalker');
         }
         if (item.source === 'xtream') {
-            return this.translateText('WORKSPACE.DASHBOARD.XTREAM');
+            return this.formatText('Xtream');
         }
         if (item.source === 'm3u') {
-            return this.translateText('WORKSPACE.DASHBOARD.M3U');
+            return this.formatText('M3U');
         }
-        return this.translateText('WORKSPACE.DASHBOARD.PROVIDER');
+        return this.formatText('Provider');
     }
 
     getRecentItemTypeLabel(item: GlobalRecentItem): string {
-        this.languageTick();
-        return this.translateText(getActivityTypeLabelKey(item.type));
+        return this.formatText(getActivityTypeLabelKey(item.type));
     }
 
     getRecentItemLink(item: GlobalRecentItem): string[] {
@@ -964,18 +949,16 @@ export class DashboardDataService {
     private getActivityItemProviderLabel(
         item: Pick<PortalActivityItem, 'source'>
     ): string {
-        this.languageTick();
-
         if (item.source === 'stalker') {
-            return this.translateText('WORKSPACE.DASHBOARD.STALKER');
+            return this.formatText('Stalker');
         }
         if (item.source === 'xtream') {
-            return this.translateText('WORKSPACE.DASHBOARD.XTREAM');
+            return this.formatText('Xtream');
         }
         if (item.source === 'm3u') {
-            return this.translateText('WORKSPACE.DASHBOARD.M3U');
+            return this.formatText('M3U');
         }
-        return this.translateText('WORKSPACE.DASHBOARD.PROVIDER');
+        return this.formatText('Provider');
     }
 
     getFavoriteItemTypeLabel(item: DashboardFavoriteItem): string {
@@ -989,8 +972,7 @@ export class DashboardDataService {
     private getActivityItemTypeLabel(
         item: Pick<PortalActivityItem, 'type'>
     ): string {
-        this.languageTick();
-        return this.translateText(getActivityTypeLabelKey(item.type));
+        return this.formatText(getActivityTypeLabelKey(item.type));
     }
 
     getGlobalFavoriteLink(item: DashboardFavoriteItem): string[] {
@@ -1086,14 +1068,12 @@ export class DashboardDataService {
     }
 
     formatTimestamp(value?: string | number): string {
-        this.languageTick();
-
         const timestamp = toTimestamp(value);
         if (!timestamp) {
-            return this.translateText('WORKSPACE.DASHBOARD.NOT_YET_SYNCED');
+            return this.formatText('Not yet synced');
         }
 
-        return new Date(timestamp).toLocaleString(this.getLocale());
+        return new Date(timestamp).toLocaleString('en-US');
     }
 
     private async loadM3uPlaylistFavorites(
@@ -1218,14 +1198,16 @@ export class DashboardDataService {
         const fallbackTimestamp =
             this.getM3uFavoriteTimestamp(playlistMeta) ??
             new Date(0).toISOString();
-        const items = resolvedChannels.slice().map((favorite) =>
-            this.createM3uFavoriteItem(
-                playlistMeta,
-                favorite.favoriteId,
-                favorite.channel,
-                fallbackTimestamp
-            )
-        );
+        const items = resolvedChannels
+            .slice()
+            .map((favorite) =>
+                this.createM3uFavoriteItem(
+                    playlistMeta,
+                    favorite.favoriteId,
+                    favorite.channel,
+                    fallbackTimestamp
+                )
+            );
 
         this.m3uFavoritesCache.set(playlistMeta._id, {
             fingerprint,
@@ -1294,18 +1276,10 @@ export class DashboardDataService {
         return toTimestamp(item.updateDate) || toTimestamp(item.importDate);
     }
 
-    private getLocale(): string | undefined {
-        return (
-            this.translate.currentLang ||
-            this.translate.defaultLang ||
-            undefined
-        );
-    }
-
-    private translateText(
+    private formatText(
         key: string,
         params?: Record<string, string | number>
     ): string {
-        return this.translate.instant(key, params);
+        return interpolateText(key, params);
     }
 }

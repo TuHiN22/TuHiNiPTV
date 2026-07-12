@@ -32,7 +32,7 @@
         <ng-template appDetailMeta>
             @if (serial.info.actors || serial.info.tmdb_cast?.length) {
                 <div class="details__meta-item">
-                    <span class="label">{{ 'XTREAM.ACTORS' | translate }}</span>
+                    <span class="label">{{ 'Actors' }}</span>
                     @if (serial.info.tmdb_cast?.length) {
                         <div class="details__cast-strip">
                             @for (
@@ -80,9 +80,7 @@
             }
             @if (serial.info.director) {
                 <div class="details__meta-item">
-                    <span class="label">{{
-                        'XTREAM.DIRECTOR' | translate
-                    }}</span>
+                    <span class="label">{{ 'Director' }}</span>
                     <span class="value">{{ serial.info.director }}</span>
                 </div>
             }
@@ -104,7 +102,7 @@
                     </span>
                     <span class="play-btn__copy">
                         <span class="play-btn__label">
-                            {{ action.labelKey | translate }}
+                            {{ action.labelKey }}
                         </span>
                         @if (action.episodeLabel) {
                             <span class="play-btn__meta">
@@ -169,7 +167,7 @@
         <div detail-extras>
             @if (similarInPortals().length) {
                 <section class="details__similar" data-test-id="tmdb-similar">
-                    <h3>{{ 'XTREAM.SIMILAR' | translate }}</h3>
+                    <h3>{{ 'Similar' }}</h3>
                     <div class="details__similar-strip">
                         @for (
                             item of similarInPortals();
@@ -212,7 +210,7 @@
             <!-- YouTube Trailer (TMDB enrichment; Stalker provides none) -->
             @if (trailerEmbedUrl(); as trailerUrl) {
                 <div class="youtube-trailer">
-                    <h3>{{ 'XTREAM.YOUTUBE_TRAILER' | translate }}</h3>
+                    <h3>{{ 'YouTube Trailer' }}</h3>
                     <div class="trailer-wrapper">
                         <iframe
                             [src]="trailerUrl | safe"

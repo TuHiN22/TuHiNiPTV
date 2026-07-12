@@ -5,7 +5,7 @@
         >{{ r.startMs | date: 'HH:mm' }} – {{ r.stopMs | date: 'HH:mm' }}</span
     >
     @if (r.when === 'now') {
-        <span class="time-now">{{ 'EPG.TIMELINE.ON_NOW' | translate }}</span>
+        <span class="time-now">{{ 'On now' }}</span>
     }
 </div>
 
@@ -23,7 +23,7 @@
     @if (isPlaying()) {
         <div class="playtag">
             <mat-icon>play_arrow</mat-icon>
-            {{ 'EPG.TIMELINE.FROM_ARCHIVE' | translate }}
+            {{ 'From archive' }}
         </div>
     }
 </div>
@@ -31,20 +31,17 @@
 <div class="aux">
     @if (r.when === 'now') {
         @if (minutesLeft() !== null) {
-            <span class="nowtag"
-                >{{ minutesLeft() }}
-                {{ 'EPG.TIMELINE.MINUTES_LEFT' | translate }}</span
-            >
+            <span class="nowtag">{{ minutesLeft() }} {{ 'min left' }}</span>
         }
     } @else if (r.canCatchUp) {
         <button
             type="button"
             class="watch"
             (click)="onWatch($event)"
-            [attr.aria-label]="'EPG.TIMELINE.WATCH_FROM_START' | translate"
+            [attr.aria-label]="'Watch from start'"
         >
             <mat-icon>replay</mat-icon>
-            {{ 'EPG.TIMELINE.WATCH' | translate }}
+            {{ 'Watch' }}
         </button>
     }
 
@@ -52,9 +49,7 @@
         type="button"
         class="icbtn"
         (click)="onInfo($event)"
-        [attr.aria-label]="
-            'EPG.PROGRAM_DIALOG.SHOW_PROGRAM_DETAILS' | translate
-        "
+        [attr.aria-label]="'Show details about this program'"
     >
         <mat-icon>info_outline</mat-icon>
     </button>

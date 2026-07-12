@@ -3,7 +3,7 @@
         <div class="channels-loading-state" aria-live="polite">
             <div class="channels-loading-state__copy">
                 <div class="channels-loading-state__title">
-                    {{ 'CHANNELS.LOADING' | translate }}
+                    {{ 'Loading channels...' }}
                 </div>
             </div>
 
@@ -53,11 +53,11 @@
         <div class="empty-search-state">
             <mat-icon class="empty-state-icon">search_off</mat-icon>
             <h3 class="empty-state-title">
-                {{ 'CHANNELS.NO_CHANNELS_FOUND' | translate }}
+                {{ 'No channels found' }}
             </h3>
             @if (searchTermInput()) {
                 <p class="empty-state-hint">
-                    {{ 'CHANNELS.TRY_DIFFERENT_SEARCH' | translate }}
+                    {{ 'Try a different search term' }}
                 </p>
             }
         </div>

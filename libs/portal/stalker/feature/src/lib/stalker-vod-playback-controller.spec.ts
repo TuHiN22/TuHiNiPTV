@@ -1,6 +1,5 @@
 import { signal } from '@angular/core';
 import type { MatSnackBar } from '@angular/material/snack-bar';
-import type { TranslateService } from '@ngx-translate/core';
 import type {
     Logger,
     PortalPlaybackPositions,
@@ -57,9 +56,6 @@ function createController() {
     const snackBar = {
         open: jest.fn(),
     } as unknown as MatSnackBar;
-    const translateService = {
-        instant: jest.fn((key: string) => key),
-    } as unknown as TranslateService;
     const logger = {
         debug: jest.fn(),
         info: jest.fn(),
@@ -73,7 +69,6 @@ function createController() {
         playbackPositions,
         portalPlayer,
         snackBar,
-        translateService,
         logger,
         playbackErrorLogMessage: 'Playback failed',
     });
@@ -127,7 +122,7 @@ describe('StalkerVodPlaybackController', () => {
         );
 
         expect(snackBar.open).toHaveBeenCalledWith(
-            'PORTALS.STREAM_OFFLINE',
+            'STREAM is OFFLINE',
             undefined,
             { duration: 3000 }
         );

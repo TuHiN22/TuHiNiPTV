@@ -1,7 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogService } from '@iptvnator/ui/components';
 import {
@@ -37,7 +36,6 @@ export interface XtreamRefreshPreparationState {
 export class PlaylistRefreshActionService {
     private readonly router = inject(Router);
     private readonly store = inject(Store);
-    private readonly translate = inject(TranslateService);
     private readonly snackBar = inject(MatSnackBar);
     private readonly dialogService = inject(DialogService);
     private readonly databaseService = inject(DatabaseService);
@@ -98,12 +96,9 @@ export class PlaylistRefreshActionService {
 
     private refreshXtream(item: PlaylistMeta): void {
         this.dialogService.openConfirmDialog({
-            title: this.translate.instant(
-                'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.TITLE'
-            ),
-            message: this.translate.instant(
-                'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.MESSAGE'
-            ),
+            title: 'Refresh Xtream Playlist',
+            message:
+                'This will delete the local Xtream cache and re-import categories and streams from the remote server. Favorites, recently viewed items, hidden category visibility, and playback progress are restored after a successful re-import when matching content still exists. If the server cannot be reached, the restore remains pending until a later successful refresh. Continue?',
             width: '400px',
             onConfirm: async () => {
                 if (this.isRefreshing()) {
@@ -121,9 +116,7 @@ export class PlaylistRefreshActionService {
 
                 try {
                     this.snackBar.open(
-                        this.translate.instant(
-                            'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.STARTED'
-                        ),
+                        'Refresh started. Navigating to playlist...',
                         undefined,
                         { duration: 2000 }
                     );
@@ -177,9 +170,7 @@ export class PlaylistRefreshActionService {
                             error
                         );
                         this.snackBar.open(
-                            this.translate.instant(
-                                'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.ERROR'
-                            ),
+                            'Failed to refresh playlist. Please try again.',
                             undefined,
                             { duration: 3000 }
                         );
@@ -232,9 +223,7 @@ export class PlaylistRefreshActionService {
             );
 
             this.snackBar.open(
-                this.translate.instant(
-                    'HOME.PLAYLISTS.PLAYLIST_UPDATE_SUCCESS'
-                ),
+                'Success! The playlist was successfully updated.',
                 undefined,
                 { duration: 2000 }
             );
@@ -251,7 +240,7 @@ export class PlaylistRefreshActionService {
                 }
                 this.snackBar.open(
                     this.getRefreshErrorMessage(error, item),
-                    this.translate.instant('CLOSE'),
+                    'Close',
                     { duration: 5000 }
                 );
             }
@@ -271,12 +260,10 @@ export class PlaylistRefreshActionService {
             error.message?.includes('ENOENT') &&
             item.filePath
         ) {
-            return this.translate.instant(
-                'HOME.PLAYLISTS.PLAYLIST_UPDATE_FILE_NOT_FOUND'
-            );
+            return 'Playlist refresh failed. The local file is no longer available. Check the file path or re-import the playlist.';
         }
 
-        return this.translate.instant('HOME.PLAYLISTS.PLAYLIST_UPDATE_ERROR');
+        return 'Error updating playlist details.';
     }
 
     private handlePlaylistSecurityError(
@@ -292,14 +279,8 @@ export class PlaylistRefreshActionService {
         }
 
         const ref = this.snackBar.open(
-            this.translateWithFallback(
-                'HOME.URL_UPLOAD.ERROR_INVALID_TLS',
-                'Certificate for this playlist host is invalid.'
-            ),
-            this.translateWithFallback(
-                'HOME.URL_UPLOAD.TRUST_TLS_HOST',
-                'Trust host'
-            ),
+            'Certificate for this playlist host is invalid.',
+            'Trust host',
             { duration: 10000 }
         );
         ref.onAction().subscribe(() => {
@@ -314,29 +295,18 @@ export class PlaylistRefreshActionService {
     ): void {
         if (!host) {
             this.snackBar.open(
-                this.translateWithFallback(
-                    'HOME.URL_UPLOAD.ERROR_TLS_HOST_UNKNOWN',
-                    'Could not determine the playlist host. Please retry manually.'
-                ),
-                this.translate.instant('CLOSE'),
+                'Could not determine the playlist host. Please retry manually.',
+                'Close',
                 { duration: 5000 }
             );
             return;
         }
 
         this.dialogService.openConfirmDialog({
-            title: this.translateWithFallback(
-                'HOME.URL_UPLOAD.TRUST_TLS_HOST_TITLE',
-                'Trust invalid certificate?'
-            ),
-            message: this.translateWithFallback(
-                'HOME.URL_UPLOAD.TRUST_TLS_HOST_WARNING',
-                'Only continue if you trust this playlist host. TuHiN iPTV will allow invalid TLS certificates for this host, but other hosts still require valid certificates.'
-            ),
-            confirmLabel: this.translateWithFallback(
-                'HOME.URL_UPLOAD.TRUST_TLS_HOST',
-                'Trust host'
-            ),
+            title: 'Trust invalid certificate?',
+            message:
+                'Only continue if you trust this playlist host. TuHiN iPTV will allow invalid TLS certificates for this host, but other hosts still require valid certificates.',
+            confirmLabel: 'Trust host',
             width: '420px',
             onConfirm: () => {
                 void this.trustPlaylistHost(host).then(retry);
@@ -356,11 +326,6 @@ export class PlaylistRefreshActionService {
         await this.settingsStore.updateSettings({
             trustedInsecureTlsHosts: Array.from(trustedHosts),
         });
-    }
-
-    private translateWithFallback(key: string, fallback: string): string {
-        const translated = this.translate.instant(key);
-        return translated === key ? fallback : translated;
     }
 
     private updateRefreshPreparationFromEvent(

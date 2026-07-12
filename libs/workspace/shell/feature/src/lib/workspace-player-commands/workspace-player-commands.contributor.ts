@@ -1,6 +1,5 @@
 import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
 import {
     WorkspaceCommandContribution,
     WorkspaceViewCommandService,
@@ -25,7 +24,7 @@ const PLAYER_COMMAND_DEFS: readonly PlayerCommandDefinition[] = [
         id: 'switch-player-videojs',
         player: VideoPlayer.VideoJs,
         icon: 'play_circle',
-        nameKey: 'SETTINGS.PLAYER_VIDEOJS',
+        nameKey: 'Video.js player',
         keywords: ['player', 'videojs', 'video.js'],
         requires: 'none',
         priority: 90,
@@ -34,7 +33,7 @@ const PLAYER_COMMAND_DEFS: readonly PlayerCommandDefinition[] = [
         id: 'switch-player-html5',
         player: VideoPlayer.Html5Player,
         icon: 'play_circle',
-        nameKey: 'SETTINGS.PLAYER_HTML5',
+        nameKey: 'HTML5 video player',
         keywords: ['player', 'html5'],
         requires: 'none',
         priority: 91,
@@ -43,7 +42,7 @@ const PLAYER_COMMAND_DEFS: readonly PlayerCommandDefinition[] = [
         id: 'switch-player-artplayer',
         player: VideoPlayer.ArtPlayer,
         icon: 'play_circle',
-        nameKey: 'SETTINGS.PLAYER_ARTPLAYER',
+        nameKey: 'ArtPlayer',
         keywords: ['player', 'artplayer', 'art'],
         requires: 'none',
         priority: 92,
@@ -52,7 +51,7 @@ const PLAYER_COMMAND_DEFS: readonly PlayerCommandDefinition[] = [
         id: 'switch-player-embedded-mpv',
         player: VideoPlayer.EmbeddedMpv,
         icon: 'play_circle',
-        nameKey: 'SETTINGS.PLAYER_EMBEDDED_MPV',
+        nameKey: 'Embedded MPV (Experimental)',
         keywords: ['player', 'embedded', 'mpv', 'native'],
         requires: 'embedded-mpv',
         priority: 93,
@@ -61,7 +60,7 @@ const PLAYER_COMMAND_DEFS: readonly PlayerCommandDefinition[] = [
         id: 'switch-player-mpv',
         player: VideoPlayer.MPV,
         icon: 'play_circle_outline',
-        nameKey: 'SETTINGS.PLAYER_MPV',
+        nameKey: 'MPV player',
         keywords: ['player', 'mpv', 'external'],
         requires: 'managed-external',
         priority: 94,
@@ -70,7 +69,7 @@ const PLAYER_COMMAND_DEFS: readonly PlayerCommandDefinition[] = [
         id: 'switch-player-vlc',
         player: VideoPlayer.VLC,
         icon: 'play_circle_outline',
-        nameKey: 'SETTINGS.PLAYER_VLC',
+        nameKey: 'VLC',
         keywords: ['player', 'vlc', 'external'],
         requires: 'managed-external',
         priority: 95,
@@ -82,7 +81,6 @@ export class WorkspacePlayerCommandsContributor {
     private readonly viewCommands = inject(WorkspaceViewCommandService);
     private readonly settingsStore = inject(SettingsStore);
     private readonly snackBar = inject(MatSnackBar);
-    private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly runtime = inject(RuntimeCapabilitiesService);
     private readonly embeddedMpvSupported = signal(false);
@@ -141,17 +139,13 @@ export class WorkspacePlayerCommandsContributor {
             id: def.id,
             group: 'global',
             icon: def.icon,
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.SWITCH_PLAYER_LABEL',
-            labelParams: () => ({ name: this.translate.instant(def.nameKey) }),
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.SWITCH_PLAYER_DESCRIPTION',
+            labelKey: 'Switch player to {{name}}',
+            labelParams: () => ({ name: def.nameKey }),
+            descriptionKey: 'Set {{name}} as the active video player',
             descriptionParams: () => ({
-                name: this.translate.instant(def.nameKey),
+                name: def.nameKey,
             }),
-            keywords: () => [
-                ...def.keywords,
-                this.translate.instant(def.nameKey).toLowerCase(),
-            ],
+            keywords: () => [...def.keywords, def.nameKey.toLowerCase()],
             priority: def.priority,
             visible: () => this.isVisible(def),
             enabled: () => this.settingsStore.player() !== def.player,
@@ -173,18 +167,11 @@ export class WorkspacePlayerCommandsContributor {
     private activate(def: PlayerCommandDefinition): void {
         void this.settingsStore.updateSettings({ player: def.player });
 
-        const name = this.translate.instant(def.nameKey);
-        this.snackBar.open(
-            this.translate.instant(
-                'WORKSPACE.SHELL.COMMANDS.SWITCH_PLAYER_FEEDBACK',
-                { name }
-            ),
-            undefined,
-            {
-                duration: 2500,
-                horizontalPosition: 'center',
-                verticalPosition: 'bottom',
-            }
-        );
+        const name = def.nameKey;
+        this.snackBar.open(`Player set to ${name}`, undefined, {
+            duration: 2500,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+        });
     }
 }

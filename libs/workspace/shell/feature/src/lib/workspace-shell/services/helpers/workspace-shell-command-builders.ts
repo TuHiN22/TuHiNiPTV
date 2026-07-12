@@ -8,7 +8,7 @@ import {
     WorkspacePortalContext,
     WorkspaceShellRoute,
 } from '@iptvnator/workspace/shell/util';
-import { TranslateFn } from './workspace-shell-search-labels';
+import { TextFormatter } from './workspace-shell-search-labels';
 
 export interface CommandBuilderActions {
     openPlaylistSearch: (query: string) => void;
@@ -31,7 +31,7 @@ export interface CommandBuilderContext {
     canRefreshPlaylist: boolean;
     supportsDownloads: boolean;
     showDashboard: boolean;
-    translate: TranslateFn;
+    formatText: TextFormatter;
     router: Router;
     actions: CommandBuilderActions;
 }
@@ -46,7 +46,7 @@ export function buildCommandPaletteItems(
         ...getGlobalCommandDefinitions(ctx),
         ...viewCommands,
     ]
-        .map((command) => resolveCommand(command, ctx.translate))
+        .map((command) => resolveCommand(command, ctx.formatText))
         .filter((command) => command.visible)
         .sort(comparePaletteCommands);
 }
@@ -93,9 +93,8 @@ export function getPlaylistCommandDefinitions(
             id: 'playlist-search',
             group: 'playlist',
             icon: 'playlist_play',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.PLAYLIST_SEARCH_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.PLAYLIST_SEARCH_DESCRIPTION',
+            labelKey: 'Advanced search this playlist',
+            descriptionKey: 'Open advanced playlist search',
             priority: 10,
             visible: canOpenPlaylistSearch,
             run: ({ query }) => ctx.actions.openPlaylistSearch(query),
@@ -104,9 +103,8 @@ export function getPlaylistCommandDefinitions(
             id: 'refresh-playlist',
             group: 'playlist',
             icon: 'sync',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.REFRESH_PLAYLIST_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.REFRESH_PLAYLIST_DESCRIPTION',
+            labelKey: 'Refresh playlist',
+            descriptionKey: 'Re-sync data from remote source',
             priority: 20,
             visible: ctx.canRefreshPlaylist,
             run: () => ctx.actions.refreshCurrentPlaylist(),
@@ -115,9 +113,8 @@ export function getPlaylistCommandDefinitions(
             id: 'playlist-info',
             group: 'playlist',
             icon: 'info',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.PLAYLIST_INFO_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.PLAYLIST_INFO_DESCRIPTION',
+            labelKey: 'Playlist details',
+            descriptionKey: 'Show current playlist information',
             priority: 30,
             visible: ctx.hasActivePlaylist,
             run: () => ctx.actions.openPlaylistInfo(),
@@ -126,9 +123,8 @@ export function getPlaylistCommandDefinitions(
             id: 'account-info',
             group: 'playlist',
             icon: 'account_circle',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.ACCOUNT_INFO_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.ACCOUNT_INFO_DESCRIPTION',
+            labelKey: 'Account info',
+            descriptionKey: 'Show Xtream server account details',
             priority: 40,
             visible: context.provider === 'xtreams',
             run: () => ctx.actions.openAccountInfo(),
@@ -152,9 +148,8 @@ export function getGlobalCommandDefinitions(
             id: 'global-search',
             group: 'global',
             icon: 'search',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.GLOBAL_SEARCH_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.GLOBAL_SEARCH_DESCRIPTION',
+            labelKey: 'Search all playlists',
+            descriptionKey: 'Open global search',
             priority: 10,
             visible: hasSearchablePlaylists && route.kind !== 'global-search',
             keywords: ['xtream', 'm3u', 'live'],
@@ -164,9 +159,8 @@ export function getGlobalCommandDefinitions(
             id: 'open-global-favorites',
             group: 'global',
             icon: 'star',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.OPEN_GLOBAL_FAVORITES_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.OPEN_GLOBAL_FAVORITES_DESCRIPTION',
+            labelKey: 'Open global favorites',
+            descriptionKey: 'Navigate to aggregated favorites',
             priority: 20,
             visible: route.kind !== 'global-favorites',
             run: () => actions.navigateToGlobalFavorites(),
@@ -175,9 +169,8 @@ export function getGlobalCommandDefinitions(
             id: 'open-global-recent',
             group: 'global',
             icon: 'history',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.OPEN_GLOBAL_RECENT_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.OPEN_GLOBAL_RECENT_DESCRIPTION',
+            labelKey: 'Open recently viewed',
+            descriptionKey: 'Open global recently viewed page',
             priority: 30,
             visible: route.kind !== 'global-recent',
             run: () => actions.openGlobalRecent(),
@@ -186,9 +179,8 @@ export function getGlobalCommandDefinitions(
             id: 'open-downloads',
             group: 'global',
             icon: 'download',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.OPEN_DOWNLOADS_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.OPEN_DOWNLOADS_DESCRIPTION',
+            labelKey: 'Open downloads',
+            descriptionKey: 'Navigate to downloads view',
             priority: 40,
             visible: supportsDownloads && route.kind !== 'downloads',
             run: () => actions.openDownloadsShortcut(),
@@ -197,9 +189,8 @@ export function getGlobalCommandDefinitions(
             id: 'open-settings',
             group: 'global',
             icon: 'settings',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.OPEN_SETTINGS_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.OPEN_SETTINGS_DESCRIPTION',
+            labelKey: 'Open settings',
+            descriptionKey: 'Navigate to application settings',
             priority: 50,
             visible: route.kind !== 'settings',
             run: () => {
@@ -210,9 +201,8 @@ export function getGlobalCommandDefinitions(
             id: 'open-sources',
             group: 'global',
             icon: 'library_books',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.OPEN_SOURCES_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.OPEN_SOURCES_DESCRIPTION',
+            labelKey: 'Manage sources',
+            descriptionKey: 'Navigate to source management',
             priority: 60,
             visible: route.kind !== 'sources',
             run: () => {
@@ -223,9 +213,8 @@ export function getGlobalCommandDefinitions(
             id: 'open-dashboard',
             group: 'global',
             icon: 'dashboard',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.OPEN_DASHBOARD_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.OPEN_DASHBOARD_DESCRIPTION',
+            labelKey: 'Open dashboard',
+            descriptionKey: 'Navigate to the dashboard',
             priority: 70,
             visible: showDashboard && route.kind !== 'dashboard',
             run: () => {
@@ -236,9 +225,8 @@ export function getGlobalCommandDefinitions(
             id: 'add-playlist',
             group: 'global',
             icon: 'add_circle_outline',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.ADD_PLAYLIST_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.ADD_PLAYLIST_DESCRIPTION',
+            labelKey: 'Add new source',
+            descriptionKey: 'Open add playlist dialog',
             priority: 80,
             run: () => actions.openAddPlaylistDialog(),
         },
@@ -246,9 +234,8 @@ export function getGlobalCommandDefinitions(
             id: 'add-playlist-m3u',
             group: 'global',
             icon: 'folder_open',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.ADD_PLAYLIST_M3U_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.ADD_PLAYLIST_M3U_DESCRIPTION',
+            labelKey: 'Add M3U playlist',
+            descriptionKey: 'Open add dialog on the M3U file or URL tab',
             keywords: ['m3u', 'm3u8', 'file', 'url', 'add', 'import'],
             priority: 79,
             run: () => actions.openAddPlaylistDialog('url'),
@@ -257,9 +244,8 @@ export function getGlobalCommandDefinitions(
             id: 'add-playlist-xtream',
             group: 'global',
             icon: 'cloud',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.ADD_PLAYLIST_XTREAM_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.ADD_PLAYLIST_XTREAM_DESCRIPTION',
+            labelKey: 'Add Xtream Codes playlist',
+            descriptionKey: 'Open add dialog on the Xtream Codes tab',
             keywords: ['xtream', 'codes', 'iptv', 'add', 'import'],
             priority: 78,
             run: () => actions.openAddPlaylistDialog('xtream'),
@@ -268,9 +254,8 @@ export function getGlobalCommandDefinitions(
             id: 'add-playlist-stalker',
             group: 'global',
             icon: 'cast',
-            labelKey: 'WORKSPACE.SHELL.COMMANDS.ADD_PLAYLIST_STALKER_LABEL',
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.ADD_PLAYLIST_STALKER_DESCRIPTION',
+            labelKey: 'Add Stalker portal',
+            descriptionKey: 'Open add dialog on the Stalker Portal tab',
             keywords: ['stalker', 'portal', 'mac', 'ministra', 'add'],
             priority: 77,
             run: () => actions.openAddPlaylistDialog('stalker'),
@@ -292,7 +277,7 @@ function getPortalNavigationCommands(
                   targetSection: 'radio',
                   currentSection: section,
                   icon: 'radio',
-                  labelKey: 'WORKSPACE.SHELL.RAIL_RADIO',
+                  labelKey: 'Radio',
                   priority: 115,
               })
             : null;
@@ -304,7 +289,7 @@ function getPortalNavigationCommands(
             targetSection: 'vod',
             currentSection: section,
             icon: 'movie',
-            labelKey: 'WORKSPACE.SHELL.RAIL_MOVIES',
+            labelKey: 'Movies',
             priority: 100,
         }),
         createNavigationCommand(ctx, {
@@ -313,7 +298,7 @@ function getPortalNavigationCommands(
             targetSection: liveSection,
             currentSection: section,
             icon: 'live_tv',
-            labelKey: 'WORKSPACE.SHELL.RAIL_LIVE',
+            labelKey: 'Live TV',
             priority: 110,
         }),
         radioCommand,
@@ -323,7 +308,7 @@ function getPortalNavigationCommands(
             targetSection: 'series',
             currentSection: section,
             icon: 'video_library',
-            labelKey: 'WORKSPACE.SHELL.RAIL_SERIES',
+            labelKey: 'Series',
             priority: 120,
         }),
     ].filter(
@@ -343,7 +328,7 @@ function getM3uNavigationCommands(
             targetSection: 'all',
             currentSection: section,
             icon: 'format_list_bulleted',
-            labelKey: 'WORKSPACE.SHELL.RAIL_ALL_CHANNELS',
+            labelKey: 'All channels',
             priority: 100,
         }),
         createNavigationCommand(ctx, {
@@ -352,7 +337,7 @@ function getM3uNavigationCommands(
             targetSection: 'groups',
             currentSection: section,
             icon: 'folder_open',
-            labelKey: 'WORKSPACE.SHELL.RAIL_GROUPS',
+            labelKey: 'Groups',
             priority: 110,
         }),
         createNavigationCommand(ctx, {
@@ -361,7 +346,7 @@ function getM3uNavigationCommands(
             targetSection: 'favorites',
             currentSection: section,
             icon: 'star',
-            labelKey: 'WORKSPACE.SHELL.RAIL_FAVORITES',
+            labelKey: 'Favorites',
             priority: 120,
         }),
         createNavigationCommand(ctx, {
@@ -370,7 +355,7 @@ function getM3uNavigationCommands(
             targetSection: 'recent',
             currentSection: section,
             icon: 'history',
-            labelKey: 'WORKSPACE.SHELL.RAIL_RECENT',
+            labelKey: 'Recently viewed',
             priority: 130,
         }),
     ].filter(
@@ -399,9 +384,9 @@ function createNavigationCommand(
         group: 'view',
         icon: config.icon,
         labelKey: config.labelKey,
-        descriptionKey: 'WORKSPACE.SHELL.COMMANDS.OPEN_VIEW_DESCRIPTION',
+        descriptionKey: 'Navigate to {{view}}',
         descriptionParams: () => ({
-            view: ctx.translate(config.labelKey),
+            view: ctx.formatText(config.labelKey),
         }),
         priority: config.priority,
         run: () => {
@@ -417,7 +402,7 @@ function createNavigationCommand(
 
 export function resolveCommand(
     command: WorkspaceCommandContribution,
-    translate: TranslateFn
+    formatText: TextFormatter
 ): WorkspaceResolvedCommandItem {
     const labelParams = resolveCommandValue(command.labelParams);
     const descriptionParams = resolveCommandValue(command.descriptionParams);
@@ -426,9 +411,9 @@ export function resolveCommand(
         id: command.id,
         group: command.group,
         icon: command.icon,
-        label: translate(command.labelKey, labelParams),
+        label: formatText(command.labelKey, labelParams),
         description: command.descriptionKey
-            ? translate(command.descriptionKey, descriptionParams)
+            ? formatText(command.descriptionKey, descriptionParams)
             : '',
         keywords: resolveCommandValue(command.keywords) ?? [],
         priority: command.priority ?? 100,

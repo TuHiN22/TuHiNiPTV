@@ -6,12 +6,7 @@
             [matMenuTriggerFor]="seasonMenu"
             type="button"
         >
-            <span>
-                {{
-                    'PORTALS.SEASON_TAB'
-                        | translate: { number: selectedSeason() ?? '—' }
-                }}
-            </span>
+            <span> Season {{ selectedSeason() ?? '—' }} </span>
             <mat-icon>arrow_drop_down</mat-icon>
         </button>
         <mat-menu #seasonMenu="matMenu">
@@ -23,12 +18,7 @@
                     "
                     (click)="selectSeason(seasonKey)"
                 >
-                    <span>
-                        {{
-                            'PORTALS.SEASON_TAB'
-                                | translate: { number: seasonKey }
-                        }}
-                    </span>
+                    <span> Season {{ seasonKey }} </span>
                     <span class="season-tabs__menu-count">
                         {{ episodeCounts()[seasonKey] }}
                     </span>
@@ -50,7 +40,7 @@
                 "
                 (click)="selectSeason(seasonKey)"
             >
-                {{ 'PORTALS.SEASON_TAB' | translate: { number: seasonKey } }}
+                Season {{ seasonKey }}
                 @if (isSeasonCompleted(seasonKey)) {
                     <mat-icon class="season-tabs__done">check</mat-icon>
                 }
@@ -66,7 +56,7 @@
             (click)="backToPlayingRequested.emit()"
         >
             <mat-icon>play_circle</mat-icon>
-            {{ 'PORTALS.BACK_TO_PLAYING_EPISODE' | translate }}
+            {{ 'Back to playing episode' }}
         </button>
     }
 </div>

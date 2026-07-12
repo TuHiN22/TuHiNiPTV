@@ -13,7 +13,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     getM3uArchiveDays,
     isM3uCatchupPlaybackSupported,
@@ -75,7 +74,6 @@ import { EpgProgram } from '@iptvnator/shared/interfaces';
         MatProgressSpinnerModule,
         PortalEmptyStateComponent,
         ResizableDirective,
-        TranslatePipe,
         WebPlayerViewComponent,
     ],
 })
@@ -103,7 +101,6 @@ export class UnifiedLiveTabComponent {
     private readonly portalPlayer = inject(PORTAL_PLAYER);
     private readonly destroyRef = inject(DestroyRef);
     private readonly snackBar = inject(MatSnackBar);
-    private readonly translate = inject(TranslateService);
 
     readonly player = this.settingsStore.player;
     readonly supportsEpg = this.runtime.supportsEpg;
@@ -196,8 +193,7 @@ export class UnifiedLiveTabComponent {
             ''
     );
     readonly timelineArchiveAvailable = computed(
-        () =>
-            this.isM3uSelection() && this.currentM3uArchivePlaybackAvailable()
+        () => this.isM3uSelection() && this.currentM3uArchivePlaybackAvailable()
     );
     /**
      * Catch-up window (days) for the active M3U channel, so the timeline can
@@ -236,9 +232,7 @@ export class UnifiedLiveTabComponent {
         return getLiveEpgPanelSummary(this.activeDetail());
     });
     readonly liveEpgPanelSummaryLabelKey = computed(() =>
-        this.activeTimeshift()
-            ? 'EPG.ARCHIVE_PLAYBACK'
-            : 'EPG.CURRENT_PROGRAM'
+        this.activeTimeshift() ? 'Archive playback' : 'Current program'
     );
 
     readonly channelsForList = computed((): UnifiedFavoriteChannel[] =>
@@ -393,7 +387,7 @@ export class UnifiedLiveTabComponent {
         );
         if (!playbackUrl) {
             this.snackBar.open(
-                this.translate.instant('EPG.TIMELINE.CATCHUP_FAILED'),
+                "Couldn't start archive playback for this program",
                 undefined,
                 { duration: 4000 }
             );
@@ -570,5 +564,4 @@ export class UnifiedLiveTabComponent {
             };
         });
     }
-
 }

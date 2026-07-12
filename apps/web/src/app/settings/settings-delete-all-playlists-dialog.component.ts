@@ -3,7 +3,6 @@ import { Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
 
 export interface SettingsDeleteAllPlaylistsDialogData {
     summary: {
@@ -25,13 +24,7 @@ type SettingsDeleteSummaryItem = {
     selector: 'app-settings-delete-all-playlists-dialog',
     templateUrl: './settings-delete-all-playlists-dialog.component.html',
     styleUrls: ['./settings-delete-all-playlists-dialog.component.scss'],
-    imports: [
-        CommonModule,
-        MatButtonModule,
-        MatDialogModule,
-        MatIconModule,
-        TranslateModule,
-    ],
+    imports: [CommonModule, MatButtonModule, MatDialogModule, MatIconModule],
 })
 export class SettingsDeleteAllPlaylistsDialogComponent {
     readonly dialogData =
@@ -42,27 +35,27 @@ export class SettingsDeleteAllPlaylistsDialogComponent {
             id: 'm3u',
             count: this.dialogData.summary.m3u,
             icon: 'playlist_play',
-            labelKey: 'HOME.PLAYLIST_TYPES.M3U',
+            labelKey: 'M3U (local, url, text)',
         },
         {
             id: 'xtream',
             count: this.dialogData.summary.xtream,
             icon: 'cloud',
-            labelKey: 'HOME.PLAYLIST_TYPES.XTREAM',
+            labelKey: 'Xtream',
         },
         {
             id: 'stalker',
             count: this.dialogData.summary.stalker,
             icon: 'router',
-            labelKey: 'HOME.PLAYLIST_TYPES.STALKER',
+            labelKey: 'Stalker',
         },
     ]);
 
     readonly consequenceKeys = [
-        'SETTINGS.REMOVE_DIALOG.CONSEQUENCE_FAVORITES',
-        'SETTINGS.REMOVE_DIALOG.CONSEQUENCE_RECENTLY_VIEWED',
-        'SETTINGS.REMOVE_DIALOG.CONSEQUENCE_PLAYBACK',
-        'SETTINGS.REMOVE_DIALOG.CONSEQUENCE_DOWNLOADS',
-        'SETTINGS.REMOVE_DIALOG.CONSEQUENCE_XTREAM_CACHE',
+        'Favorites saved for these playlists',
+        'Recently viewed history',
+        'Saved playback positions',
+        'Download history entries linked to those playlists',
+        'Imported Xtream categories and locally cached content',
     ] as const;
 }

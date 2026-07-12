@@ -3,7 +3,6 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 import { of } from 'rxjs';
 import {
     DashboardRailsSettings,
-    Language,
     Settings,
     StartupBehavior,
     STORE_KEY,
@@ -69,7 +68,6 @@ describe('SettingsStore dashboard rail settings', () => {
             player: VideoPlayer.VideoJs,
             streamFormat: StreamFormat.M3u8StreamFormat,
             openStreamOnDoubleClick: false,
-            language: Language.ENGLISH,
             showCaptions: false,
             showDashboard: true,
             startupBehavior: StartupBehavior.FirstView,

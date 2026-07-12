@@ -5,14 +5,14 @@ import {
     Injectable,
     signal,
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
-import { filter, startWith } from 'rxjs';
+import { filter } from 'rxjs';
 import { PlaylistContextFacade } from '@iptvnator/playlist/shared/util';
 import {
     buildPortalRailLinks,
+    interpolateText,
     PortalRailLink,
 } from '@iptvnator/portal/shared/util';
 import { selectAllPlaylistsMeta } from '@iptvnator/m3u-state';
@@ -23,7 +23,7 @@ import {
     WorkspaceStartupPreferencesService,
 } from '@iptvnator/workspace/shell/util';
 import { getProviderFromPlaylist } from './helpers/workspace-shell-route-utils';
-import { translateRailLinks } from './helpers/workspace-shell-search-labels';
+import { formatRailLinks } from './helpers/workspace-shell-search-labels';
 
 @Injectable()
 export class WorkspaceShellRouteStateService {
@@ -33,14 +33,8 @@ export class WorkspaceShellRouteStateService {
     private readonly startupPreferences = inject(
         WorkspaceStartupPreferencesService
     );
-    private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly runtime = inject(RuntimeCapabilitiesService);
-
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
 
     readonly activePlaylist = this.playlistContext.activePlaylist;
     readonly playlists = this.store.selectSignal(selectAllPlaylistsMeta);
@@ -61,24 +55,18 @@ export class WorkspaceShellRouteStateService {
         )
     );
     readonly brandTooltipKey = computed(() =>
-        this.showDashboard()
-            ? 'WORKSPACE.SHELL.RAIL_DASHBOARD'
-            : 'WORKSPACE.SHELL.RAIL_SOURCES'
+        this.showDashboard() ? 'Dashboard' : 'Sources'
     );
     readonly brandAriaLabelKey = computed(() =>
-        this.showDashboard()
-            ? 'WORKSPACE.SHELL.OPEN_DASHBOARD'
-            : 'WORKSPACE.SHELL.OPEN_SOURCES'
+        this.showDashboard() ? 'Open dashboard' : 'Open sources'
     );
     readonly workspaceLinks = computed<PortalRailLink[]>(() => {
-        this.languageTick();
-
         const links: PortalRailLink[] = [];
 
         if (this.showDashboard()) {
             links.push({
                 icon: 'dashboard',
-                tooltip: this.translateText('WORKSPACE.SHELL.RAIL_DASHBOARD'),
+                tooltip: this.formatText('Dashboard'),
                 path: ['/workspace/dashboard'],
                 exact: true,
             });
@@ -86,16 +74,14 @@ export class WorkspaceShellRouteStateService {
 
         links.push({
             icon: 'library_books',
-            tooltip: this.translateText('WORKSPACE.SHELL.RAIL_SOURCES'),
+            tooltip: this.formatText('Sources'),
             path: ['/workspace/sources'],
         });
 
         if (this.runtime.isElectron) {
             links.push({
                 icon: 'search',
-                tooltip: this.translateText(
-                    'WORKSPACE.SHELL.RAIL_GLOBAL_SEARCH'
-                ),
+                tooltip: this.formatText('Global search'),
                 path: ['/workspace/search'],
                 exact: true,
             });
@@ -103,14 +89,14 @@ export class WorkspaceShellRouteStateService {
 
         links.push({
             icon: 'favorite',
-            tooltip: this.translateText('HOME.PLAYLISTS.GLOBAL_FAVORITES'),
+            tooltip: this.formatText('Global favorites'),
             path: ['/workspace/global-favorites'],
             exact: true,
         });
 
         links.push({
             icon: 'history',
-            tooltip: this.translateText('WORKSPACE.SHELL.RAIL_GLOBAL_RECENT'),
+            tooltip: this.formatText('Recently viewed'),
             path: ['/workspace/global-recent'],
             exact: true,
         });
@@ -185,14 +171,12 @@ export class WorkspaceShellRouteStateService {
         return `rail-context-region rail-context-region--${context.provider}`;
     });
     readonly primaryContextLinks = computed<PortalRailLink[]>(() => {
-        this.languageTick();
-
         const context = this.railContext();
         if (!context) {
             return [];
         }
 
-        return translateRailLinks(
+        return formatRailLinks(
             buildPortalRailLinks({
                 provider: context.provider,
                 playlistId: context.playlistId,
@@ -203,18 +187,16 @@ export class WorkspaceShellRouteStateService {
                 ),
             }).primary,
             context.provider,
-            (key, params) => this.translateText(key, params)
+            (key, params) => this.formatText(key, params)
         );
     });
     readonly secondaryContextLinks = computed<PortalRailLink[]>(() => {
-        this.languageTick();
-
         const context = this.railContext();
         if (!context) {
             return [];
         }
 
-        return translateRailLinks(
+        return formatRailLinks(
             buildPortalRailLinks({
                 provider: context.provider,
                 playlistId: context.playlistId,
@@ -222,7 +204,7 @@ export class WorkspaceShellRouteStateService {
                 workspace: true,
             }).secondary.filter((link) => link.section !== 'downloads'),
             context.provider,
-            (key, params) => this.translateText(key, params)
+            (key, params) => this.formatText(key, params)
         );
     });
     readonly isDownloadsView = computed(
@@ -262,10 +244,10 @@ export class WorkspaceShellRouteStateService {
             });
     }
 
-    private translateText(
+    private formatText(
         key: string,
         params?: Record<string, string | number>
     ): string {
-        return this.translate.instant(key, params);
+        return interpolateText(key, params);
     }
 }

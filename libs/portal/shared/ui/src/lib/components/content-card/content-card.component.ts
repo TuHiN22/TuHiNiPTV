@@ -2,18 +2,12 @@ import { DatePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    computed,
-    inject,
     input,
     output,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { normalizeDateLocale } from '@iptvnator/pipes';
-import { TranslateService } from '@ngx-translate/core';
-import { startWith } from 'rxjs';
 
 @Component({
     selector: 'app-content-card',
@@ -24,12 +18,6 @@ import { startWith } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentCardComponent {
-    private readonly translate = inject(TranslateService);
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
-
     /** URL of the poster image */
     readonly posterUrl = input<string>();
 
@@ -59,12 +47,7 @@ export class ContentCardComponent {
 
     /** Emitted when the remove button is clicked */
     readonly remove = output<void>();
-    readonly currentLocale = computed(() => {
-        this.languageTick();
-        return normalizeDateLocale(
-            this.translate.currentLang || this.translate.defaultLang
-        );
-    });
+    readonly currentLocale = () => 'en-US';
 
     /** Get the icon for the placeholder based on type */
     getPlaceholderIcon(): string {

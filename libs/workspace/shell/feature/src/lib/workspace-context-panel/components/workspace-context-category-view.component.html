@@ -46,10 +46,8 @@
             </button>
         } @empty {
             <app-workspace-context-error-view
-                [title]="'PORTALS.EMPTY_LIST_VIEW.TITLE' | translate"
-                [description]="
-                    'PORTALS.EMPTY_LIST_VIEW.NO_SEARCH_RESULTS' | translate
-                "
+                [title]="'No results found'"
+                [description]="'Nothing found, try to change your search request.'"
                 [showActionButtons]="false"
                 [viewType]="'NO_SEARCH_RESULTS'"
             />

@@ -4,10 +4,7 @@ import {
     computed,
     inject,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { startWith } from 'rxjs';
 import {
     ContentCardComponent,
     ContentRailShellComponent,
@@ -41,18 +38,12 @@ const RECENTLY_ADDED_ITEMS_LIMIT = 30;
     templateUrl: './recently-added.component.html',
     styleUrls: ['./recently-added.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ContentCardComponent, ContentRailShellComponent, TranslatePipe],
+    imports: [ContentCardComponent, ContentRailShellComponent],
 })
 export class RecentlyAddedComponent {
     private readonly xtreamStore = inject(XtreamStore);
     private readonly router = inject(Router);
     private readonly activatedRoute = inject(ActivatedRoute);
-    private readonly translate = inject(TranslateService);
-    // Re-compute translated labels when the active language changes.
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
 
     readonly recentlyAddedLive = computed(() =>
         this.getRecentlyAdded(
@@ -107,15 +98,9 @@ export class RecentlyAddedComponent {
     readonly seriesSeeAllLink = computed(() => this.buildSectionLink('series'));
     readonly liveSeeAllLink = computed(() => this.buildSectionLink('live'));
 
-    readonly vodSeeAllLabel = computed(() =>
-        this.translateWithTick('PORTALS.BROWSE_ALL_MOVIES')
-    );
-    readonly seriesSeeAllLabel = computed(() =>
-        this.translateWithTick('PORTALS.BROWSE_ALL_SERIES')
-    );
-    readonly liveSeeAllLabel = computed(() =>
-        this.translateWithTick('PORTALS.BROWSE_ALL_LIVE')
-    );
+    readonly vodSeeAllLabel = computed(() => 'Browse all movies');
+    readonly seriesSeeAllLabel = computed(() => 'Browse all series');
+    readonly liveSeeAllLabel = computed(() => 'Browse all live TV');
 
     private buildSectionLink(
         section: 'vod' | 'series' | 'live'
@@ -123,11 +108,6 @@ export class RecentlyAddedComponent {
         const id = this.playlistId();
         if (!id) return null;
         return ['/workspace', 'xtreams', id, section];
-    }
-
-    private translateWithTick(key: string): string {
-        this.languageTick();
-        return this.translate.instant(key);
     }
 
     private getRecentlyAdded<T extends RecentlyAddedItem>(

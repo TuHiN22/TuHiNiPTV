@@ -17,16 +17,9 @@
             >
                 <span class="rail__see-all-label">
                     @if ((totalCount() ?? items().length) > items().length) {
-                        {{
-                            'WORKSPACE.DASHBOARD.SEE_ALL_COUNT'
-                                | translate
-                                    : {
-                                          count:
-                                              totalCount() ?? items().length,
-                                      }
-                        }}
+                        See all {{ totalCount() ?? items().length }}
                     } @else {
-                        {{ 'WORKSPACE.DASHBOARD.SEE_ALL' | translate }}
+                        {{ 'See all' }}
                     }
                 </span>
                 <mat-icon>chevron_right</mat-icon>
@@ -177,7 +170,10 @@
                                     </div>
                                 }
 
-                                @if (card.watchProgress !== null && card.watchProgress !== undefined) {
+                                @if (
+                                    card.watchProgress !== null &&
+                                    card.watchProgress !== undefined
+                                ) {
                                     <span
                                         class="rail__art-progress"
                                         aria-hidden="true"
@@ -215,7 +211,7 @@
                                 class="rail__action-trigger"
                                 [matMenuTriggerFor]="cardActionMenu"
                                 [matMenuTriggerData]="{ card: card }"
-                                [attr.aria-label]="'SHOW_MORE' | translate"
+                                [attr.aria-label]="'More'"
                                 [attr.data-test-id]="
                                     testId() ? testId() + '-card-actions' : null
                                 "
@@ -247,7 +243,7 @@
                         (click)="selectAction(card, action, $event)"
                     >
                         <mat-icon>{{ action.icon }}</mat-icon>
-                        <span>{{ action.labelKey | translate }}</span>
+                        <span>{{ action.labelKey }}</span>
                     </button>
                 }
             </ng-template>

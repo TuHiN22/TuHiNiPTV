@@ -8,11 +8,7 @@ import {
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { TranslatePipe } from '@ngx-translate/core';
-import {
-    ActorFilmographyCredit,
-    ActorProfile,
-} from '@iptvnator/services';
+import { ActorFilmographyCredit, ActorProfile } from '@iptvnator/services';
 
 /**
  * One filmography entry as rendered on the actor page. `available` marks a
@@ -29,7 +25,7 @@ export type ActorViewScope = 'portal' | 'global';
 
 @Component({
     selector: 'app-actor-view',
-    imports: [MatIcon, MatProgressSpinnerModule, TranslatePipe],
+    imports: [MatIcon, MatProgressSpinnerModule],
     templateUrl: './actor-view.component.html',
     styleUrls: ['./actor-view.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,5 +1,4 @@
 import { Component, computed, inject } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
 import { PortalCollectionContextService } from '@iptvnator/portal/shared/util';
 import { WorkspaceContextCategoryViewComponent } from './components/workspace-context-category-view.component';
 
@@ -13,7 +12,7 @@ import { WorkspaceContextCategoryViewComponent } from './components/workspace-co
  */
 @Component({
     selector: 'app-workspace-collection-context-panel',
-    imports: [TranslatePipe, WorkspaceContextCategoryViewComponent],
+    imports: [WorkspaceContextCategoryViewComponent],
     template: `
         <div class="context-column">
             <header class="context-header">
@@ -21,19 +20,16 @@ import { WorkspaceContextCategoryViewComponent } from './components/workspace-co
                     <h2>
                         {{
                             selectedCategory()?.category_name ||
-                                ('WORKSPACE.CONTEXT.FILTER_BY_TYPE' | translate)
+                                'Filter by type'
                         }}
                     </h2>
                 </div>
                 @if (selectedCount() !== null) {
                     <span class="context-header__badge">
                         @if (selectedCount() === 1) {
-                            {{ 'WORKSPACE.CONTEXT.ITEM_COUNT_ONE' | translate }}
+                            {{ '1 item' }}
                         } @else {
-                            {{
-                                'WORKSPACE.CONTEXT.ITEM_COUNT_OTHER'
-                                    | translate: { count: selectedCount() }
-                            }}
+                            {{ selectedCount() }} items
                         }
                     </span>
                 }

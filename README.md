@@ -48,26 +48,25 @@
 **Platform**
 
 - Desktop auto-updater and mobile remote control
-- 18 languages ([translation files](apps/web/src/assets/i18n/)), light & dark themes, and keyboard shortcuts
+- English-only interface, light & dark themes, and keyboard shortcuts
 
 ## Keyboard shortcuts
 
 Press `?` or `Shift+/` in the workspace to open the in-app shortcuts list.
 
-| Area              | Shortcut                    | Action                                     |
-| ----------------- | --------------------------- | ------------------------------------------ |
-| Global            | `Ctrl/Cmd+K`                | Open command palette                       |
-| Global            | `Ctrl/Cmd+F`                | Open global search                         |
-| Global            | `Ctrl/Cmd+R`                | Open recently viewed                       |
-| Navigation        | `Ctrl/Cmd+B`                | Toggle the live sidebar                    |
-| Navigation        | `0-9`                       | Select an M3U channel by number            |
-| Playback          | `Space` / `K`               | Play or pause embedded MPV playback        |
-| Playback          | `F`                         | Toggle embedded MPV fullscreen             |
-| Playback          | `ArrowLeft` / `ArrowRight`  | Seek embedded MPV playback by 5 seconds    |
-| Playback          | `ArrowUp` / `ArrowDown`     | Adjust volume by 5%                        |
-| Playback          | `M`                         | Mute audio                                 |
-| Dialogs and lists | `Escape`                    | Close dialogs and dismiss overlays         |
-
+| Area              | Shortcut                   | Action                                  |
+| ----------------- | -------------------------- | --------------------------------------- |
+| Global            | `Ctrl/Cmd+K`               | Open command palette                    |
+| Global            | `Ctrl/Cmd+F`               | Open global search                      |
+| Global            | `Ctrl/Cmd+R`               | Open recently viewed                    |
+| Navigation        | `Ctrl/Cmd+B`               | Toggle the live sidebar                 |
+| Navigation        | `0-9`                      | Select an M3U channel by number         |
+| Playback          | `Space` / `K`              | Play or pause embedded MPV playback     |
+| Playback          | `F`                        | Toggle embedded MPV fullscreen          |
+| Playback          | `ArrowLeft` / `ArrowRight` | Seek embedded MPV playback by 5 seconds |
+| Playback          | `ArrowUp` / `ArrowDown`    | Adjust volume by 5%                     |
+| Playback          | `M`                        | Mute audio                              |
+| Dialogs and lists | `Escape`                   | Close dialogs and dismiss overlays      |
 
 ## Disclaimer
 

@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StreamFormat, VideoPlayer } from '@iptvnator/shared/interfaces';
 import { SettingsPlaybackSectionComponent } from './settings-playback-section.component';
 
@@ -24,23 +23,8 @@ describe('SettingsPlaybackSectionComponent', () => {
                 SettingsPlaybackSectionComponent,
                 NoopAnimationsModule,
                 ReactiveFormsModule,
-                TranslateModule.forRoot(),
             ],
         }).compileComponents();
-
-        const translate = TestBed.inject(TranslateService);
-        translate.setTranslation(
-            'en',
-            {
-                SETTINGS: {
-                    MPV_PLAYER_PATH_DESCRIPTION: MPV_PATH_DESCRIPTION,
-                    MPV_COMPATIBLE_PLAYER_TIP: MPV_COMPATIBLE_PLAYER_TIP,
-                    VLC_PLAYER_PATH_DESCRIPTION: VLC_PATH_DESCRIPTION,
-                },
-            },
-            true
-        );
-        translate.use('en');
 
         fixture = TestBed.createComponent(SettingsPlaybackSectionComponent);
         fixture.componentRef.setInput('form', createForm());
@@ -48,11 +32,11 @@ describe('SettingsPlaybackSectionComponent', () => {
         fixture.componentRef.setInput('players', [
             {
                 id: VideoPlayer.VideoJs,
-                labelKey: 'SETTINGS.PLAYER_VIDEOJS',
+                labelKey: 'Video.js player',
             },
             {
                 id: VideoPlayer.MPV,
-                labelKey: 'SETTINGS.PLAYER_MPV',
+                labelKey: 'MPV player',
             },
         ]);
         fixture.componentRef.setInput('streamFormatEnum', StreamFormat);
@@ -103,7 +87,7 @@ describe('SettingsPlaybackSectionComponent', () => {
                 )
             ).not.toBeNull();
             expect(fixture.nativeElement.textContent).toContain(
-                'SETTINGS.OPEN_EXTERNAL_PLAYER_ON_DOUBLE_CLICK'
+                'Start MPV/VLC with double-click'
             );
         }
     );
@@ -319,7 +303,7 @@ describe('SettingsPlaybackSectionComponent', () => {
             )
         ).toBeNull();
         expect(fixture.nativeElement.textContent).toContain(
-            'SETTINGS.MPV_PLAYER_ARGUMENTS_LABEL'
+            'mpv command-line arguments'
         );
         expect(
             fixture.nativeElement.querySelector<HTMLTextAreaElement>(
@@ -348,7 +332,7 @@ describe('SettingsPlaybackSectionComponent', () => {
             )
         ).toBeNull();
         expect(fixture.nativeElement.textContent).toContain(
-            'SETTINGS.VLC_PLAYER_ARGUMENTS_LABEL'
+            'VLC command-line arguments'
         );
         expect(
             fixture.nativeElement.querySelector<HTMLTextAreaElement>(

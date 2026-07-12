@@ -9,7 +9,6 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 import {
     ELECTRON_BRIDGE_APP_UPDATE_STATUSES,
     ElectronBridgeAppUpdateStatus,
@@ -18,7 +17,7 @@ import { AppUpdateReleaseNotesDialogComponent } from './settings/app-update-rele
 
 @Component({
     selector: 'app-update-notification-panel',
-    imports: [MatButtonModule, MatIconModule, TranslatePipe],
+    imports: [MatButtonModule, MatIconModule],
     template: `
         @if (isVisible(); as visible) {
             <section
@@ -28,13 +27,13 @@ import { AppUpdateReleaseNotesDialogComponent } from './settings/app-update-rele
                 <header class="app-update-notification__header">
                     <span>
                         <mat-icon>system_update</mat-icon>
-                        {{ 'SETTINGS.APP_UPDATE_TITLE' | translate }}
+                        {{ 'Application update' }}
                     </span>
                     <button
                         mat-icon-button
                         type="button"
                         (click)="dismiss()"
-                        [attr.aria-label]="'CLOSE' | translate"
+                        [attr.aria-label]="'Close'"
                     >
                         <mat-icon>close</mat-icon>
                     </button>
@@ -42,15 +41,7 @@ import { AppUpdateReleaseNotesDialogComponent } from './settings/app-update-rele
 
                 <div class="app-update-notification__body">
                     <strong>
-                        {{
-                            labelKey()
-                                | translate
-                                    : {
-                                          version:
-                                              status()?.latestVersion ||
-                                              status()?.currentVersion,
-                                      }
-                        }}
+                        {{ label() }}
                     </strong>
                     @if (status()?.progress; as progress) {
                         <progress
@@ -68,7 +59,7 @@ import { AppUpdateReleaseNotesDialogComponent } from './settings/app-update-rele
                         data-test-id="app-update-notification-release-notes"
                     >
                         <mat-icon>article</mat-icon>
-                        {{ 'SETTINGS.APP_UPDATE_RELEASE_NOTES' | translate }}
+                        {{ 'What's new' }}
                     </button>
 
                     @if (status()?.status === appUpdateStatuses.Downloaded) {
@@ -79,7 +70,7 @@ import { AppUpdateReleaseNotesDialogComponent } from './settings/app-update-rele
                             data-test-id="app-update-notification-install"
                         >
                             <mat-icon>restart_alt</mat-icon>
-                            {{ 'SETTINGS.APP_UPDATE_INSTALL' | translate }}
+                            {{ 'Restart application' }}
                         </button>
                     } @else {
                         <button
@@ -93,7 +84,7 @@ import { AppUpdateReleaseNotesDialogComponent } from './settings/app-update-rele
                             data-test-id="app-update-notification-download"
                         >
                             <mat-icon>{{ primaryActionIcon() }}</mat-icon>
-                            {{ primaryActionLabelKey() | translate }}
+                            {{ primaryActionLabelKey() }}
                         </button>
                     }
                 </div>
@@ -181,15 +172,17 @@ export class AppUpdateNotificationPanelComponent implements OnInit, OnDestroy {
     readonly appUpdateStatuses = ELECTRON_BRIDGE_APP_UPDATE_STATUSES;
     readonly status = signal<ElectronBridgeAppUpdateStatus | null>(null);
     readonly dismissedVersion = signal<string | null>(null);
-    readonly labelKey = computed(() =>
-        this.status()?.status === ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Downloaded
-            ? 'SETTINGS.APP_UPDATE_DOWNLOADED'
-            : 'SETTINGS.APP_UPDATE_AVAILABLE'
-    );
+    readonly label = computed(() => {
+        const status = this.status();
+        const version = status?.latestVersion || status?.currentVersion || '';
+        return status?.status === ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Downloaded
+            ? `Version ${version} is ready to install`
+            : `Version ${version} is available`;
+    });
     readonly primaryActionLabelKey = computed(() =>
         this.status()?.supportedSelfUpdate === false
-            ? 'SETTINGS.APP_UPDATE_OPEN_RELEASE'
-            : 'SETTINGS.APP_UPDATE_DOWNLOAD'
+            ? 'Open GitHub release'
+            : 'Update'
     );
     readonly primaryActionIcon = computed(() =>
         this.status()?.supportedSelfUpdate === false

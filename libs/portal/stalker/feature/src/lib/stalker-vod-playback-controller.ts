@@ -1,6 +1,5 @@
 import type { WritableSignal } from '@angular/core';
 import type { MatSnackBar } from '@angular/material/snack-bar';
-import type { TranslateService } from '@ngx-translate/core';
 import type {
     Logger,
     PortalPlaybackPositions,
@@ -19,7 +18,6 @@ interface StalkerVodPlaybackControllerConfig {
     playbackPositions: PortalPlaybackPositions;
     portalPlayer: PortalPlayer;
     snackBar: MatSnackBar;
-    translateService: TranslateService;
     logger: Logger;
     playbackErrorLogMessage: string;
 }
@@ -50,13 +48,12 @@ export class StalkerVodPlaybackController {
                 error
             );
             const failure = classifyStalkerPlaybackFailure(error);
-            const errorMessage = this.config.translateService.instant(
+            const errorMessage =
                 failure === 'content-unavailable'
-                    ? 'PORTALS.CONTENT_NOT_AVAILABLE'
+                    ? 'This content is not available on this server'
                     : failure === 'stream-offline'
-                      ? 'PORTALS.STREAM_OFFLINE'
-                      : 'PORTALS.PLAYBACK_ERROR'
-            );
+                      ? 'STREAM is OFFLINE'
+                      : 'Failed to get playback URL';
             this.config.snackBar.open(errorMessage, undefined, {
                 duration: 3000,
             });
@@ -121,13 +118,9 @@ export class StalkerVodPlaybackController {
     }
 
     showCopyNotification(): void {
-        this.config.snackBar.open(
-            this.config.translateService.instant('PORTALS.STREAM_URL_COPIED'),
-            undefined,
-            {
-                duration: 2000,
-            }
-        );
+        this.config.snackBar.open('Stream URL copied to clipboard', undefined, {
+            duration: 2000,
+        });
     }
 
     handleExternalFallbackRequest(request: PlaybackFallbackRequest): void {

@@ -5,13 +5,12 @@
         }}</mat-icon>
         <p class="empty-title">
             @if (searchTerm()) {
-                {{ 'WORKSPACE.GLOBAL_FAVORITES.NO_RESULTS' | translate }}
+                {{ 'No results' }}
             } @else {
                 {{
-                    (mode() === 'favorites'
-                        ? 'PORTALS.NO_FAVORITES'
-                        : 'PORTALS.NO_RECENT_ITEMS'
-                    ) | translate
+                    mode() === 'favorites'
+                        ? 'No favorites yet'
+                        : 'No recently viewed items'
                 }}
             }
         </p>
@@ -27,10 +26,9 @@
                 [date]="item.addedAt ?? item.viewedAt"
                 [showRemoveButton]="true"
                 [removeTooltip]="
-                    (mode() === 'favorites'
-                        ? 'PORTALS.REMOVE_FROM_FAVORITES'
-                        : 'PORTALS.REMOVE_FROM_RECENT'
-                    ) | translate
+                    mode() === 'favorites'
+                        ? 'Remove from favorites'
+                        : 'Remove from recently viewed'
                 "
                 (cardClick)="onCardClick(item)"
                 (remove)="onRemove(item)"

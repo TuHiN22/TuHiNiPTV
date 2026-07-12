@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { PlaylistActions } from '@iptvnator/m3u-state';
 import { DataService } from '@iptvnator/services';
 import { PLAYLIST_PARSE_BY_URL } from '@iptvnator/shared/interfaces';
@@ -44,12 +43,6 @@ describe('AddPlaylistDialogComponent', () => {
                     provide: MatSnackBar,
                     useValue: {
                         open: jest.fn(),
-                    },
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: jest.fn((value: string) => value),
                     },
                 },
                 {
@@ -114,7 +107,7 @@ describe('AddPlaylistDialogComponent', () => {
             PlaylistActions.parsePlaylist({
                 uploadType: 'TEXT',
                 playlist: '#EXTM3U',
-                title: 'HOME.IMPORTED_AS_TEXT',
+                title: 'Imported as text',
             })
         );
         expect(dialogRef.close).toHaveBeenCalled();
@@ -203,12 +196,6 @@ describe('AddPlaylistDialogComponent', () => {
                     { provide: MatDialogRef, useValue: dialogRef },
                     { provide: Store, useValue: store },
                     { provide: MatSnackBar, useValue: { open: jest.fn() } },
-                    {
-                        provide: TranslateService,
-                        useValue: {
-                            instant: jest.fn((value: string) => value),
-                        },
-                    },
                     {
                         provide: MAT_DIALOG_DATA,
                         useValue: { type: deepLinkType },

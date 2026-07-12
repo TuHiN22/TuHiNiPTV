@@ -5,18 +5,16 @@
         }}</mat-icon>
         <div class="empty-state-title">
             {{
-                (searchTerm()
-                    ? 'CHANNELS.NO_SEARCH_RESULTS'
-                    : 'PORTALS.ERROR_VIEW.EMPTY_CATEGORY.TITLE'
-                ) | translate
+                searchTerm()
+                    ? 'No channels found'
+                    : 'No content in this category'
             }}
         </div>
         <div class="empty-state-hint">
             {{
-                (searchTerm()
-                    ? 'CHANNELS.TRY_DIFFERENT_SEARCH'
-                    : 'PORTALS.ERROR_VIEW.EMPTY_CATEGORY.DESCRIPTION'
-                ) | translate
+                searchTerm()
+                    ? 'Try a different search term'
+                    : 'Select another category or switch the content type.'
             }}
         </div>
     </div>
@@ -37,22 +35,18 @@
                 <header class="groups-nav-header">
                     <div class="groups-nav-header__content">
                         <h2 class="groups-nav-title">
-                            {{ 'CHANNELS.GROUPS' | translate }}
+                            {{ 'Groups' }}
                         </h2>
                         <div class="groups-nav-actions">
                             <button
                                 type="button"
                                 mat-icon-button
                                 class="groups-nav-action groups-nav-action--search"
-                                [matTooltip]="
-                                    'CHANNELS.SEARCH_GROUPS' | translate
-                                "
+                                [matTooltip]="'Search groups'"
                                 [attr.aria-pressed]="
                                     isGroupSearchOpen() ? 'true' : 'false'
                                 "
-                                [attr.aria-label]="
-                                    'CHANNELS.SEARCH_GROUPS' | translate
-                                "
+                                [attr.aria-label]="'Search groups'"
                                 (click)="toggleGroupSearch()"
                             >
                                 <mat-icon>search</mat-icon>
@@ -61,12 +55,8 @@
                                 type="button"
                                 mat-icon-button
                                 class="groups-nav-action groups-nav-action--manage"
-                                [matTooltip]="
-                                    'CHANNELS.MANAGE_GROUPS' | translate
-                                "
-                                [attr.aria-label]="
-                                    'CHANNELS.MANAGE_GROUPS' | translate
-                                "
+                                [matTooltip]="'Manage groups'"
+                                [attr.aria-label]="'Manage groups'"
                                 (click)="openGroupManagement()"
                             >
                                 <mat-icon>tune</mat-icon>
@@ -84,9 +74,7 @@
                                 type="search"
                                 spellcheck="false"
                                 [value]="localGroupSearchTerm()"
-                                [placeholder]="
-                                    'CHANNELS.SEARCH_GROUPS' | translate
-                                "
+                                [placeholder]="'Search groups'"
                                 (input)="
                                     updateGroupSearchTerm(
                                         $any($event.target).value
@@ -98,7 +86,7 @@
                                 type="button"
                                 mat-icon-button
                                 class="groups-nav-search__close"
-                                [attr.aria-label]="'CLOSE' | translate"
+                                [attr.aria-label]="'Close'"
                                 (click)="closeGroupSearch()"
                             >
                                 <mat-icon>close</mat-icon>
@@ -131,7 +119,7 @@
                                     @if (group.key) {
                                         {{ group.key | titlecase }}
                                     } @else {
-                                        {{ 'CHANNELS.UNGROUPED' | translate }}
+                                        {{ 'Ungrouped' }}
                                     }
                                 </span>
                                 <span class="nav-item-meta">
@@ -150,18 +138,14 @@
                             </mat-icon>
                             <div class="groups-nav-empty__title">
                                 {{
-                                    (hasSearchQuery()
-                                        ? 'CHANNELS.NO_GROUPS_FOUND'
-                                        : 'CHANNELS.NO_VISIBLE_GROUPS'
-                                    ) | translate
+                                    hasSearchQuery()
+                                        ? 'No groups found'
+                                        : 'No visible groups'
                                 }}
                             </div>
                             @if (hasSearchQuery()) {
                                 <div class="groups-nav-empty__hint">
-                                    {{
-                                        'CHANNELS.TRY_DIFFERENT_SEARCH'
-                                            | translate
-                                    }}
+                                    {{ 'Try a different search term' }}
                                 </div>
                             }
                         </div>
@@ -178,7 +162,7 @@
                             @if (group.key) {
                                 {{ group.key | titlecase }}
                             } @else {
-                                {{ 'CHANNELS.UNGROUPED' | translate }}
+                                {{ 'Ungrouped' }}
                             }
                         </h2>
                         <span class="category-subtitle">
@@ -198,12 +182,8 @@
                         mat-icon-button
                         type="button"
                         class="groups-sidebar-toggle"
-                        [attr.aria-label]="
-                            'LAYOUT.HIDE_CHANNELS_LIST' | translate
-                        "
-                        [matTooltip]="
-                            'LAYOUT.TOGGLE_SIDEBAR_TOOLTIP' | translate
-                        "
+                        [attr.aria-label]="'Hide channels list'"
+                        [matTooltip]="'Toggle channels list (⌘/Ctrl+B)'"
                         (click)="sidebarToggleRequested.emit()"
                     >
                         <mat-icon>chevron_left</mat-icon>
@@ -253,11 +233,7 @@
                             trackBy: trackByChannel
                         "
                         [name]="
-                            i +
-                            1 +
-                            '. ' +
-                            (channel?.name ||
-                                ('CHANNELS.UNNAMED_CHANNEL' | translate))
+                            i + 1 + '. ' + (channel?.name || 'Unnamed Channel')
                         "
                         [logo]="getLogoForChannel(channel)"
                         [showEpg]="shouldShowEpg()"
@@ -290,7 +266,7 @@
                 <header class="sidebar-header groups-content-header">
                     <div class="category-meta">
                         <h2 class="category-title">
-                            {{ 'CHANNELS.GROUPS' | translate }}
+                            {{ 'Groups' }}
                         </h2>
                     </div>
                 </header>
@@ -301,18 +277,16 @@
                     </mat-icon>
                     <div class="empty-state-title">
                         {{
-                            (hasSearchQuery()
-                                ? 'CHANNELS.NO_SEARCH_RESULTS'
-                                : 'CHANNELS.NO_VISIBLE_GROUPS'
-                            ) | translate
+                            hasSearchQuery()
+                                ? 'No channels found'
+                                : 'No visible groups'
                         }}
                     </div>
                     <div class="empty-state-hint">
                         {{
-                            (hasSearchQuery()
-                                ? 'CHANNELS.TRY_DIFFERENT_SEARCH'
-                                : 'CHANNELS.MANAGE_GROUPS_HINT'
-                            ) | translate
+                            hasSearchQuery()
+                                ? 'Try a different search term'
+                                : 'Use manage groups to show groups again.'
                         }}
                     </div>
                 </div>
@@ -333,6 +307,6 @@
 <mat-menu #channelContextMenu="matMenu">
     <button mat-menu-item (click)="openChannelDetails()">
         <mat-icon>info</mat-icon>
-        <span>{{ 'CHANNELS.SHOW_DETAILS' | translate }}</span>
+        <span>{{ 'Show channel details' }}</span>
     </button>
 </mat-menu>

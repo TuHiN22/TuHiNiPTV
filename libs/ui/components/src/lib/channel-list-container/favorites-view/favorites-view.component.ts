@@ -16,7 +16,6 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
-import { TranslatePipe } from '@ngx-translate/core';
 import { resolveChannelEpgLookupKey } from '@iptvnator/m3u-state';
 import { Channel, EpgProgram } from '@iptvnator/shared/interfaces';
 import { buildChannelEpgMetadataMap } from '../epg-enrichment.util';
@@ -34,7 +33,6 @@ import { ChannelListItemComponent } from '../channel-list-item/channel-list-item
         DragDropModule,
         MatIconModule,
         MatMenuModule,
-        TranslatePipe,
     ],
 })
 export class FavoritesViewComponent {
@@ -80,7 +78,9 @@ export class FavoritesViewComponent {
         y: '0px',
     });
 
-    readonly hasSearchTerm = computed(() => this.searchTerm().trim().length > 0);
+    readonly hasSearchTerm = computed(
+        () => this.searchTerm().trim().length > 0
+    );
     readonly filteredFavorites = computed(() => {
         const favorites = this.favorites();
         const term = this.searchTerm().trim().toLowerCase();

@@ -3,7 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Actions } from '@ngrx/effects';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { TranslateService } from '@ngx-translate/core';
 import {
     EpgRuntimeBridgeService,
     EpgService,
@@ -13,7 +12,6 @@ import { MockProvider } from 'ng-mocks';
 import { EMPTY, of } from 'rxjs';
 import { DataService, RuntimeCapabilitiesService } from '@iptvnator/services';
 import {
-    Language,
     Settings,
     StartupBehavior,
     STORE_KEY,
@@ -40,7 +38,6 @@ const DEFAULT_SETTINGS: Settings = {
     epgUrl: [],
     streamFormat: StreamFormat.AutoStreamFormat,
     openStreamOnDoubleClick: false,
-    language: Language.ENGLISH,
     showCaptions: false,
     showDashboard: true,
     startupBehavior: StartupBehavior.FirstView,
@@ -66,7 +63,6 @@ describe('AppComponent', () => {
     let settingsService: MockSettingsService;
     let snackBar: MatSnackBar;
     let store: MockStore;
-    let translateService: TranslateService;
     let runtimeCapabilities: Partial<RuntimeCapabilitiesService>;
     let epgBridge: Partial<EpgRuntimeBridgeService>;
 
@@ -117,11 +113,6 @@ describe('AppComponent', () => {
                 MockProvider(MatSnackBar, {
                     open: jest.fn(),
                 }),
-                MockProvider(TranslateService, {
-                    instant: jest.fn((key: string) => key),
-                    setDefaultLang: jest.fn(),
-                    use: jest.fn(),
-                }),
                 {
                     provide: WORKSPACE_SHELL_ACTIONS,
                     useValue: {
@@ -150,7 +141,6 @@ describe('AppComponent', () => {
         ) as unknown as MockSettingsService;
         snackBar = TestBed.inject(MatSnackBar);
         store = TestBed.inject(MockStore);
-        translateService = TestBed.inject(TranslateService);
         component = fixture.componentInstance;
     });
 
@@ -160,15 +150,11 @@ describe('AppComponent', () => {
 
     it('should init component', () => {
         const storeDispatchSpy = jest.spyOn(store, 'dispatch');
-        jest.spyOn(translateService, 'setDefaultLang');
         jest.spyOn(component, 'initSettings');
 
         component.ngOnInit();
         expect(storeDispatchSpy).toHaveBeenCalledWith(
             PlaylistActions.loadPlaylists()
-        );
-        expect(translateService.setDefaultLang).toHaveBeenCalledWith(
-            Language.ENGLISH
         );
         expect(component.initSettings).toHaveBeenCalledTimes(1);
     });
@@ -199,7 +185,6 @@ describe('AppComponent', () => {
         const settings: Settings = {
             ...DEFAULT_SETTINGS,
             epgUrl: ['https://example.com/epg.xml'],
-            language: Language.SPANISH,
             theme: Theme.DarkTheme,
         };
         epgBridge.checkFreshness = jest.fn().mockResolvedValue({
@@ -208,12 +193,10 @@ describe('AppComponent', () => {
         });
         settingsService.getValueFromLocalStorage.mockReturnValue(of(settings));
         jest.spyOn(settingsService, 'changeTheme');
-        jest.spyOn(translateService, 'use');
 
         component.initSettings();
         await fixture.whenStable();
 
-        expect(translateService.use).toHaveBeenCalledWith(Language.SPANISH);
         expect(settingsService.changeTheme).toHaveBeenCalledWith(
             Theme.DarkTheme
         );

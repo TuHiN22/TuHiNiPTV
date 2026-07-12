@@ -13,7 +13,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DialogService } from '@iptvnator/ui/components';
 import { firstValueFrom, map, startWith } from 'rxjs';
 import {
@@ -55,7 +54,6 @@ const DOWNLOAD_COLLECTION_LABELS = {
         MatIcon,
         MatProgressBarModule,
         MatTooltip,
-        TranslatePipe,
     ],
 })
 export class DownloadsComponent {
@@ -65,7 +63,6 @@ export class DownloadsComponent {
     private readonly playlistsService = inject(PlaylistsService);
     private readonly collectionCtx = inject(PortalCollectionContextService);
     private readonly dialogService = inject(DialogService);
-    private readonly translate = inject(TranslateService);
     private readonly snackBar = inject(MatSnackBar);
     private readonly shellActions = inject(PORTAL_SHELL_ACTIONS);
     readonly downloadsService = inject(DownloadsService);
@@ -242,17 +239,15 @@ export class DownloadsComponent {
     async copyUrl(item: DownloadItem): Promise<void> {
         try {
             await navigator.clipboard.writeText(item.url);
-            this.snackBar.open(
-                this.translate.instant('DOWNLOADS.URL_COPIED'),
-                undefined,
-                { duration: 2000, horizontalPosition: 'start' }
-            );
+            this.snackBar.open('Download URL copied to clipboard', undefined, {
+                duration: 2000,
+                horizontalPosition: 'start',
+            });
         } catch {
-            this.snackBar.open(
-                this.translate.instant('DOWNLOADS.URL_COPY_FAILED'),
-                undefined,
-                { duration: 3000, horizontalPosition: 'start' }
-            );
+            this.snackBar.open('Failed to copy URL to clipboard', undefined, {
+                duration: 3000,
+                horizontalPosition: 'start',
+            });
         }
     }
 
@@ -296,13 +291,10 @@ export class DownloadsComponent {
 
     async clearCompleted() {
         this.dialogService.openConfirmDialog({
-            title: this.translate.instant(
-                'DOWNLOADS.CLEAR_COMPLETED_DIALOG.TITLE'
-            ),
-            message: this.translate.instant(
-                'DOWNLOADS.CLEAR_COMPLETED_DIALOG.MESSAGE'
-            ),
-            confirmLabel: this.translate.instant('DOWNLOADS.CLEAR_COMPLETED'),
+            title: 'Clear completed downloads',
+            message:
+                'This removes completed, failed, and canceled entries from the current downloads view. It does not delete any files that were already downloaded to disk.',
+            confirmLabel: 'Clear Completed',
             onConfirm: async (): Promise<void> => {
                 await this.downloadsService.clearCompleted(this.playlistId());
             },
@@ -369,7 +361,7 @@ export class DownloadsComponent {
     async openInLibrary(item: DownloadItem): Promise<void> {
         if (!this.hasSourcePlaylist(item)) {
             this.snackBar.open(
-                this.translate.instant('DOWNLOADS.SOURCE_PLAYLIST_MISSING'),
+                'This download can no longer open in the library because its source playlist was removed.',
                 undefined,
                 { duration: 3000, horizontalPosition: 'start' }
             );
@@ -574,8 +566,8 @@ export class DownloadsComponent {
     private handleFileActionError(error?: string): void {
         const message =
             error === 'File not found'
-                ? this.translate.instant('DOWNLOADS.FILE_NOT_FOUND')
-                : this.translate.instant('DOWNLOADS.FILE_ACTION_ERROR');
+                ? 'This downloaded file is no longer available on disk.'
+                : 'The file action could not be completed.';
 
         this.snackBar.open(message, undefined, {
             duration: 3000,

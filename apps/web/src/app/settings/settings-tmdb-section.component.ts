@@ -1,4 +1,10 @@
-import { Component, inject, input, signal, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    inject,
+    input,
+    signal,
+    ViewEncapsulation,
+} from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -6,7 +12,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { TranslateModule } from '@ngx-translate/core';
 import { TmdbApiService } from '@iptvnator/services';
 
 type TmdbKeyTestState = 'idle' | 'testing' | 'success' | 'error';
@@ -21,7 +26,6 @@ type TmdbKeyTestState = 'idle' | 'testing' | 'success' | 'error';
         MatInputModule,
         MatProgressSpinnerModule,
         ReactiveFormsModule,
-        TranslateModule,
     ],
     templateUrl: './settings-tmdb-section.component.html',
     encapsulation: ViewEncapsulation.None,

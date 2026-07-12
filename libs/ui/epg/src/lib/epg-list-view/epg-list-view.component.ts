@@ -11,13 +11,9 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { normalizeDateLocale } from '@iptvnator/pipes';
 import { EpgProgram } from '@iptvnator/shared/interfaces';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { startWith } from 'rxjs';
 import {
     EpgDateNavigationDirection,
     getTodayEpgDateKey,
@@ -68,7 +64,6 @@ type RenderState = 'loading' | 'list' | EpgTimelineEmptyReason;
         EpgTimelineEmptyStateComponent,
         MatIcon,
         MatTooltip,
-        TranslatePipe,
     ],
 })
 export class EpgListViewComponent {
@@ -88,7 +83,7 @@ export class EpgListViewComponent {
     readonly selectedDate = input<string | null>(null);
     readonly collapsed = input(false);
     readonly summary = input<EpgTimelineSummary | null>(null);
-    readonly summaryLabelKey = input('EPG.CURRENT_PROGRAM');
+    readonly summaryLabelKey = input('Current program');
 
     readonly programActivated = output<EpgProgramActivationEvent>();
     readonly returnToLive = output<void>();
@@ -98,7 +93,6 @@ export class EpgListViewComponent {
     readonly collapsedChange = output<boolean>();
 
     private readonly programmeDialog = inject(EpgProgrammeDialogService);
-    private readonly translate = inject(TranslateService);
 
     readonly list = viewChild<ElementRef<HTMLElement>>('list');
     readonly nowMs = signal(Date.now());
@@ -111,17 +105,7 @@ export class EpgListViewComponent {
         const key = this.selectedDate()?.trim();
         return key ? key : getTodayEpgDateKey();
     });
-
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
-    readonly currentLocale = computed(() => {
-        this.languageTick();
-        return normalizeDateLocale(
-            this.translate.currentLang || this.translate.defaultLang
-        );
-    });
+    readonly currentLocale = () => 'en-US';
 
     readonly rows = computed<EpgListRow[]>(() =>
         buildEpgListRows(this.programs(), this.viewDayKey(), this.nowMs(), {
@@ -135,7 +119,9 @@ export class EpgListViewComponent {
     );
     readonly nowRowMinutesLeft = computed(() => {
         const row = this.nowRow();
-        return row ? Math.max(0, Math.round((row.stopMs - this.nowMs()) / 60_000)) : null;
+        return row
+            ? Math.max(0, Math.round((row.stopMs - this.nowMs()) / 60_000))
+            : null;
     });
 
     readonly viewDate = computed(() => parseEpgDateKey(this.viewDayKey()));

@@ -50,11 +50,11 @@ Codecov) and each Tier B/C project's `validationCommand` (falling back to
 `nx test`) without coverage; projects with an `e2e` target are skipped there
 because the E2E workflow already runs them on every PR.
 
-| Tier | Rule | Validation |
-| --- | --- | --- |
-| A | Product/runtime Angular, Electron, backend, data-access, portal, playlist, workspace, playback, EPG, and shared UI code collects source coverage. | `pnpm run coverage:ci` |
-| B | Validate behavior without percentage coverage, such as `website`, `packaging`, and Playwright E2E projects. | `pnpm nx test website`, `pnpm nx test packaging`, or the closest E2E target |
-| C | Excluded from the source coverage baseline, such as mock servers, test helper libraries, and untested feature shells. | Validate through dependent flows, or add focused tests when changing behavior directly |
+| Tier | Rule                                                                                                                                              | Validation                                                                             |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| A    | Product/runtime Angular, Electron, backend, data-access, portal, playlist, workspace, playback, EPG, and shared UI code collects source coverage. | `pnpm run coverage:ci`                                                                 |
+| B    | Validate behavior without percentage coverage, such as `website`, `packaging`, and Playwright E2E projects.                                       | `pnpm nx test website`, `pnpm nx test packaging`, or the closest E2E target            |
+| C    | Excluded from the source coverage baseline, such as mock servers, test helper libraries, and untested feature shells.                             | Validate through dependent flows, or add focused tests when changing behavior directly |
 
 `apps/website` is an Astro marketing site. Its useful signal is a successful
 static build plus targeted output checks, not a merged code coverage percentage.
@@ -100,17 +100,12 @@ For local investigation only, Chromium browser V8 coverage can be explored with:
 pnpm run coverage:e2e:v8:web
 ```
 
-## I18n
+## Language invariant
 
-```bash
-pnpm run i18n:check
-```
-
-The i18n check is non-mutating. It compares every locale file in
-`apps/web/src/assets/i18n/` against `en.json` and fails on missing or extra keys.
-Identical English fallback values are reported as warnings by default; use
-`node tools/i18n/check-drift.mjs --fail-on-identical` for a stricter translation
-audit.
+The application is English-only. Validation should reject new translation
+runtime dependencies, translation pipes, locale asset folders, or configurable
+language settings. User-facing text belongs directly in the owning component or
+service.
 
 ## Logging
 

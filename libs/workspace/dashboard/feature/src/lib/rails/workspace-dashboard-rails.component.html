@@ -99,9 +99,7 @@
                                     >
                                 }
                                 @for (genre of item.genres; track genre) {
-                                    <span class="hero__badge">{{
-                                        genre
-                                    }}</span>
+                                    <span class="hero__badge">{{ genre }}</span>
                                 }
                             </span>
                         }
@@ -149,7 +147,10 @@
                             </span>
                         }
 
-                        @if (item.watchProgress !== null && item.watchProgress !== undefined) {
+                        @if (
+                            item.watchProgress !== null &&
+                            item.watchProgress !== undefined
+                        ) {
                             <span class="hero__progress" aria-hidden="true">
                                 <span
                                     class="hero__progress-bar"
@@ -159,28 +160,22 @@
                             <span class="hero__progress-meta">
                                 @if (item.remainingLabel) {
                                     <span>{{
-                                        item.remainingLabel.key
-                                            | translate
-                                                : item.remainingLabel.params
+                                        formatText(
+                                            item.remainingLabel.key,
+                                            item.remainingLabel.params
+                                        )
                                     }}</span>
                                     <span class="hero__progress-meta-sep"
                                         >·</span
                                     >
                                 }
-                                <span>{{
-                                    'WORKSPACE.DASHBOARD.PERCENT_WATCHED'
-                                        | translate
-                                            : { value: item.watchProgress }
-                                }}</span>
+                                <span>{{ item.watchProgress }}% watched</span>
                             </span>
                         }
 
                         <span class="hero__cta">
                             <mat-icon>play_arrow</mat-icon>
-                            <span>{{
-                                'WORKSPACE.DASHBOARD.CONTINUE_WATCHING'
-                                    | translate
-                            }}</span>
+                            <span>{{ 'Continue Watching' }}</span>
                         </span>
                     </span>
                 </a>
@@ -209,7 +204,7 @@
             continueWatchingCards().length > 0
         ) {
             <lib-dashboard-rail
-                [label]="'WORKSPACE.DASHBOARD.CONTINUE_WATCHING' | translate"
+                [label]="'Continue Watching'"
                 [items]="continueWatchingCards()"
                 [totalCount]="data.globalRecentVodItems().length"
                 [seeAllLink]="['/workspace/global-recent']"
@@ -225,7 +220,7 @@
             liveFavoriteCardsEnriched().length > 0
         ) {
             <lib-dashboard-rail
-                [label]="liveRailTitleKeyForSource('favorites') | translate"
+                [label]="liveRailTitleKeyForSource('favorites')"
                 [items]="liveFavoriteCardsEnriched()"
                 [totalCount]="data.globalFavoriteLiveItems().length"
                 [seeAllLink]="['/workspace/global-favorites']"
@@ -253,7 +248,7 @@
             recentLiveCardsEnriched().length > 0
         ) {
             <lib-dashboard-rail
-                [label]="liveRailTitleKeyForSource('recent') | translate"
+                [label]="liveRailTitleKeyForSource('recent')"
                 [items]="recentLiveCardsEnriched()"
                 [totalCount]="data.globalRecentLiveItems().length"
                 [seeAllLink]="['/workspace/global-recent']"
@@ -268,10 +263,7 @@
             favoriteMoviesAndSeriesCards().length > 0
         ) {
             <lib-dashboard-rail
-                [label]="
-                    'WORKSPACE.DASHBOARD.FAVORITE_MOVIES_AND_SERIES'
-                        | translate
-                "
+                [label]="'Favorite movies & series'"
                 [items]="favoriteMoviesAndSeriesCards()"
                 [totalCount]="
                     data.globalFavoriteItems().length -
@@ -301,7 +293,7 @@
         <!-- Sources rail -->
         @if (dashboardRails().recentSources && sourceCards().length > 0) {
             <lib-dashboard-rail
-                [label]="'WORKSPACE.DASHBOARD.RECENT_SOURCES' | translate"
+                [label]="'Recently Used Sources'"
                 [items]="sourceCards()"
                 [totalCount]="data.playlists().length"
                 [seeAllLink]="['/workspace/sources']"
@@ -330,16 +322,15 @@
             xtreamRecentlyAddedCards().length > 0
         ) {
             <lib-dashboard-rail
-                [label]="
-                    'WORKSPACE.DASHBOARD.XTREAM_RECENTLY_ADDED' | translate
-                "
+                [label]="'Recently Added on Xtream'"
                 [items]="xtreamRecentlyAddedCards()"
                 [totalCount]="data.xtreamRecentlyAddedItems().length"
                 [testId]="'dashboard-xtream-recently-added-rail'"
             />
         } @else if (
             dashboardRails().xtreamRecentlyAdded &&
-            xtreamPlaylistCount() > 0 && data.xtreamRecentlyAddedLoading()
+            xtreamPlaylistCount() > 0 &&
+            data.xtreamRecentlyAddedLoading()
         ) {
             <section
                 class="rails-page__skeleton-rail"
@@ -358,7 +349,7 @@
         <!-- TMDB trending rail (opt-in; Electron only — needs title matching) -->
         @if (dashboardRails().tmdbTrending && trendingCards().length > 0) {
             <lib-dashboard-rail
-                [label]="'WORKSPACE.DASHBOARD.TMDB_TRENDING' | translate"
+                [label]="'Trending this week'"
                 [items]="trendingCards()"
                 [totalCount]="trendingCards().length"
                 [testId]="'dashboard-tmdb-trending-rail'"

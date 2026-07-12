@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { PlaylistActions } from '@iptvnator/m3u-state';
 import { DialogService } from '@iptvnator/ui/components';
 import { DataService, SettingsStore } from '@iptvnator/services';
@@ -54,7 +53,6 @@ export class ElectronService extends DataService {
     private readonly dialogService = inject(DialogService);
     private readonly store = inject(Store);
     private readonly settingsStore = inject(SettingsStore);
-    private readonly translateService = inject(TranslateService);
     private readonly debugLog = createDevLogger('ElectronService');
     private readonly silentXtreamActions = new Set<string>([
         XtreamCodeActions.GetAccountInfo,
@@ -229,9 +227,7 @@ export class ElectronService extends DataService {
                 })
             );
             this.snackBar.open(
-                this.translateService.instant(
-                    'HOME.PLAYLISTS.AUTO_REFRESH_UPDATE_SUCCESS'
-                ),
+                'Success! The playlists were successfully updated',
                 undefined,
                 { duration: 2000 }
             );
@@ -314,19 +310,19 @@ export class ElectronService extends DataService {
                 }
 
                 const statusCode = this.extractHttpStatusCode(error);
-                let messageKey = 'HOME.URL_UPLOAD.ERROR_FETCH_FAILED';
+                let messageKey =
+                    'Failed to fetch the playlist. Please check the URL and try again.';
                 if (statusCode === 403) {
-                    messageKey = 'HOME.URL_UPLOAD.ERROR_403';
+                    messageKey =
+                        'Access denied (403): The server refused the request. The URL may require authentication or the playlist is restricted.';
                 } else if (statusCode === 404) {
-                    messageKey = 'HOME.URL_UPLOAD.ERROR_404';
+                    messageKey =
+                        'Playlist not found (404): The URL does not point to a valid playlist. Please check the URL.';
                 } else if (statusCode === 401) {
-                    messageKey = 'HOME.URL_UPLOAD.ERROR_401';
+                    messageKey =
+                        'Unauthorized (401): Authentication is required to access this playlist.';
                 }
-                this.snackBar.open(
-                    this.translateService.instant(messageKey),
-                    this.translateService.instant('CLOSE'),
-                    { duration: 5000 }
-                );
+                this.snackBar.open(messageKey, 'Close', { duration: 5000 });
             });
     }
 
@@ -386,9 +382,7 @@ export class ElectronService extends DataService {
             );
 
             this.snackBar.open(
-                this.translateService.instant(
-                    'HOME.PLAYLISTS.PLAYLIST_UPDATE_SUCCESS'
-                ),
+                'Success! The playlist was successfully updated.',
                 undefined,
                 { duration: 2000 }
             );
@@ -404,7 +398,7 @@ export class ElectronService extends DataService {
             }
             this.snackBar.open(
                 this.getPlaylistRefreshErrorMessage(error, data),
-                this.translateService.instant('CLOSE'),
+                'Close',
                 { duration: 5000 }
             );
         }
@@ -424,42 +418,27 @@ export class ElectronService extends DataService {
                     errorMessage
                 )
             ) {
-                return this.translateWithFallback(
-                    'HOME.PLAYLISTS.PLAYLIST_UPDATE_FILE_NOT_FOUND',
-                    'Playlist refresh failed. The local file is no longer available. Check the file path or re-import the playlist.'
-                );
+                return 'Playlist refresh failed. The local file is no longer available. Check the file path or re-import the playlist.';
             }
 
             if (/(EACCES|EPERM|permission denied)/i.test(errorMessage)) {
-                return this.translateWithFallback(
-                    'HOME.PLAYLISTS.PLAYLIST_UPDATE_FILE_ACCESS_ERROR',
-                    'Playlist refresh failed. The app can no longer access the local file.'
-                );
+                return 'Playlist refresh failed. The app can no longer access the local file.';
             }
 
-            return this.translateService.instant(
-                'HOME.PLAYLISTS.PLAYLIST_UPDATE_ERROR'
-            );
+            return 'Error updating playlist details.';
         }
 
         const statusCode = this.extractHttpStatusCode(error);
         if (statusCode === 404) {
-            return this.translateService.instant('HOME.URL_UPLOAD.ERROR_404');
+            return 'Playlist not found (404): The URL does not point to a valid playlist. Please check the URL.';
         }
         if (statusCode === 403) {
-            return this.translateService.instant('HOME.URL_UPLOAD.ERROR_403');
+            return 'Access denied (403): The server refused the request. The URL may require authentication or the playlist is restricted.';
         }
         if (statusCode === 401) {
-            return this.translateService.instant('HOME.URL_UPLOAD.ERROR_401');
+            return 'Unauthorized (401): Authentication is required to access this playlist.';
         }
-        return this.translateService.instant(
-            'HOME.URL_UPLOAD.ERROR_FETCH_FAILED'
-        );
-    }
-
-    private translateWithFallback(key: string, fallback: string): string {
-        const translated = this.translateService.instant(key);
-        return translated === key ? fallback : translated;
+        return 'Failed to fetch the playlist. Please check the URL and try again.';
     }
 
     private handlePlaylistSecurityError(
@@ -475,14 +454,8 @@ export class ElectronService extends DataService {
         }
 
         const ref = this.snackBar.open(
-            this.translateWithFallback(
-                'HOME.URL_UPLOAD.ERROR_INVALID_TLS',
-                'Certificate for this playlist host is invalid.'
-            ),
-            this.translateWithFallback(
-                'HOME.URL_UPLOAD.TRUST_TLS_HOST',
-                'Trust host'
-            ),
+            'Certificate for this playlist host is invalid.',
+            'Trust host',
             { duration: 10000 }
         );
 
@@ -498,29 +471,18 @@ export class ElectronService extends DataService {
     ): void {
         if (!host) {
             this.snackBar.open(
-                this.translateWithFallback(
-                    'HOME.URL_UPLOAD.ERROR_TLS_HOST_UNKNOWN',
-                    'Could not determine the playlist host. Please retry manually.'
-                ),
-                this.translateService.instant('CLOSE'),
+                'Could not determine the playlist host. Please retry manually.',
+                'Close',
                 { duration: 5000 }
             );
             return;
         }
 
         this.dialogService.openConfirmDialog({
-            title: this.translateWithFallback(
-                'HOME.URL_UPLOAD.TRUST_TLS_HOST_TITLE',
-                'Trust invalid certificate?'
-            ),
-            message: this.translateWithFallback(
-                'HOME.URL_UPLOAD.TRUST_TLS_HOST_WARNING',
-                'Only continue if you trust this playlist host. TuHiN iPTV will allow invalid TLS certificates for this host, but other hosts still require valid certificates.'
-            ),
-            confirmLabel: this.translateWithFallback(
-                'HOME.URL_UPLOAD.TRUST_TLS_HOST',
-                'Trust host'
-            ),
+            title: 'Trust invalid certificate?',
+            message:
+                'Only continue if you trust this playlist host. TuHiN iPTV will allow invalid TLS certificates for this host, but other hosts still require valid certificates.',
+            confirmLabel: 'Trust host',
             width: '420px',
             onConfirm: () => {
                 void this.trustPlaylistHost(host).then(retry);

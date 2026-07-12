@@ -2,37 +2,31 @@ import { PortalRailSection } from '@iptvnator/portal/shared/util';
 
 export const SEARCH_INPUT_DEBOUNCE_MS = 350;
 
-export const SEARCH_PLAYLIST_PLACEHOLDER =
-    'WORKSPACE.SHELL.SEARCH_PLAYLIST_PLACEHOLDER';
-export const SEARCH_SECTION_PLACEHOLDER =
-    'WORKSPACE.SHELL.SEARCH_SECTION_PLACEHOLDER';
-export const FILTER_SECTION_PLACEHOLDER =
-    'WORKSPACE.SHELL.FILTER_SECTION_PLACEHOLDER';
-export const SEARCH_SOURCES_PLACEHOLDER =
-    'WORKSPACE.SHELL.SEARCH_SOURCES_PLACEHOLDER';
-export const SEARCH_LOADED_ONLY_STATUS =
-    'WORKSPACE.SHELL.SEARCH_STATUS_LOADED_ONLY';
+export const SEARCH_PLAYLIST_PLACEHOLDER = 'Search in this playlist...';
+export const SEARCH_SECTION_PLACEHOLDER = 'Search in this section...';
+export const FILTER_SECTION_PLACEHOLDER = 'Filter this section...';
+export const SEARCH_SOURCES_PLACEHOLDER = 'Search sources (all playlists)...';
+export const SEARCH_LOADED_ONLY_STATUS = 'Loaded channels only';
 
-export const CLEAR_RECENTLY_VIEWED_TOOLTIP =
-    'WORKSPACE.SHELL.CLEAR_RECENTLY_VIEWED_SECTION';
+export const CLEAR_RECENTLY_VIEWED_TOOLTIP = 'Clear recently viewed';
 export const CLEAR_RECENTLY_VIEWED_ARIA =
-    'WORKSPACE.SHELL.CLEAR_RECENTLY_VIEWED_SECTION_ARIA';
+    'Clear recently viewed for this section';
 
 export const RAIL_TOOLTIP_KEYS: Readonly<
     Partial<Record<PortalRailSection, string>>
 > = {
-    vod: 'WORKSPACE.SHELL.RAIL_MOVIES',
-    live: 'WORKSPACE.SHELL.RAIL_LIVE',
-    itv: 'WORKSPACE.SHELL.RAIL_LIVE',
-    radio: 'WORKSPACE.SHELL.RAIL_RADIO',
-    series: 'WORKSPACE.SHELL.RAIL_SERIES',
-    'recently-added': 'WORKSPACE.SHELL.RAIL_RECENTLY_ADDED',
-    search: 'WORKSPACE.SHELL.RAIL_SEARCH',
-    recent: 'WORKSPACE.SHELL.RAIL_RECENT',
-    favorites: 'WORKSPACE.SHELL.RAIL_FAVORITES',
-    downloads: 'WORKSPACE.SHELL.RAIL_DOWNLOADS',
-    all: 'WORKSPACE.SHELL.RAIL_ALL_CHANNELS',
-    groups: 'WORKSPACE.SHELL.RAIL_GROUPS',
+    vod: 'Movies',
+    live: 'Live TV',
+    itv: 'Live TV',
+    radio: 'Radio',
+    series: 'Series',
+    'recently-added': 'Recently added',
+    search: 'Advanced search',
+    recent: 'Recently viewed',
+    favorites: 'Favorites',
+    downloads: 'Downloads',
+    all: 'All channels',
+    groups: 'Groups',
 };
 
 export type XtreamImportPhaseTone = 'remote' | 'local' | null;

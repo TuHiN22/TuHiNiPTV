@@ -34,19 +34,19 @@ without creating dependency cycles (`portal/shared/data-access` already
 depends on `portal/xtream/data-access`, so it cannot host code the Xtream
 store imports):
 
-| File | Responsibility |
-| --- | --- |
-| `tmdb-config.ts` | API/image base URLs, embedded default API key, cache TTLs, app-language → TMDB-language mapping |
-| `tmdb.types.ts` | TMDB v3 response shapes (search, details with credits) |
-| `tmdb-api.service.ts` | Thin `fetch`-based client (TMDB supports CORS; works in Electron renderer and PWA). Accepts v3 keys (`api_key` param) and v4 tokens (Bearer) |
-| `tmdb-matcher.ts` | Title normalization, year extraction, and the match-confidence gate (pure functions) |
-| `tmdb-cache.service.ts` | Environment-aware cache (Electron IPC bridge vs in-memory LRU capped at 300 entries) with caller-supplied TTLs |
-| `tmdb-merge.ts` | Field-level merge into `XtreamVodInfo` / `XtreamSerieInfo` (pure functions, no mutation) |
-| `tmdb-runtime.service.ts` | Shared runtime context: opt-in gate, effective API key, language resolution |
-| `tmdb-enrichment.service.ts` | Movie/TV orchestrator and facade: id resolution → details fetch → cache; delegates person/season lookups |
-| `tmdb-person.service.ts` | Cached person details + combined filmography (`person:<id>` rows) |
-| `tmdb-season.service.ts` | Cached lazy per-season episode lists (`id:<id>\|season:<n>` rows) |
-| `tmdb-trending.service.ts` | Weekly trending (movie + tv merged by popularity, `trending:week` rows, 1-day TTL) |
+| File                         | Responsibility                                                                                                                               |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tmdb-config.ts`             | API/image base URLs, embedded default API key, cache TTLs, app-language → TMDB-language mapping                                              |
+| `tmdb.types.ts`              | TMDB v3 response shapes (search, details with credits)                                                                                       |
+| `tmdb-api.service.ts`        | Thin `fetch`-based client (TMDB supports CORS; works in Electron renderer and PWA). Accepts v3 keys (`api_key` param) and v4 tokens (Bearer) |
+| `tmdb-matcher.ts`            | Title normalization, year extraction, and the match-confidence gate (pure functions)                                                         |
+| `tmdb-cache.service.ts`      | Environment-aware cache (Electron IPC bridge vs in-memory LRU capped at 300 entries) with caller-supplied TTLs                               |
+| `tmdb-merge.ts`              | Field-level merge into `XtreamVodInfo` / `XtreamSerieInfo` (pure functions, no mutation)                                                     |
+| `tmdb-runtime.service.ts`    | Shared runtime context: opt-in gate, effective API key, language resolution                                                                  |
+| `tmdb-enrichment.service.ts` | Movie/TV orchestrator and facade: id resolution → details fetch → cache; delegates person/season lookups                                     |
+| `tmdb-person.service.ts`     | Cached person details + combined filmography (`person:<id>` rows)                                                                            |
+| `tmdb-season.service.ts`     | Cached lazy per-season episode lists (`id:<id>\|season:<n>` rows)                                                                            |
+| `tmdb-trending.service.ts`   | Weekly trending (movie + tv merged by popularity, `trending:week` rows, 1-day TTL)                                                           |
 
 Integration glue per portal:
 
@@ -100,14 +100,12 @@ The year filter is applied client-side rather than via TMDB's strict
 `year`/`first_air_date_year` search params, which would drop correct results
 when the provider's year is off by one.
 
-**Non-Latin titles**: TMDB matches translated titles but returns `title` in
-the *request* language, so a Cyrillic query issued with `en-US` would come
-back with an English title and fail the exact-match gate.
-`tmdbSearchLanguageForTitle` detects Cyrillic queries and issues the search
-with `ru-RU` (unless the app language is already Cyrillic-based); details
-are still fetched in the app language afterwards.
+**Non-Latin titles**: search requests remain fixed to `en-US`. TMDB may return
+an English title for a non-Latin query, so the strict confidence gate can reject
+some results. This is intentional: English-only metadata is preferred over a
+language-specific fallback that would reintroduce multiple language paths.
 
-## Details Fetch and Localization
+## English Details Fetch
 
 Details are fetched with
 `/movie/{id}?append_to_response=credits,videos,recommendations` (`/tv/{id}`
@@ -135,20 +133,10 @@ purely from these cross-portal matches (shared `VodDetailsComponent` for
 movies, `stalker-series-view` for series); Xtream detail views append
 them after the local-catalog matches, deduplicated by normalized title,
 with the source playlist name on each card.
-The `language` param derives from the app language setting
-(`Language` enum → TMDB code, e.g. `de` → `de-DE`); cache rows are keyed per
-language, so switching the app language re-fetches localized metadata.
-
-TMDB language-filters both text AND videos — a Russian-only title returns
-an empty overview and no trailer for `en-US` (its trailer is tagged
-`iso_639_1=ru`). When the app-language payload is missing either, the
-enrichment refetches once in the content's `original_language` and fills
-only the missing fields (`tmdb-language-fallback.ts`): the details
-overview and/or trailer (each independently, so a present app-language
-overview is kept while the trailer is filled), and — via the same rule in
-`TmdbSeasonService` when a season payload carries no usable text — the
-season overview and per-episode names/overviews. Genres, credits and
-artwork stay in the app language; both language rows land in the cache.
+TMDB search, details, videos, and season requests always use `en-US`. Cache rows
+therefore have one deterministic language key and do not need invalidation for
+language changes. Provider metadata remains visible when TMDB has no English
+overview, trailer, season text, or episode text.
 
 Trailers embed via `https://www.youtube-nocookie.com/embed/…`. YouTube
 requires a Referer on the embed request ("Error 153 — Video player

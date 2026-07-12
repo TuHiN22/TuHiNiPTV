@@ -7,7 +7,7 @@
             <span class="header-title">
                 <mat-icon>live_tv</mat-icon>
                 @if (!minimized()) {
-                    {{ 'EPG.IMPORT_PROGRESS' | translate }}
+                    {{ 'EPG Import' }}
                 } @else {
                     <span class="minimized-summary">
                         {{ loadingCount() }} loading
@@ -32,7 +32,7 @@
                     mat-icon-button
                     class="dismiss-all-btn"
                     (click)="dismissAll()"
-                    [attr.aria-label]="'CLOSE' | translate"
+                    [attr.aria-label]="'Close'"
                 >
                     <mat-icon>close</mat-icon>
                 </button>
@@ -70,8 +70,8 @@
                                     mat-icon-button
                                     class="retry-btn"
                                     (click)="retry(item.url)"
-                                    [attr.aria-label]="'EPG.RETRY' | translate"
-                                    [matTooltip]="'EPG.RETRY' | translate"
+                                    [attr.aria-label]="'Retry'"
+                                    [matTooltip]="'Retry'"
                                 >
                                     <mat-icon>refresh</mat-icon>
                                 </button>
@@ -80,7 +80,7 @@
                                 mat-icon-button
                                 class="dismiss-btn"
                                 (click)="dismiss(item.url)"
-                                [attr.aria-label]="'CLOSE' | translate"
+                                [attr.aria-label]="'Close'"
                             >
                                 <mat-icon>close</mat-icon>
                             </button>
@@ -94,18 +94,14 @@
                             @if (item.stats) {
                                 <span
                                     class="stat-badge"
-                                    matTooltip="{{
-                                        'EPG.TOTAL_CHANNELS' | translate
-                                    }}"
+                                    matTooltip="{{ 'Total channels' }}"
                                 >
                                     <mat-icon>tv</mat-icon>
                                     {{ item.stats.totalChannels }}
                                 </span>
                                 <span
                                     class="stat-badge"
-                                    matTooltip="{{
-                                        'EPG.TOTAL_PROGRAMS' | translate
-                                    }}"
+                                    matTooltip="{{ 'Total programs' }}"
                                 >
                                     <mat-icon>event</mat-icon>
                                     {{ item.stats.totalPrograms }}
@@ -113,7 +109,7 @@
                             } @else if (item.error) {
                                 <span class="error-text">{{ item.error }}</span>
                             } @else if (item.status === 'loading') {
-                                <span>{{ 'EPG.LOADING' | translate }}...</span>
+                                <span>{{ 'Loading' }}...</span>
                             }
                         </div>
                     </div>
@@ -124,7 +120,7 @@
                         <div class="queue-header">
                             <mat-icon>queue</mat-icon>
                             <span
-                                >{{ 'EPG.QUEUED' | translate }} ({{
+                                >{{ 'Queued' }} ({{
                                     queuedImports.length
                                 }})</span
                             >
@@ -146,7 +142,7 @@
                                         mat-icon-button
                                         class="dismiss-btn"
                                         (click)="dismiss(item.url)"
-                                        [attr.aria-label]="'CLOSE' | translate"
+                                        [attr.aria-label]="'Close'"
                                     >
                                         <mat-icon>close</mat-icon>
                                     </button>

@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
 import {
     ELECTRON_BRIDGE_APP_UPDATE_STATUSES,
     ElectronBridgeAppUpdateStatus,
@@ -15,7 +14,7 @@ import {
 
 @Component({
     selector: 'app-settings-about-section',
-    imports: [MatButtonModule, MatIconModule, TranslateModule],
+    imports: [MatButtonModule, MatIconModule],
     templateUrl: './settings-about-section.component.html',
     encapsulation: ViewEncapsulation.None,
     styles: [':host { display: contents; }'],
@@ -25,7 +24,9 @@ export class SettingsAboutSectionComponent {
     readonly isDesktop = input(false);
     readonly version = input<string | undefined>();
     readonly updateMessage = input<string | undefined>();
-    readonly appUpdateStatus = input<ElectronBridgeAppUpdateStatus | null>(null);
+    readonly appUpdateStatus = input<ElectronBridgeAppUpdateStatus | null>(
+        null
+    );
 
     readonly checkForAppUpdate = output<void>();
     readonly downloadAppUpdate = output<void>();
@@ -65,7 +66,7 @@ export class SettingsAboutSectionComponent {
 
         return Boolean(
             status?.currentVersion &&
-                status.status !== ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Checking
+            status.status !== ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Checking
         );
     });
 
@@ -75,28 +76,30 @@ export class SettingsAboutSectionComponent {
         return Boolean(status && !status.supportedSelfUpdate);
     });
 
-    readonly appUpdateStatusLabelKey = computed(() => {
+    readonly appUpdateStatusLabel = computed(() => {
+        const updateStatus = this.appUpdateStatus();
         const status =
-            this.appUpdateStatus()?.status ??
-            ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Idle;
+            updateStatus?.status ?? ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Idle;
+        const version =
+            updateStatus?.latestVersion ?? updateStatus?.currentVersion ?? '';
 
         switch (status) {
             case ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Checking:
-                return 'SETTINGS.APP_UPDATE_CHECKING';
+                return 'Checking for updates…';
             case ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Available:
-                return 'SETTINGS.APP_UPDATE_AVAILABLE';
+                return `Version ${version} is available`;
             case ELECTRON_BRIDGE_APP_UPDATE_STATUSES.NotAvailable:
-                return 'SETTINGS.APP_UPDATE_NOT_AVAILABLE';
+                return 'You are using the latest version';
             case ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Downloading:
-                return 'SETTINGS.APP_UPDATE_DOWNLOADING';
+                return `Downloading version ${version}…`;
             case ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Downloaded:
-                return 'SETTINGS.APP_UPDATE_DOWNLOADED';
+                return `Version ${version} is ready to install`;
             case ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Unsupported:
-                return 'SETTINGS.APP_UPDATE_IDLE';
+                return 'Ready to check for updates';
             case ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Error:
-                return 'SETTINGS.APP_UPDATE_ERROR';
+                return 'Update check failed';
             default:
-                return 'SETTINGS.APP_UPDATE_IDLE';
+                return 'Ready to check for updates';
         }
     });
 }

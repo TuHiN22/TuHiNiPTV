@@ -1,8 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
 import { WorkspaceShellXtreamImportService } from '../../services/workspace-shell-xtream-import.service';
 import { WorkspaceShellImportOverlayComponent } from './workspace-shell-import-overlay.component';
 
@@ -37,19 +35,6 @@ describe('WorkspaceShellImportOverlayComponent', () => {
                     provide: WorkspaceShellXtreamImportService,
                     useValue: importService,
                 },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => key,
-                        get: (key: string) => of(key),
-                        stream: (key: string) => of(key),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                    },
-                },
             ],
         }).compileComponents();
     });
@@ -68,7 +53,9 @@ describe('WorkspaceShellImportOverlayComponent', () => {
     });
 
     it('renders the progress copy when the service exposes one', () => {
-        importService.xtreamImportProgressLabel.set('Movies imported: 20 / 12,323');
+        importService.xtreamImportProgressLabel.set(
+            'Movies imported: 20 / 12,323'
+        );
 
         const fixture = TestBed.createComponent(
             WorkspaceShellImportOverlayComponent
@@ -91,9 +78,8 @@ describe('WorkspaceShellImportOverlayComponent', () => {
         );
         fixture.detectChanges();
 
-        const progress = fixture.nativeElement.querySelector(
-            'mat-progress-bar'
-        );
+        const progress =
+            fixture.nativeElement.querySelector('mat-progress-bar');
         expect(progress).not.toBeNull();
         expect(progress.getAttribute('mode')).toBe('determinate');
     });
@@ -104,9 +90,8 @@ describe('WorkspaceShellImportOverlayComponent', () => {
         );
         fixture.detectChanges();
 
-        const progress = fixture.nativeElement.querySelector(
-            'mat-progress-bar'
-        );
+        const progress =
+            fixture.nativeElement.querySelector('mat-progress-bar');
         expect(progress.getAttribute('mode')).toBe('indeterminate');
     });
 

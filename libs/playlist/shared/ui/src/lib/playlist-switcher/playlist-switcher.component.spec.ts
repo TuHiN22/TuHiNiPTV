@@ -10,7 +10,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
 import { PlaylistActions } from '@iptvnator/m3u-state';
 import { PlaylistContextFacade } from '@iptvnator/playlist/shared/util';
 import { DialogService } from '@iptvnator/ui/components';
@@ -107,11 +106,7 @@ describe('PlaylistSwitcherComponent', () => {
 
     async function createComponent(): Promise<void> {
         await TestBed.configureTestingModule({
-            imports: [
-                PlaylistSwitcherComponent,
-                NoopAnimationsModule,
-                TranslateModule.forRoot(),
-            ],
+            imports: [PlaylistSwitcherComponent, NoopAnimationsModule],
             providers: [
                 {
                     provide: PlaylistContextFacade,

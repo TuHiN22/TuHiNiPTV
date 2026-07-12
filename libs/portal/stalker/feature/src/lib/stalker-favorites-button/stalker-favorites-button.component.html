@@ -2,11 +2,14 @@
 @if (isFavorite === false) {
     <button class="favorite-btn" (click)="addToFavorites()">
         <mat-icon>add</mat-icon>
-        {{ 'PORTALS.ADD_TO_FAVORITES' | translate }}
+        {{ 'Add to favorites' }}
     </button>
 } @else {
-    <button class="favorite-btn favorite-btn--active" (click)="removeFromFavorites()">
+    <button
+        class="favorite-btn favorite-btn--active"
+        (click)="removeFromFavorites()"
+    >
         <mat-icon>check</mat-icon>
-        {{ 'PORTALS.REMOVE_FROM_FAVORITES' | translate }}
+        {{ 'Remove from favorites' }}
     </button>
 }

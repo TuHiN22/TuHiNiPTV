@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
 import { AppUpdateReleaseNotesDialogComponent } from './app-update-release-notes-dialog.component';
 
 const releaseNotes = {
@@ -24,10 +23,7 @@ describe('AppUpdateReleaseNotesDialogComponent', () => {
         } as unknown as typeof window.electron;
 
         await TestBed.configureTestingModule({
-            imports: [
-                AppUpdateReleaseNotesDialogComponent,
-                TranslateModule.forRoot(),
-            ],
+            imports: [AppUpdateReleaseNotesDialogComponent],
             providers: [
                 {
                     provide: MAT_DIALOG_DATA,
@@ -60,8 +56,9 @@ describe('AppUpdateReleaseNotesDialogComponent', () => {
             version: '0.23.0',
         });
         expect(
-            fixture.nativeElement.querySelector('[data-test-id="release-notes-body"] h2')
-                ?.textContent
+            fixture.nativeElement.querySelector(
+                '[data-test-id="release-notes-body"] h2'
+            )?.textContent
         ).toContain('v0.23.0');
         expect(
             fixture.nativeElement.querySelector(
@@ -114,7 +111,9 @@ describe('AppUpdateReleaseNotesDialogComponent', () => {
         ).click();
         await fixture.whenStable();
 
-        expect(window.electron.getAppUpdateReleaseNotes).toHaveBeenLastCalledWith({
+        expect(
+            window.electron.getAppUpdateReleaseNotes
+        ).toHaveBeenLastCalledWith({
             direction: 'previous',
             version: 'v0.23.0',
         });

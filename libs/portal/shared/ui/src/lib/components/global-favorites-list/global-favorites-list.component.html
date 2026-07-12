@@ -9,22 +9,19 @@
             <mat-icon class="empty-icon">star_border</mat-icon>
             @if (hasSearchTerm()) {
                 <p class="empty-title">
-                    {{ 'WORKSPACE.GLOBAL_FAVORITES.NO_RESULTS' | translate }}
+                    {{ 'No results' }}
                 </p>
                 <p class="empty-hint">
-                    {{
-                        'WORKSPACE.GLOBAL_FAVORITES.NO_RESULTS_HINT'
-                            | translate
-                    }}
+                    {{ 'Try a different search term' }}
                 </p>
             } @else {
                 <p class="empty-title">
-                    {{
-                        'WORKSPACE.GLOBAL_FAVORITES.EMPTY_TITLE' | translate
-                    }}
+                    {{ 'No live TV favorites yet' }}
                 </p>
                 <p class="empty-hint">
-                    {{ 'WORKSPACE.GLOBAL_FAVORITES.EMPTY_HINT' | translate }}
+                    {{
+                        'Star live channels from M3U, Xtream, or Stalker playlists to see them here.'
+                    }}
                 </p>
             }
         </div>
@@ -64,16 +61,14 @@
     @if (contextMenuChannel()?.m3uChannel) {
         <button mat-menu-item (click)="openChannelDetails()">
             <mat-icon>info</mat-icon>
-            <span>{{ 'CHANNELS.SHOW_DETAILS' | translate }}</span>
+            <span>{{ 'Show channel details' }}</span>
         </button>
     }
     @if (mode() === 'recent') {
         <button mat-menu-item (click)="removeContextMenuChannel()">
             <mat-icon>delete</mat-icon>
             <span>
-                {{
-                    'WORKSPACE.DASHBOARD.REMOVE_FROM_HISTORY' | translate
-                }}
+                {{ 'Remove from history' }}
             </span>
         </button>
     }

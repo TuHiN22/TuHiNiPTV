@@ -1,6 +1,5 @@
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import {
     DetailActionsTemplateDirective,
     DetailMetaTemplateDirective,
@@ -55,7 +54,7 @@ describe('PortalDetailShellComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [HostComponent, TranslateModule.forRoot()],
+            imports: [HostComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(HostComponent);

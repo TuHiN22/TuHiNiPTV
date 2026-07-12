@@ -9,15 +9,11 @@ import {
     input,
     output,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
-import { normalizeDateLocale } from '@iptvnator/pipes';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { startWith } from 'rxjs';
 import {
     PortalStatus,
     PortalStatusService,
@@ -37,7 +33,6 @@ import { PlaylistMeta } from '@iptvnator/shared/interfaces';
         MatProgressBarModule,
         MatProgressSpinnerModule,
         MatTooltip,
-        TranslatePipe,
     ],
 })
 export class PlaylistItemComponent implements OnInit {
@@ -61,21 +56,11 @@ export class PlaylistItemComponent implements OnInit {
     portalStatus: PortalStatus = 'unavailable';
     private readonly portalStatusService = inject(PortalStatusService);
     private readonly runtime = inject(RuntimeCapabilitiesService);
-    private readonly translate = inject(TranslateService);
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
 
     readonly supportsPlaylistRefresh = this.runtime.supportsPlaylistRefresh;
     readonly supportsXtreamSqliteDataSource =
         this.runtime.supportsXtreamSqliteDataSource;
-    readonly currentLocale = computed(() => {
-        this.languageTick();
-        return normalizeDateLocale(
-            this.translate.currentLang || this.translate.defaultLang
-        );
-    });
+    readonly currentLocale = () => 'en-US';
 
     async ngOnInit() {
         await this.checkPortalStatus();
@@ -83,11 +68,12 @@ export class PlaylistItemComponent implements OnInit {
 
     private async checkPortalStatus() {
         if (this.item.serverUrl && this.item.username && this.item.password) {
-            this.portalStatus = await this.portalStatusService.checkPortalStatus(
-                this.item.serverUrl,
-                this.item.username,
-                this.item.password
-            );
+            this.portalStatus =
+                await this.portalStatusService.checkPortalStatus(
+                    this.item.serverUrl,
+                    this.item.username,
+                    this.item.password
+                );
         }
     }
 

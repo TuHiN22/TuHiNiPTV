@@ -1,12 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import {
     ELECTRON_BRIDGE_APP_UPDATE_STATUSES,
     ElectronBridgeAppUpdateStatus,
 } from '@iptvnator/shared/interfaces';
 import { SettingsAboutSectionComponent } from './settings-about-section.component';
 
-function getButton(fixture: ComponentFixture<SettingsAboutSectionComponent>, id: string) {
+function getButton(
+    fixture: ComponentFixture<SettingsAboutSectionComponent>,
+    id: string
+) {
     return fixture.nativeElement.querySelector(
         `[data-test-id="${id}"]`
     ) as HTMLButtonElement | null;
@@ -29,10 +31,7 @@ describe('SettingsAboutSectionComponent app updates', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                SettingsAboutSectionComponent,
-                TranslateModule.forRoot(),
-            ],
+            imports: [SettingsAboutSectionComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SettingsAboutSectionComponent);
@@ -42,7 +41,9 @@ describe('SettingsAboutSectionComponent app updates', () => {
         const download = jest.fn();
         fixture.componentInstance.downloadAppUpdate.subscribe(download);
         const openNotes = jest.fn();
-        fixture.componentInstance.openAppUpdateReleaseNotes.subscribe(openNotes);
+        fixture.componentInstance.openAppUpdateReleaseNotes.subscribe(
+            openNotes
+        );
         configureComponent(fixture, {
             currentVersion: '0.22.0',
             latestVersion: '0.23.0',
@@ -83,7 +84,9 @@ describe('SettingsAboutSectionComponent app updates', () => {
 
     it('shows release notes for the current version when no update is available', () => {
         const openNotes = jest.fn();
-        fixture.componentInstance.openAppUpdateReleaseNotes.subscribe(openNotes);
+        fixture.componentInstance.openAppUpdateReleaseNotes.subscribe(
+            openNotes
+        );
         configureComponent(fixture, {
             currentVersion: '0.22.0',
             latestVersion: '0.22.0',
@@ -126,8 +129,8 @@ describe('SettingsAboutSectionComponent app updates', () => {
             supportedSelfUpdate: false,
         });
 
-        expect(fixture.componentInstance.appUpdateStatusLabelKey()).toBe(
-            'SETTINGS.APP_UPDATE_IDLE'
+        expect(fixture.componentInstance.appUpdateStatusLabel()).toBe(
+            'Ready to check for updates'
         );
         expect(getButton(fixture, 'app-update-open-release')).toBeTruthy();
     });

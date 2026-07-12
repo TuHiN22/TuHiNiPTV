@@ -1,6 +1,14 @@
-import { Component, computed, effect, inject, input, output, signal, untracked } from '@angular/core';
+import {
+    Component,
+    computed,
+    effect,
+    inject,
+    input,
+    output,
+    signal,
+    untracked,
+} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 import { SafePipe } from '@iptvnator/pipes';
 import { PORTAL_EXTERNAL_PLAYBACK } from '@iptvnator/portal/shared/util';
 import {
@@ -58,7 +66,6 @@ import { PortalInlinePlayerComponent } from '../portal-inline-player/portal-inli
         PortalDetailShellComponent,
         PortalInlinePlayerComponent,
         SafePipe,
-        TranslatePipe,
     ],
 })
 export class VodDetailsComponent {
@@ -79,47 +86,38 @@ export class VodDetailsComponent {
     /** Active external playback session for launch state */
     readonly externalPlayback = input<ExternalPlayerSession | null>(null);
 
-    // ============ Outputs ============
-
-    /** Emitted when play button is clicked */
     readonly playClicked = output<VodDetailsItem>();
 
-    /** Emitted when resume button is clicked (includes position) */
-    readonly resumeClicked = output<{ item: VodDetailsItem; positionSeconds: number }>();
+    readonly resumeClicked = output<{
+        item: VodDetailsItem;
+        positionSeconds: number;
+    }>();
 
-    /** Emitted when favorite toggle is clicked */
-    readonly favoriteToggled = output<{ item: VodDetailsItem; isFavorite: boolean }>();
+    readonly favoriteToggled = output<{
+        item: VodDetailsItem;
+        isFavorite: boolean;
+    }>();
 
-    /** Emitted when back button is clicked */
     readonly backClicked = output<void>();
 
-    /** Emitted when download is requested (parent handles URL construction) */
     readonly downloadRequested = output<VodDetailsItem>();
 
-    /** Emitted when inline playback position changes */
     readonly inlineTimeUpdated = output<{
         currentTime: number;
         duration: number;
     }>();
 
-    /** Emitted when the inline player should be closed */
     readonly inlinePlaybackClosed = output<void>();
 
-    /** Emitted when the stream url is copied */
     readonly streamUrlCopied = output<void>();
 
-    /** Emitted when the inline player requests MPV/VLC fallback */
     readonly inlineExternalFallbackRequested =
         output<PlaybackFallbackRequest>();
-
-    // ============ Services ============
 
     private readonly downloadsService = inject(DownloadsService);
     private readonly crossPortalSimilar = inject(CrossPortalSimilarService);
     private readonly externalPlaybackActions = inject(PORTAL_EXTERNAL_PLAYBACK);
     private readonly router = inject(Router);
-
-    // ============ Computed State ============
 
     /** Whether running in Electron (downloads available) */
     readonly isElectron = computed(() => this.downloadsService.isAvailable());
@@ -195,7 +193,11 @@ export class VodDetailsComponent {
         // Access signal to create reactive dependency
         this.downloadsService.downloads();
         const vodId = getVodNumericId(item);
-        return this.downloadsService.isDownloaded(vodId, item.playlistId, 'vod');
+        return this.downloadsService.isDownloaded(
+            vodId,
+            item.playlistId,
+            'vod'
+        );
     });
 
     /** Whether VOD is currently downloading */
@@ -204,7 +206,11 @@ export class VodDetailsComponent {
         // Access signal to create reactive dependency
         this.downloadsService.downloads();
         const vodId = getVodNumericId(item);
-        return this.downloadsService.isDownloading(vodId, item.playlistId, 'vod');
+        return this.downloadsService.isDownloading(
+            vodId,
+            item.playlistId,
+            'vod'
+        );
     });
 
     readonly matchedExternalPlayback = computed(() => {
@@ -325,7 +331,9 @@ export class VodDetailsComponent {
         }
         const item = this.item();
         const basePath =
-            item.type === 'stalker' ? '/workspace/stalker' : '/workspace/xtreams';
+            item.type === 'stalker'
+                ? '/workspace/stalker'
+                : '/workspace/xtreams';
         void this.router.navigate([
             basePath,
             item.playlistId,
@@ -343,10 +351,7 @@ export class VodDetailsComponent {
         this.downloadRequested.emit(this.item());
     }
 
-    onInlineTimeUpdate(event: {
-        currentTime: number;
-        duration: number;
-    }): void {
+    onInlineTimeUpdate(event: { currentTime: number; duration: number }): void {
         this.inlineTimeUpdated.emit(event);
     }
 
@@ -358,9 +363,7 @@ export class VodDetailsComponent {
         this.streamUrlCopied.emit();
     }
 
-    onInlineExternalFallbackRequested(
-        request: PlaybackFallbackRequest
-    ): void {
+    onInlineExternalFallbackRequested(request: PlaybackFallbackRequest): void {
         this.inlineExternalFallbackRequested.emit(request);
     }
 

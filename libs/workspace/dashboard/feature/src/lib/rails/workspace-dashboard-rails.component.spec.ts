@@ -298,10 +298,10 @@ describe('Live rail helpers', () => {
 
     it('uses honest, semantically named title keys for favorite and recent live rails', () => {
         expect(liveRailTitleKeyForSource('favorites')).toBe(
-            'WORKSPACE.DASHBOARD.LIVE_FAVORITES'
+            'Live now on your favorites'
         );
         expect(liveRailTitleKeyForSource('recent')).toBe(
-            'WORKSPACE.DASHBOARD.RECENTLY_WATCHED_LIVE_TV'
+            'Recently watched live TV'
         );
     });
 
@@ -569,7 +569,7 @@ describe('playback-position helpers', () => {
                     durationSeconds: 6000,
                 })
             ).toEqual({
-                key: 'WORKSPACE.DASHBOARD.REMAINING_SECONDS',
+                key: '{{seconds}}s left',
                 params: { seconds: 30 },
             });
             expect(
@@ -578,7 +578,7 @@ describe('playback-position helpers', () => {
                     durationSeconds: 1800,
                 })
             ).toEqual({
-                key: 'WORKSPACE.DASHBOARD.REMAINING_MINUTES',
+                key: '{{minutes}}m left',
                 params: { minutes: 30 },
             });
             expect(
@@ -587,7 +587,7 @@ describe('playback-position helpers', () => {
                     durationSeconds: 3600,
                 })
             ).toEqual({
-                key: 'WORKSPACE.DASHBOARD.REMAINING_HOURS',
+                key: '{{hours}}h left',
                 params: { hours: 1 },
             });
             expect(
@@ -596,7 +596,7 @@ describe('playback-position helpers', () => {
                     durationSeconds: 6840,
                 })
             ).toEqual({
-                key: 'WORKSPACE.DASHBOARD.REMAINING_HOURS_MINUTES',
+                key: '{{hours}}h {{minutes}}m left',
                 params: { hours: 1, minutes: 44 },
             });
         });
@@ -608,7 +608,7 @@ describe('playback-position helpers', () => {
                     durationSeconds: 6000,
                 })
             ).toEqual({
-                key: 'WORKSPACE.DASHBOARD.REMAINING_SECONDS',
+                key: '{{seconds}}s left',
                 params: { seconds: 0 },
             });
         });

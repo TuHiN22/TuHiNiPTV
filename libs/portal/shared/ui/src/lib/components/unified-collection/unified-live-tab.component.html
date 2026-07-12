@@ -84,7 +84,9 @@
                             [programs]="timelinePrograms()"
                             [channelName]="timelineChannelName()"
                             [channelLogo]="timelineChannelLogo()"
-                            [archivePlaybackAvailable]="timelineArchiveAvailable()"
+                            [archivePlaybackAvailable]="
+                                timelineArchiveAvailable()
+                            "
                             [archiveDays]="timelineArchiveDays()"
                             [activeProgram]="activeTimeshiftProgram()"
                             [isLivePlayback]="!activeTimeshift()"
@@ -111,7 +113,9 @@
                             [programs]="timelinePrograms()"
                             [channelName]="timelineChannelName()"
                             [channelLogo]="timelineChannelLogo()"
-                            [archivePlaybackAvailable]="timelineArchiveAvailable()"
+                            [archivePlaybackAvailable]="
+                                timelineArchiveAvailable()
+                            "
                             [archiveDays]="timelineArchiveDays()"
                             [activeProgram]="activeTimeshiftProgram()"
                             [isLivePlayback]="!activeTimeshift()"
@@ -140,7 +144,7 @@
     } @else {
         <app-portal-empty-state
             icon="live_tv"
-            [message]="'CHANNELS.SELECT_CHANNEL_PLAYBACK' | translate"
+            [message]="'Please select a channel to start playback'"
         />
     }
 </div>

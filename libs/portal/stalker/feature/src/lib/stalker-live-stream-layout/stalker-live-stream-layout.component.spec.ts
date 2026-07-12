@@ -12,9 +12,7 @@ import {
 import { StalkerStore } from '@iptvnator/portal/stalker/data-access';
 import { EpgListViewComponent, EpgTimelineComponent } from '@iptvnator/ui/epg';
 import { AudioPlayerComponent } from '@iptvnator/ui/playback';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChannelListItemComponent } from '@iptvnator/ui/components';
-import { MockPipe } from 'ng-mocks';
 import { of } from 'rxjs';
 import {
     PlaylistsService,
@@ -330,12 +328,6 @@ describe('StalkerLiveStreamLayoutComponent', () => {
                 { provide: SettingsStore, useValue: settingsStore },
                 { provide: PORTAL_PLAYER, useValue: portalPlayer },
                 {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: jest.fn((value: string) => value),
-                    },
-                },
-                {
                     provide: MatSnackBar,
                     useValue: {
                         open: jest.fn(),
@@ -352,7 +344,6 @@ describe('StalkerLiveStreamLayoutComponent', () => {
                         EpgTimelineComponent,
                         PortalEmptyStateComponent,
                         ResizableDirective,
-                        TranslatePipe,
                         WebPlayerViewComponent,
                     ],
                 },
@@ -363,10 +354,6 @@ describe('StalkerLiveStreamLayoutComponent', () => {
                         StubEpgTimelineComponent,
                         StubPortalEmptyStateComponent,
                         StubResizableDirective,
-                        MockPipe(
-                            TranslatePipe,
-                            (value: string | null | undefined) => value ?? ''
-                        ),
                         StubWebPlayerViewComponent,
                     ],
                 },

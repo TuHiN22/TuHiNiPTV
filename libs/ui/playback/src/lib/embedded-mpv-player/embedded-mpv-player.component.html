@@ -28,7 +28,7 @@
                 <p>{{ statusLabel() }}</p>
                 <button mat-stroked-button type="button" (click)="retry()">
                     <mat-icon>refresh</mat-icon>
-                    <span>{{ 'EMBEDDED_MPV.PLAYER.RETRY' | translate }}</span>
+                    <span>{{ 'Retry' }}</span>
                 </button>
             </div>
         } @else if (isLoading() && !stalled()) {
@@ -53,10 +53,12 @@
                 aria-live="assertive"
             >
                 <mat-icon>warning_amber</mat-icon>
-                <p>{{ 'EMBEDDED_MPV.PLAYER.STALLED' | translate }}</p>
+                <p>
+                    {{ 'This stream is taking longer than expected to start.' }}
+                </p>
                 <button mat-stroked-button type="button" (click)="retry()">
                     <mat-icon>refresh</mat-icon>
-                    <span>{{ 'EMBEDDED_MPV.PLAYER.RETRY' | translate }}</span>
+                    <span>{{ 'Retry' }}</span>
                 </button>
             </div>
         } @else if (statusLabel()) {
@@ -95,14 +97,8 @@
                     class="embedded-mpv-player__control-button"
                     [disabled]="isLoading()"
                     (click)="togglePaused()"
-                    [attr.aria-label]="(isPaused()
-                            ? 'EMBEDDED_MPV.PLAYER.PLAY'
-                            : 'EMBEDDED_MPV.PLAYER.PAUSE'
-                        ) | translate"
-                    [matTooltip]="(isPaused()
-                            ? 'EMBEDDED_MPV.PLAYER.PLAY'
-                            : 'EMBEDDED_MPV.PLAYER.PAUSE'
-                        ) | translate"
+                    [attr.aria-label]="isPaused() ? 'Play' : 'Pause'"
+                    [matTooltip]="isPaused() ? 'Play' : 'Pause'"
                     matTooltipPosition="above"
                 >
                     <mat-icon>{{
@@ -118,12 +114,8 @@
                         data-test-id="embedded-mpv-previous-episode"
                         [disabled]="isLoading() || !canPreviousEpisode()"
                         (click)="requestPreviousEpisode()"
-                        [attr.aria-label]="
-                            'EMBEDDED_MPV.PLAYER.PREVIOUS_EPISODE' | translate
-                        "
-                        [matTooltip]="
-                            'EMBEDDED_MPV.PLAYER.PREVIOUS_EPISODE' | translate
-                        "
+                        [attr.aria-label]="'Previous episode'"
+                        [matTooltip]="'Previous episode'"
                         matTooltipPosition="above"
                     >
                         <mat-icon>skip_previous</mat-icon>
@@ -136,12 +128,8 @@
                         data-test-id="embedded-mpv-next-episode"
                         [disabled]="isLoading() || !canNextEpisode()"
                         (click)="requestNextEpisode()"
-                        [attr.aria-label]="
-                            'EMBEDDED_MPV.PLAYER.NEXT_EPISODE' | translate
-                        "
-                        [matTooltip]="
-                            'EMBEDDED_MPV.PLAYER.NEXT_EPISODE' | translate
-                        "
+                        [attr.aria-label]="'Next episode'"
+                        [matTooltip]="'Next episode'"
                         matTooltipPosition="above"
                     >
                         <mat-icon>skip_next</mat-icon>
@@ -154,12 +142,8 @@
                     class="embedded-mpv-player__control-button"
                     [disabled]="!canSeek()"
                     (click)="seekBy(-10)"
-                    [attr.aria-label]="
-                        'EMBEDDED_MPV.PLAYER.BACK_10_SECONDS' | translate
-                    "
-                    [matTooltip]="
-                        'EMBEDDED_MPV.PLAYER.BACK_10_SECONDS' | translate
-                    "
+                    [attr.aria-label]="'Back 10 seconds'"
+                    [matTooltip]="'Back 10 seconds'"
                     matTooltipPosition="above"
                 >
                     <mat-icon>replay_10</mat-icon>
@@ -171,12 +155,8 @@
                     class="embedded-mpv-player__control-button"
                     [disabled]="!canSeek()"
                     (click)="seekBy(10)"
-                    [attr.aria-label]="
-                        'EMBEDDED_MPV.PLAYER.FORWARD_10_SECONDS' | translate
-                    "
-                    [matTooltip]="
-                        'EMBEDDED_MPV.PLAYER.FORWARD_10_SECONDS' | translate
-                    "
+                    [attr.aria-label]="'Forward 10 seconds'"
+                    [matTooltip]="'Forward 10 seconds'"
                     matTooltipPosition="above"
                 >
                     <mat-icon>forward_10</mat-icon>
@@ -211,9 +191,7 @@
                     } @else if (isLivePlayback()) {
                         <span
                             class="embedded-mpv-player__live-badge"
-                            [attr.aria-label]="
-                                'EMBEDDED_MPV.PLAYER.LIVE_STREAM' | translate
-                            "
+                            [attr.aria-label]="'Live stream'"
                         >
                             <span
                                 class="embedded-mpv-player__live-dot"
@@ -257,14 +235,8 @@
                         type="button"
                         class="embedded-mpv-player__control-button"
                         (click)="toggleMute()"
-                        [attr.aria-label]="(volume() <= 0
-                                ? 'EMBEDDED_MPV.PLAYER.UNMUTE'
-                                : 'EMBEDDED_MPV.PLAYER.MUTE'
-                            ) | translate"
-                        [matTooltip]="(volume() <= 0
-                                ? 'EMBEDDED_MPV.PLAYER.UNMUTE'
-                                : 'EMBEDDED_MPV.PLAYER.MUTE'
-                            ) | translate"
+                        [attr.aria-label]="volume() <= 0 ? 'Unmute' : 'Mute'"
+                        [matTooltip]="volume() <= 0 ? 'Unmute' : 'Mute'"
                         matTooltipPosition="above"
                     >
                         <mat-icon>{{ volumeIcon() }}</mat-icon>
@@ -273,9 +245,7 @@
                         <div
                             class="embedded-mpv-player__control-panel embedded-mpv-player__volume-popover"
                             role="dialog"
-                            [attr.aria-label]="
-                                'EMBEDDED_MPV.PLAYER.VOLUME' | translate
-                            "
+                            [attr.aria-label]="'Volume'"
                         >
                             <input
                                 class="embedded-mpv-player__slider embedded-mpv-player__slider--volume"
@@ -304,12 +274,8 @@
                             class="embedded-mpv-player__control-button"
                             (click)="toggleAudioMenu()"
                             [attr.aria-expanded]="menus.audioOpen()"
-                            [attr.aria-label]="
-                                'EMBEDDED_MPV.PLAYER.AUDIO_TRACKS' | translate
-                            "
-                            [matTooltip]="
-                                'EMBEDDED_MPV.PLAYER.AUDIO_TRACKS' | translate
-                            "
+                            [attr.aria-label]="'Audio tracks'"
+                            [matTooltip]="'Audio tracks'"
                             matTooltipPosition="above"
                         >
                             <mat-icon>graphic_eq</mat-icon>
@@ -318,16 +284,10 @@
                             <div
                                 class="embedded-mpv-player__control-panel embedded-mpv-player__audio-popover"
                                 role="menu"
-                                [attr.aria-label]="
-                                    'EMBEDDED_MPV.PLAYER.AUDIO_TRACKS'
-                                        | translate
-                                "
+                                [attr.aria-label]="'Audio tracks'"
                             >
                                 <div class="embedded-mpv-player__menu-title">
-                                    {{
-                                        'EMBEDDED_MPV.PLAYER.AUDIO_TRACKS'
-                                            | translate
-                                    }}
+                                    {{ 'Audio tracks' }}
                                 </div>
                                 <div
                                     class="embedded-mpv-player__audio-track-list"
@@ -369,12 +329,8 @@
                             class="embedded-mpv-player__control-button"
                             (click)="toggleSubtitleMenu()"
                             [attr.aria-expanded]="menus.subtitleOpen()"
-                            [attr.aria-label]="
-                                'EMBEDDED_MPV.PLAYER.SUBTITLES' | translate
-                            "
-                            [matTooltip]="
-                                'EMBEDDED_MPV.PLAYER.SUBTITLES' | translate
-                            "
+                            [attr.aria-label]="'Subtitles'"
+                            [matTooltip]="'Subtitles'"
                             matTooltipPosition="above"
                         >
                             <mat-icon>{{
@@ -387,15 +343,10 @@
                             <div
                                 class="embedded-mpv-player__control-panel embedded-mpv-player__audio-popover"
                                 role="menu"
-                                [attr.aria-label]="
-                                    'EMBEDDED_MPV.PLAYER.SUBTITLES' | translate
-                                "
+                                [attr.aria-label]="'Subtitles'"
                             >
                                 <div class="embedded-mpv-player__menu-title">
-                                    {{
-                                        'EMBEDDED_MPV.PLAYER.SUBTITLES'
-                                            | translate
-                                    }}
+                                    {{ 'Subtitles' }}
                                 </div>
                                 <div
                                     class="embedded-mpv-player__audio-track-list"
@@ -412,10 +363,7 @@
                                         "
                                         (click)="selectSubtitleTrack(-1)"
                                     >
-                                        <span>{{
-                                            'EMBEDDED_MPV.PLAYER.SUBTITLES_OFF'
-                                                | translate
-                                        }}</span>
+                                        <span>{{ 'Off' }}</span>
                                         @if (
                                             selectedSubtitleTrackId() === null
                                         ) {
@@ -462,19 +410,12 @@
                             (click)="toggleSpeedMenu()"
                             [attr.aria-expanded]="menus.speedOpen()"
                             [attr.aria-label]="
-                                ('EMBEDDED_MPV.PLAYER.PLAYBACK_SPEED'
-                                    | translate) +
+                                'Playback speed' +
                                 ' ' +
                                 speedLabel(playbackSpeed())
                             "
                             [matTooltip]="
-                                'EMBEDDED_MPV.PLAYER.SPEED_TOOLTIP'
-                                    | translate
-                                        : {
-                                              speed: speedLabel(
-                                                  playbackSpeed()
-                                              )
-                                          }
+                                'Speed: ' + speedLabel(playbackSpeed())
                             "
                             matTooltipPosition="above"
                         >
@@ -484,16 +425,10 @@
                             <div
                                 class="embedded-mpv-player__control-panel embedded-mpv-player__audio-popover"
                                 role="menu"
-                                [attr.aria-label]="
-                                    'EMBEDDED_MPV.PLAYER.PLAYBACK_SPEED'
-                                        | translate
-                                "
+                                [attr.aria-label]="'Playback speed'"
                             >
                                 <div class="embedded-mpv-player__menu-title">
-                                    {{
-                                        'EMBEDDED_MPV.PLAYER.PLAYBACK_SPEED'
-                                            | translate
-                                    }}
+                                    {{ 'Playback speed' }}
                                 </div>
                                 <div
                                     class="embedded-mpv-player__audio-track-list"
@@ -537,19 +472,12 @@
                             (click)="toggleAspectMenu()"
                             [attr.aria-expanded]="menus.aspectOpen()"
                             [attr.aria-label]="
-                                ('EMBEDDED_MPV.PLAYER.ASPECT_RATIO'
-                                    | translate) +
+                                'Aspect ratio' +
                                 ' ' +
                                 aspectLabel(aspectOverride())
                             "
                             [matTooltip]="
-                                'EMBEDDED_MPV.PLAYER.ASPECT_TOOLTIP'
-                                    | translate
-                                        : {
-                                              aspect: aspectLabel(
-                                                  aspectOverride()
-                                              )
-                                          }
+                                'Aspect: ' + aspectLabel(aspectOverride())
                             "
                             matTooltipPosition="above"
                         >
@@ -559,16 +487,10 @@
                             <div
                                 class="embedded-mpv-player__control-panel embedded-mpv-player__audio-popover"
                                 role="menu"
-                                [attr.aria-label]="
-                                    'EMBEDDED_MPV.PLAYER.ASPECT_RATIO'
-                                        | translate
-                                "
+                                [attr.aria-label]="'Aspect ratio'"
                             >
                                 <div class="embedded-mpv-player__menu-title">
-                                    {{
-                                        'EMBEDDED_MPV.PLAYER.ASPECT_RATIO'
-                                            | translate
-                                    }}
+                                    {{ 'Aspect ratio' }}
                                 </div>
                                 <div
                                     class="embedded-mpv-player__audio-track-list"
@@ -618,16 +540,10 @@
                         (click)="toggleRecording()"
                         [attr.aria-pressed]="isRecording()"
                         [attr.aria-label]="
-                            (isRecording()
-                                ? 'EMBEDDED_MPV.PLAYER.STOP_RECORDING'
-                                : 'EMBEDDED_MPV.PLAYER.START_RECORDING'
-                            ) | translate
+                            isRecording() ? 'Stop recording' : 'Start recording'
                         "
                         [matTooltip]="
-                            (isRecording()
-                                ? 'EMBEDDED_MPV.PLAYER.STOP_RECORDING'
-                                : 'EMBEDDED_MPV.PLAYER.START_RECORDING'
-                            ) | translate
+                            isRecording() ? 'Stop recording' : 'Start recording'
                         "
                         matTooltipPosition="above"
                     >

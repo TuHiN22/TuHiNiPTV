@@ -10,7 +10,6 @@ import {
     viewChild,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * Line-clamped text with a "Show more / Show less" toggle that appears only
@@ -20,7 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
 @Component({
     selector: 'app-expandable-text',
     standalone: true,
-    imports: [MatIconModule, TranslateModule],
+    imports: [MatIconModule],
     template: `
         <p
             #textEl
@@ -37,9 +36,7 @@ import { TranslateModule } from '@ngx-translate/core';
                 (click)="toggle()"
                 [attr.aria-expanded]="isExpanded()"
             >
-                <span>{{
-                    (isExpanded() ? 'SHOW_LESS' : 'SHOW_MORE') | translate
-                }}</span>
+                <span>{{ isExpanded() ? 'Less' : 'More' }}</span>
                 <mat-icon aria-hidden="true">
                     {{ isExpanded() ? 'expand_less' : 'expand_more' }}
                 </mat-icon>

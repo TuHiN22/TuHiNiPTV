@@ -1,7 +1,7 @@
 <div class="context-column">
     <header class="context-header">
         <div class="context-header__top">
-            <h2>{{ title() | translate }}</h2>
+            <h2>{{ title() }}</h2>
             <div class="context-header__actions">
                 @if (canSearchCategories()) {
                     <button
@@ -10,10 +10,8 @@
                         class="context-header__action"
                         [class.context-header__action--active]="isSearchOpen()"
                         (click)="toggleCategorySearch()"
-                        [matTooltip]="'WORKSPACE.CONTEXT.SEARCH' | translate"
-                        [attr.aria-label]="
-                            'WORKSPACE.CONTEXT.SEARCH' | translate
-                        "
+                        [matTooltip]="'Search'"
+                        [attr.aria-label]="'Search'"
                     >
                         <mat-icon>search</mat-icon>
                     </button>
@@ -27,13 +25,8 @@
                             categorySortMode() !== 'server'
                         "
                         [matMenuTriggerFor]="categorySortMenu"
-                        [matTooltip]="
-                            ('WORKSPACE.SORT_LABEL' | translate) +
-                            (categorySortLabelKey() | translate)
-                        "
-                        [attr.aria-label]="
-                            'WORKSPACE.CATEGORY_SORT_ARIA' | translate
-                        "
+                        [matTooltip]="'Sort: ' + categorySortLabelKey()"
+                        [attr.aria-label]="'Sort categories'"
                     >
                         <mat-icon>{{ categorySortIcon() }}</mat-icon>
                     </button>
@@ -47,9 +40,7 @@
                                 (click)="setCategorySortMode(option.mode)"
                             >
                                 <mat-icon>{{ option.icon }}</mat-icon>
-                                <span>{{
-                                    option.translationKey | translate
-                                }}</span>
+                                <span>{{ option.label }}</span>
                                 @if (categorySortMode() === option.mode) {
                                     <mat-icon class="context-sort-check"
                                         >check</mat-icon
@@ -66,12 +57,8 @@
                         class="context-header__action"
                         (click)="openManageCategories()"
                         [disabled]="!canManageXtreamCategories()"
-                        [matTooltip]="
-                            'WORKSPACE.CONTEXT.MANAGE_CATEGORIES' | translate
-                        "
-                        [attr.aria-label]="
-                            'WORKSPACE.CONTEXT.MANAGE_CATEGORIES' | translate
-                        "
+                        [matTooltip]="'Manage categories'"
+                        [attr.aria-label]="'Manage categories'"
                     >
                         <mat-icon>tune</mat-icon>
                     </button>
@@ -92,12 +79,8 @@
                 spellcheck="false"
                 [value]="categorySearchTerm()"
                 (input)="onSearchInput($event)"
-                [placeholder]="
-                    'WORKSPACE.CONTEXT.SEARCH_CATEGORIES' | translate
-                "
-                [attr.aria-label]="
-                    'WORKSPACE.CONTEXT.SEARCH_CATEGORIES' | translate
-                "
+                [placeholder]="'Search categories'"
+                [attr.aria-label]="'Search categories'"
             />
             @if (categorySearchTerm()) {
                 <button
@@ -156,10 +139,8 @@
             </div>
         } @else if (isStalkerCategoryFailed()) {
             <app-workspace-context-error-view
-                [title]="'WORKSPACE.CONTEXT.LOAD_CATEGORIES_ERROR' | translate"
-                [description]="
-                    'WORKSPACE.CONTEXT.LOAD_CATEGORIES_ERROR_HINT' | translate
-                "
+                [title]="'Unable to load categories'"
+                [description]="'Please retry or verify portal settings.'"
                 [showActionButtons]="false"
             />
         } @else {

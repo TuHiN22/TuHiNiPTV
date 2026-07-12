@@ -14,7 +14,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
     DetailActionsTemplateDirective,
     DetailMetaTemplateDirective,
@@ -70,7 +69,6 @@ import { VodDetailsPlaybackService } from './vod-details-playback.service';
         PortalDetailShellComponent,
         SafePipe,
         SlicePipe,
-        TranslateModule,
         PortalInlinePlayerComponent,
     ],
 })
@@ -83,7 +81,6 @@ export class VodDetailsRouteComponent implements OnInit, OnDestroy {
     private readonly xtreamStore = inject(XtreamStore);
     private readonly downloadsService = inject(DownloadsService);
     private readonly snackBar = inject(MatSnackBar);
-    private readonly translateService = inject(TranslateService);
     private readonly playback = inject(VodDetailsPlaybackService);
     private readonly logger = createLogger('VodDetailsRoute');
     /** `playlistId:vodId` of the last initialized detail view */
@@ -418,13 +415,9 @@ export class VodDetailsRouteComponent implements OnInit, OnDestroy {
     }
 
     showCopyNotification(): void {
-        this.snackBar.open(
-            this.translateService.instant('PORTALS.STREAM_URL_COPIED'),
-            undefined,
-            {
-                duration: 2000,
-            }
-        );
+        this.snackBar.open('Stream URL copied to clipboard', undefined, {
+            duration: 2000,
+        });
     }
 
     handleExternalFallbackRequest(request: PlaybackFallbackRequest): void {

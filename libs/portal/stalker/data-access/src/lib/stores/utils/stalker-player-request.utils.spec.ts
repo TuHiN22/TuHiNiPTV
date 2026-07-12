@@ -117,7 +117,7 @@ describe('stalker-player-request.utils', () => {
         );
     });
 
-    it('returns a localized expire date string from account info', async () => {
+    it('returns an English expire date string from account info', async () => {
         const expireDate = 1_713_139_200;
         dataService.sendIpcEvent.mockResolvedValue({
             js: {
@@ -135,7 +135,9 @@ describe('stalker-player-request.utils', () => {
                 },
                 PLAYLIST
             )
-        ).resolves.toBe(new Date(expireDate * 1000).toLocaleDateString());
+        ).resolves.toBe(
+            new Date(expireDate * 1000).toLocaleDateString('en-US')
+        );
     });
 
     it('classifies provider and serialized IPC loading failures as offline streams', () => {

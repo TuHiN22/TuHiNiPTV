@@ -8,19 +8,12 @@ import {
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { TranslatePipe } from '@ngx-translate/core';
 import { SearchFormComponent } from '../search-form/search-form.component';
 
 @Component({
     selector: 'app-search-layout',
     standalone: true,
-    imports: [
-        MatIcon,
-        MatIconButton,
-        MatProgressSpinner,
-        SearchFormComponent,
-        TranslatePipe,
-    ],
+    imports: [MatIcon, MatIconButton, MatProgressSpinner, SearchFormComponent],
     templateUrl: './search-layout.component.html',
     styleUrl: './search-layout.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +24,7 @@ export class SearchLayoutComponent {
     private isWithinNearEndThreshold = false;
 
     /** Page title translation key */
-    readonly title = input<string>('PORTALS.SIDEBAR.SEARCH');
+    readonly title = input<string>('Search');
 
     /** Current search term */
     readonly searchTerm = input<string>('');
@@ -62,7 +55,7 @@ export class SearchLayoutComponent {
 
     /** Initial state description translation key */
     readonly initialDescriptionKey = input<string>(
-        'PORTALS.SEARCH_VIEW.INITIAL_DESCRIPTION'
+        'Enter at least 3 characters to search across live TV, movies and series.'
     );
 
     /** Emitted when search term changes */

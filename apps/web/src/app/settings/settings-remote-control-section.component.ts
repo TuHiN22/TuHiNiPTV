@@ -6,7 +6,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslateModule } from '@ngx-translate/core';
 import { QRCodeComponent } from 'angularx-qrcode';
 
 @Component({
@@ -20,7 +19,6 @@ import { QRCodeComponent } from 'angularx-qrcode';
         MatTooltipModule,
         QRCodeComponent,
         ReactiveFormsModule,
-        TranslateModule,
     ],
     templateUrl: './settings-remote-control-section.component.html',
     encapsulation: ViewEncapsulation.None,

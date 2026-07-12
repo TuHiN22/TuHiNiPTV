@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, skip } from 'rxjs';
 import { SettingsStore } from '@iptvnator/services';
 import { EpgRuntimeBridgeService } from './epg-runtime-bridge.service';
@@ -46,12 +45,6 @@ describe('EpgService', () => {
                 {
                     provide: MatSnackBar,
                     useValue: snackBar,
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => key,
-                    },
                 },
                 {
                     provide: SettingsStore,
@@ -395,7 +388,9 @@ describe('EpgService', () => {
         );
         expect(beforeImport.get('guide-news')).toBeNull();
 
-        const availability = firstValueFrom(service.epgAvailable$.pipe(skip(1)));
+        const availability = firstValueFrom(
+            service.epgAvailable$.pipe(skip(1))
+        );
         service.fetchEpg(['https://playlist.example.com/guide.xml']);
         await expect(availability).resolves.toBe(true);
 

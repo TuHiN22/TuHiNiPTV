@@ -3,10 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { provideRouter } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 import { WorkspaceShellRailComponent } from './workspace-shell-rail.component';
 
 @Component({
@@ -26,22 +23,7 @@ describe('WorkspaceShellRailComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [WorkspaceShellRailComponent],
-            providers: [
-                provideRouter([]),
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => key,
-                        get: (key: string) => of(key),
-                        stream: (key: string) => of(key),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                    },
-                },
-            ],
+            providers: [provideRouter([])],
         })
             .overrideComponent(WorkspaceShellRailComponent, {
                 set: {
@@ -50,7 +32,6 @@ describe('WorkspaceShellRailComponent', () => {
                         MatTooltip,
                         MockWorkspaceShellRailLinksComponent,
                         RouterLink,
-                        TranslatePipe,
                     ],
                 },
             })
@@ -61,10 +42,7 @@ describe('WorkspaceShellRailComponent', () => {
 
     it('renders provider context region and active settings shortcut state', () => {
         fixture.componentRef.setInput('brandLink', '/workspace/sources');
-        fixture.componentRef.setInput(
-            'brandAriaLabelKey',
-            'WORKSPACE.SHELL.OPEN_SOURCES'
-        );
+        fixture.componentRef.setInput('brandAriaLabelKey', 'Open sources');
         fixture.componentRef.setInput('primaryContextLinks', [
             {
                 icon: 'movie',
@@ -87,14 +65,12 @@ describe('WorkspaceShellRailComponent', () => {
             fixture.nativeElement.querySelector('.rail-shortcut.is-active')
         ).not.toBeNull();
         expect(
-            fixture.nativeElement
-                .querySelector('.brand')
-                ?.getAttribute('href')
+            fixture.nativeElement.querySelector('.brand')?.getAttribute('href')
         ).toContain('/workspace/sources');
         expect(
             fixture.nativeElement
                 .querySelector('.brand')
                 ?.getAttribute('aria-label')
-        ).toBe('WORKSPACE.SHELL.OPEN_SOURCES');
+        ).toBe('Open sources');
     });
 });

@@ -8,8 +8,6 @@ import {
     Router,
     convertToParamMap,
 } from '@angular/router';
-import { MockPipe } from 'ng-mocks';
-import { TranslatePipe } from '@ngx-translate/core';
 import { BehaviorSubject, Subject, of } from 'rxjs';
 import {
     LIVE_EPG_PANEL_STATE_STORAGE_KEY,
@@ -313,7 +311,6 @@ describe('LiveStreamLayoutComponent', () => {
                         GridListComponent,
                         PortalChannelsListComponent,
                         ResizableDirective,
-                        TranslatePipe,
                         WebPlayerViewComponent,
                     ],
                 },
@@ -323,10 +320,6 @@ describe('LiveStreamLayoutComponent', () => {
                         StubGridListComponent,
                         StubPortalChannelsListComponent,
                         StubResizableDirective,
-                        MockPipe(
-                            TranslatePipe,
-                            (value: string | null | undefined) => value ?? ''
-                        ),
                         StubWebPlayerViewComponent,
                     ],
                 },
@@ -708,7 +701,7 @@ describe('LiveStreamLayoutComponent', () => {
         expect(
             fixture.nativeElement.querySelector('.live-epg-panel-label')
                 .textContent
-        ).toContain('EPG.CURRENT_PROGRAM');
+        ).toContain('Current program');
     });
 
     it('uses currentEpgItem instead of assuming the first schedule item is current', () => {
@@ -840,7 +833,7 @@ describe('LiveStreamLayoutComponent', () => {
             })
         );
         expect(timeline.componentInstance.summaryLabelKey()).toBe(
-            'EPG.ARCHIVE_PLAYBACK'
+            'Archive playback'
         );
         expect(timeline.componentInstance.isLivePlayback()).toBe(false);
         expect(
@@ -893,9 +886,11 @@ describe('LiveStreamLayoutComponent', () => {
                 isLive: true,
             })
         );
-        expect(timeline.componentInstance.summary()?.title).toBe('Current Show');
+        expect(timeline.componentInstance.summary()?.title).toBe(
+            'Current Show'
+        );
         expect(timeline.componentInstance.summaryLabelKey()).toBe(
-            'EPG.CURRENT_PROGRAM'
+            'Current program'
         );
         expect(timeline.componentInstance.isLivePlayback()).toBe(true);
     });
@@ -1066,7 +1061,9 @@ describe('LiveStreamLayoutComponent', () => {
         const timeline = fixture.debugElement.query(
             By.directive(StubEpgTimelineComponent)
         );
-        expect(timeline.componentInstance.archivePlaybackAvailable()).toBe(true);
+        expect(timeline.componentInstance.archivePlaybackAvailable()).toBe(
+            true
+        );
     });
 
     it('shows the floating restore button when the sidebar is collapsed even without a selected category', () => {

@@ -10,7 +10,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTooltip } from '@angular/material/tooltip';
-import { TranslatePipe } from '@ngx-translate/core';
 import {
     ProgressCapsuleComponent,
     WatchedBadgeComponent,
@@ -157,10 +156,7 @@ function normalizeArtworkUrl(value: string | undefined): string | undefined {
                         </div>
                         @let rating = resolveRating(i);
                         @if (rating) {
-                            <div
-                                class="rating"
-                                [matTooltip]="'XTREAM.IMDB_RATING' | translate"
-                            >
+                            <div class="rating" [matTooltip]="' Rating IMDB'">
                                 <mat-icon>star</mat-icon>{{ rating }}
                             </div>
                         }
@@ -176,26 +172,18 @@ function normalizeArtworkUrl(value: string | undefined): string | undefined {
                         @if (hasActiveSearch()) {
                             <app-playlist-error-view
                                 [title]="
-                                    'PORTALS.SEARCH_VIEW.NO_RESULTS_FOR'
-                                        | translate: { term: searchTerm() }
+                                    'No results found for &quot;' +
+                                    searchTerm() +
+                                    '&quot;'
                                 "
-                                [description]="
-                                    'PORTALS.EMPTY_LIST_VIEW.NO_SEARCH_RESULTS'
-                                        | translate
-                                "
+                                [description]="'Nothing found, try to change your search request.'"
                                 [showActionButtons]="false"
                                 [viewType]="'NO_SEARCH_RESULTS'"
                             />
                         } @else {
                             <app-playlist-error-view
-                                [title]="
-                                    'PORTALS.ERROR_VIEW.EMPTY_CATEGORY.TITLE'
-                                        | translate
-                                "
-                                [description]="
-                                    'PORTALS.ERROR_VIEW.EMPTY_CATEGORY.DESCRIPTION'
-                                        | translate
-                                "
+                                [title]="'No content in this category'"
+                                [description]="'Select another category or switch the content type.'"
                                 [showActionButtons]="false"
                                 [viewType]="'EMPTY_CATEGORY'"
                             />
@@ -216,7 +204,6 @@ function normalizeArtworkUrl(value: string | undefined): string | undefined {
         } `,
     styleUrl: './grid-list.component.scss',
     imports: [
-        TranslatePipe,
         PlaylistErrorViewComponent,
         MatCardModule,
         MatIcon,

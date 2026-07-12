@@ -13,8 +13,7 @@
             (click)="toggleCollapsed()"
             [attr.aria-expanded]="!collapsed()"
             [attr.aria-label]="
-                (collapsed() ? 'EPG.EXPAND_PANEL' : 'EPG.COLLAPSE_PANEL')
-                    | translate
+                collapsed() ? 'Expand EPG panel' : 'Collapse EPG panel'
             "
         >
             <span class="cc"><mat-icon>keyboard_arrow_down</mat-icon></span>
@@ -31,14 +30,10 @@
                  the collapsed panel to 56px, so a block below it would be
                  clipped (mirrors the timeline's collapsed layout). -->
             @if (loading()) {
-                <span class="cn-title cn-title--muted">{{
-                    'EPG.LOADING' | translate
-                }}</span>
+                <span class="cn-title cn-title--muted">{{ 'Loading' }}</span>
             } @else if (hasSummary()) {
                 @if (isLivePlayback()) {
-                    <span class="cn-tag live">{{
-                        'EPG.TIMELINE.ON_NOW' | translate
-                    }}</span>
+                    <span class="cn-tag live">{{ 'On now' }}</span>
                     <span class="cn-title">{{ summary()?.title }}</span>
                     @if (progress() !== null) {
                         <span class="cn-bar" aria-hidden="true"
@@ -47,14 +42,13 @@
                     }
                     @if (minutesLeft() !== null) {
                         <span class="cn-meta"
-                            >{{ minutesLeft() }}
-                            {{ 'EPG.TIMELINE.MINUTES_LEFT' | translate }}</span
+                            >{{ minutesLeft() }} {{ 'min left' }}</span
                         >
                     }
                 } @else {
                     <span class="cn-tag arch">
                         <mat-icon>play_arrow</mat-icon>
-                        {{ 'EPG.ARCHIVE_PLAYBACK' | translate }}
+                        {{ 'Archive playback' }}
                     </span>
                     <span class="cn-title">{{ summary()?.title }}</span>
                     @if (hasTimeRange()) {
@@ -66,7 +60,7 @@
                 }
             } @else {
                 <span class="cn-title cn-title--muted">{{
-                    'EPG.NO_PROGRAM_INFO' | translate
+                    'No program information available'
                 }}</span>
             }
         } @else {
@@ -76,7 +70,7 @@
                     class="g-livebtn"
                     (click)="returnToLive.emit()"
                 >
-                    {{ 'EPG.TIMELINE.RETURN_TO_LIVE' | translate }}
+                    {{ 'Return to live' }}
                 </button>
             }
             @if (showJump()) {
@@ -84,10 +78,10 @@
                     type="button"
                     class="g-jump"
                     (click)="jumpToNow()"
-                    [matTooltip]="'EPG.TIMELINE.JUMP_NOW' | translate"
+                    [matTooltip]="'Jump to now'"
                 >
                     <mat-icon>my_location</mat-icon>
-                    {{ 'EPG.TIMELINE.NOW' | translate }}
+                    {{ 'Now' }}
                 </button>
             }
             @if (showDateStepper()) {
@@ -95,7 +89,7 @@
                     <button
                         type="button"
                         class="nav"
-                        [attr.aria-label]="'EPG.PREVIOUS_DAY' | translate"
+                        [attr.aria-label]="'Previous day'"
                         (click)="stepDay('prev')"
                     >
                         <mat-icon>chevron_left</mat-icon>
@@ -103,7 +97,7 @@
                     <div class="d">
                         <span>
                             @if (isViewToday()) {
-                                {{ 'EPG.TIMELINE.TODAY' | translate }}
+                                {{ 'Today' }}
                             } @else {
                                 {{
                                     viewDate()
@@ -112,13 +106,14 @@
                             }
                         </span>
                         <small>{{
-                            viewDate() | date: 'EEE, d MMM' : '' : currentLocale()
+                            viewDate()
+                                | date: 'EEE, d MMM' : '' : currentLocale()
                         }}</small>
                     </div>
                     <button
                         type="button"
                         class="nav"
-                        [attr.aria-label]="'EPG.NEXT_DAY' | translate"
+                        [attr.aria-label]="'Next day'"
                         (click)="stepDay('next')"
                     >
                         <mat-icon>chevron_right</mat-icon>
@@ -133,7 +128,9 @@
         @if (state === 'list' && !archivePlaybackAvailable()) {
             <div class="g-notice" role="note">
                 <mat-icon>info</mat-icon>
-                <span>{{ 'EPG.TIMELINE.SCHEDULE_ONLY_NOTICE' | translate }}</span>
+                <span>{{
+                    "Schedule only. This provider exposes programme history but not catch-up — past programmes can't be played."
+                }}</span>
             </div>
         }
 
@@ -160,10 +157,10 @@
                             (click)="jumpToNow()"
                         >
                             <span class="ns-dot" aria-hidden="true"></span>
-                            <span class="ns-lbl">{{
-                                'EPG.TIMELINE.ON_NOW' | translate
+                            <span class="ns-lbl">{{ 'On now' }}</span>
+                            <span class="ns-title">{{
+                                now.program.title
                             }}</span>
-                            <span class="ns-title">{{ now.program.title }}</span>
                             @if (now.progress !== null) {
                                 <span class="ns-bar" aria-hidden="true"
                                     ><i [style.width.%]="now.progress"></i
@@ -171,15 +168,12 @@
                             }
                             @if (nowRowMinutesLeft() !== null) {
                                 <span class="ns-left"
-                                    >{{ nowRowMinutesLeft() }}
-                                    {{
-                                        'EPG.TIMELINE.MINUTES_SHORT' | translate
-                                    }}</span
+                                    >{{ nowRowMinutesLeft() }} {{ 'min' }}</span
                                 >
                             }
                             <span class="ns-jump">
                                 <mat-icon>arrow_upward</mat-icon>
-                                {{ 'EPG.TIMELINE.NOW' | translate }}
+                                {{ 'Now' }}
                             </span>
                         </button>
                     }

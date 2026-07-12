@@ -24,7 +24,6 @@ import {
 } from '@iptvnator/epg/data-access';
 import { Store } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DialogService } from '@iptvnator/ui/components';
 import { MockModule, MockProvider } from 'ng-mocks';
 import {
@@ -37,7 +36,6 @@ import {
     EmbeddedMpvSupport,
     ELECTRON_BRIDGE_APP_UPDATE_STATUSES,
     ElectronBridgeAppUpdateStatus,
-    Language,
     PlaylistMeta,
     StartupBehavior,
     StreamFormat,
@@ -86,7 +84,6 @@ const DEFAULT_SETTINGS = {
     player: VideoPlayer.VideoJs,
     streamFormat: StreamFormat.AutoStreamFormat,
     openStreamOnDoubleClick: false,
-    language: Language.ENGLISH,
     showCaptions: false,
     showDashboard: true,
     startupBehavior: StartupBehavior.FirstView,
@@ -178,7 +175,6 @@ describe('SettingsComponent', () => {
     let electronService: DataService;
     let router: Router;
     let settingsStore: unknown;
-    let translate: TranslateService;
     let dialogService: DialogService;
     let playlistsService: PlaylistsService;
     let playlistBackupService: PlaylistBackupService;
@@ -297,7 +293,6 @@ describe('SettingsComponent', () => {
                 MockModule(MatFormFieldModule),
                 MockModule(MatCheckboxModule),
                 MockModule(MatDividerModule),
-                TranslateModule.forRoot(),
             ],
         }).compileComponents();
     }));
@@ -346,7 +341,6 @@ describe('SettingsComponent', () => {
         electronService = TestBed.inject(DataService);
         settingsStore = TestBed.inject(SettingsStore);
         router = TestBed.inject(Router);
-        translate = TestBed.inject(TranslateService);
         dialogService = TestBed.inject(DialogService);
         playlistsService = TestBed.inject(PlaylistsService);
         playlistBackupService = TestBed.inject(PlaylistBackupService);
@@ -633,7 +627,6 @@ describe('SettingsComponent', () => {
 
     describe('Get and set settings on component init', () => {
         const settings = {
-            language: Language.GERMAN,
             player: VideoPlayer.Html5Player,
             theme: Theme.DarkTheme,
         };
@@ -844,17 +837,6 @@ describe('SettingsComponent', () => {
             (settingsService.getAppVersion as jest.Mock).mockReturnValue(
                 of(latestVersion)
             );
-
-            // Add translation mock
-            jest.spyOn(translate, 'instant').mockImplementation((key) => {
-                if (key === 'SETTINGS.NEW_VERSION_AVAILABLE') {
-                    return 'New version available';
-                }
-                if (key === 'SETTINGS.LATEST_VERSION') {
-                    return 'Latest version installed';
-                }
-                return key;
-            });
         });
 
         it('should return true if version is outdated', () => {
@@ -867,16 +849,12 @@ describe('SettingsComponent', () => {
         });
 
         it('should update notification message if version is outdated', () => {
-            jest.spyOn(translate, 'instant');
             jest.spyOn(electronService, 'getAppVersion').mockReturnValue(
                 currentVersion
             );
             component.showVersionInformation(latestVersion);
-            expect(translate.instant).toHaveBeenCalledWith(
-                'SETTINGS.NEW_VERSION_AVAILABLE'
-            );
             expect(component.updateMessage).toBe(
-                'New version available: 1.0.0'
+                'There is a new version available: 1.0.0'
             );
         });
     });
@@ -946,14 +924,6 @@ describe('SettingsComponent', () => {
         jest.spyOn(privateApi(component).matDialog, 'open').mockReturnValue(
             createDialogRef(true)
         );
-        jest.spyOn(translate, 'instant').mockImplementation(
-            (key: string, params?: Record<string, number>) => {
-                if (key === 'SETTINGS.REMOVE_ALL_PROGRESS') {
-                    return `${params?.current}/${params?.total}`;
-                }
-                return key;
-            }
-        );
         jest.spyOn(
             privateApi(component),
             'waitForUiFeedbackFrame'
@@ -989,7 +959,9 @@ describe('SettingsComponent', () => {
         fixture.detectChanges();
 
         expect(component.isRemovingAllPlaylists()).toBe(true);
-        expect(component.removeAllProgressLabel()).toBe('3/7');
+        expect(component.removeAllProgressLabel()).toBe(
+            'Deleting playlist data… 3 / 7'
+        );
         expect(databaseService.deleteAllPlaylists).toHaveBeenCalledWith(
             expect.objectContaining({
                 operationId: 'delete-all-op',
@@ -1006,7 +978,7 @@ describe('SettingsComponent', () => {
             PlaylistActions.removeAllPlaylists()
         );
         expect(snackBar.open).toHaveBeenCalledWith(
-            'SETTINGS.PLAYLISTS_REMOVED',
+            'All playlists and playlist data were removed.',
             undefined,
             {
                 duration: 2000,
@@ -1068,12 +1040,10 @@ describe('SettingsComponent', () => {
     });
 
     it('shows the save confirmation snackbar at the bottom center with the settings offset class', () => {
-        jest.spyOn(translate, 'instant').mockReturnValue('Settings saved');
-
         component.applyChangedSettings();
 
         expect(snackBar.open).toHaveBeenCalledWith(
-            'Settings saved',
+            'Success! Configuration was saved.',
             undefined,
             {
                 duration: 2000,
@@ -1105,7 +1075,6 @@ describe('SettingsComponent', () => {
             }
         );
         const refreshSpy = jest.spyOn(component, 'refreshAllEpg');
-        jest.spyOn(translate, 'instant').mockImplementation((key) => key);
 
         component.clearEpgData();
 
@@ -1117,7 +1086,7 @@ describe('SettingsComponent', () => {
 
         expect(component.isClearingEpgData()).toBe(false);
         expect(snackBar.open).toHaveBeenCalledWith(
-            'SETTINGS.EPG_DATA_CLEARED',
+            'EPG data has been cleared',
             undefined,
             expect.objectContaining({ panelClass: ['settings-snackbar'] })
         );
@@ -1248,7 +1217,6 @@ describe('SettingsComponent', () => {
             }
         );
         const refreshSpy = jest.spyOn(component, 'refreshAllEpg');
-        jest.spyOn(translate, 'instant').mockImplementation((key) => key);
         jest.spyOn(console, 'error').mockImplementation();
 
         component.clearEpgData();
@@ -1256,7 +1224,7 @@ describe('SettingsComponent', () => {
 
         expect(component.isClearingEpgData()).toBe(false);
         expect(snackBar.open).toHaveBeenCalledWith(
-            'SETTINGS.EPG_DATA_CLEAR_FAILED',
+            'Failed to clear EPG data. Please try again.',
             undefined,
             expect.objectContaining({ panelClass: ['settings-snackbar'] })
         );
@@ -1300,9 +1268,7 @@ describe('SettingsComponent', () => {
 
     it('updates the EPG view mode through the epg section output', () => {
         const mockStore = settingsStore as unknown as MockSettingsStore;
-        const listButton = (
-            fixture.nativeElement as HTMLElement
-        ).querySelector(
+        const listButton = (fixture.nativeElement as HTMLElement).querySelector(
             '[data-test-id="epg-view-mode-list"]'
         ) as HTMLButtonElement;
 

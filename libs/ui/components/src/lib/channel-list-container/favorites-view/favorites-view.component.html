@@ -12,12 +12,7 @@
             let i = $index
         ) {
             <app-channel-list-item
-                [name]="
-                    i +
-                    1 +
-                    '. ' +
-                    (channel?.name || 'CHANNELS.UNNAMED_CHANNEL' | translate)
-                "
+                [name]="i + 1 + '. ' + (channel?.name || 'Unnamed Channel')"
                 [isDraggable]="!hasSearchTerm()"
                 [logo]="getLogoForChannel(channel)"
                 [showEpg]="shouldShowEpg()"
@@ -43,17 +38,19 @@
         <div class="empty-favorites">
             <strong>
                 @if (hasSearchTerm()) {
-                    {{ 'CHANNELS.NO_SEARCH_RESULTS' | translate }}
+                    {{ 'No channels found' }}
                 } @else {
-                    {{ 'CHANNELS.NO_FAVORITES' | translate }}
+                    {{ 'No favorites yet' }}
                 }
             </strong>
         </div>
         <div class="empty-favorites-hint">
             @if (hasSearchTerm()) {
-                {{ 'CHANNELS.TRY_DIFFERENT_SEARCH' | translate }}
+                {{ 'Try a different search term' }}
             } @else {
-                {{ 'CHANNELS.USE_STAR_TO_FAVORITE' | translate }}
+                {{
+                    "Please use 'star' icon to add channels to your favorites."
+                }}
             }
         </div>
     }
@@ -71,6 +68,6 @@
 <mat-menu #channelContextMenu="matMenu">
     <button mat-menu-item (click)="openChannelDetails()">
         <mat-icon>info</mat-icon>
-        <span>{{ 'CHANNELS.SHOW_DETAILS' | translate }}</span>
+        <span>{{ 'Show channel details' }}</span>
     </button>
 </mat-menu>

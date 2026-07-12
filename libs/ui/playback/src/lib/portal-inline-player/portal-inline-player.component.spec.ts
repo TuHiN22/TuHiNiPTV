@@ -1,7 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import type { PortalInlinePlayerComponent as PortalInlinePlayerComponentInstance } from './portal-inline-player.component';
 
 jest.unstable_mockModule('video.js', () => ({
@@ -46,7 +45,7 @@ describe('PortalInlinePlayerComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [PortalInlinePlayerComponent, TranslateModule.forRoot()],
+            imports: [PortalInlinePlayerComponent],
         })
             .overrideComponent(PortalInlinePlayerComponent, {
                 remove: {

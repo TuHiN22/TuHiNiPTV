@@ -1,4 +1,7 @@
-import { PlaybackPositionData, XtreamSerieEpisode } from '@iptvnator/shared/interfaces';
+import {
+    PlaybackPositionData,
+    XtreamSerieEpisode,
+} from '@iptvnator/shared/interfaces';
 import {
     isPortalPlaybackInProgress,
     isPortalPlaybackWatched,
@@ -57,7 +60,7 @@ export function getSeriesQuickStartAction(
     if (resumeEpisode?.position) {
         return createQuickStartAction({
             kind: SERIES_QUICK_START_ACTION_KIND.Resume,
-            labelKey: 'XTREAM.RESUME_EPISODE',
+            labelKey: 'Resume episode',
             icon: 'play_arrow',
             episode: resumeEpisode.episode,
             position: resumeEpisode.position,
@@ -79,8 +82,8 @@ export function getSeriesQuickStartAction(
                 ? SERIES_QUICK_START_ACTION_KIND.PlayNext
                 : SERIES_QUICK_START_ACTION_KIND.PlayFirst,
             labelKey: hasWatchedEpisode
-                ? 'XTREAM.PLAY_NEXT_EPISODE'
-                : 'XTREAM.PLAY_FIRST_EPISODE',
+                ? 'Play next episode'
+                : 'Play first episode',
             icon: 'play_arrow',
             episode: firstUnwatchedEpisode.episode,
             position: firstUnwatchedEpisode.position,
@@ -95,7 +98,7 @@ export function getSeriesQuickStartAction(
 
     return createQuickStartAction({
         kind: SERIES_QUICK_START_ACTION_KIND.Completed,
-        labelKey: 'XTREAM.SERIES_WATCHED',
+        labelKey: 'Series watched',
         icon: 'check_circle',
         episode: finalEpisode.episode,
         position: finalEpisode.position,

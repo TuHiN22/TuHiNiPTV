@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
 import {
     ELECTRON_BRIDGE_APP_UPDATE_STATUSES,
     ElectronBridgeAppUpdateStatus,
@@ -39,10 +38,7 @@ describe('AppUpdateNotificationPanelComponent', () => {
         } as unknown as typeof window.electron;
 
         await TestBed.configureTestingModule({
-            imports: [
-                AppUpdateNotificationPanelComponent,
-                TranslateModule.forRoot(),
-            ],
+            imports: [AppUpdateNotificationPanelComponent],
             providers: [
                 {
                     provide: MatDialog,
@@ -120,9 +116,7 @@ describe('AppUpdateNotificationPanelComponent', () => {
             '[data-test-id="app-update-notification-download"]'
         ) as HTMLButtonElement;
 
-        expect(button.textContent).toContain(
-            'SETTINGS.APP_UPDATE_OPEN_RELEASE'
-        );
+        expect(button.textContent).toContain('Open GitHub release');
         expect(button.querySelector('mat-icon')?.textContent?.trim()).toBe(
             'open_in_new'
         );

@@ -1,16 +1,16 @@
-<h2 mat-dialog-title>{{ 'XTREAM.CATEGORY_MANAGEMENT.TITLE' | translate }}</h2>
+<h2 mat-dialog-title>{{ 'Manage Categories' }}</h2>
 
 <mat-dialog-content>
     @if (isLoading()) {
         <div class="loading-container">
             <mat-spinner diameter="40" />
-            <p>{{ 'XTREAM.CATEGORY_MANAGEMENT.LOADING' | translate }}</p>
+            <p>{{ 'Loading categories...' }}</p>
         </div>
     } @else {
         <div class="header-actions">
             <div class="selection-info">
-                {{ 'XTREAM.CATEGORY_MANAGEMENT.SELECTED' | translate }}:
-                <strong>{{ selectedCount() }}</strong> / {{ totalCount() }}
+                {{ 'Selected' }}: <strong>{{ selectedCount() }}</strong> /
+                {{ totalCount() }}
             </div>
             <div class="bulk-actions">
                 <button
@@ -19,7 +19,7 @@
                     [disabled]="allSelected()"
                 >
                     <mat-icon>check_box</mat-icon>
-                    {{ 'XTREAM.CATEGORY_MANAGEMENT.SELECT_ALL' | translate }}
+                    {{ 'Select All' }}
                 </button>
                 <button
                     mat-stroked-button
@@ -27,7 +27,7 @@
                     [disabled]="selectedCount() === 0"
                 >
                     <mat-icon>check_box_outline_blank</mat-icon>
-                    {{ 'XTREAM.CATEGORY_MANAGEMENT.DESELECT_ALL' | translate }}
+                    {{ 'Deselect All' }}
                 </button>
             </div>
         </div>
@@ -39,10 +39,7 @@
                 spellcheck="false"
                 [value]="searchTerm()"
                 (input)="searchTerm.set($any($event.target).value)"
-                [placeholder]="
-                    'XTREAM.CATEGORY_MANAGEMENT.SEARCH_PLACEHOLDER'
-                        | translate
-                "
+                [placeholder]="'Search categories...'"
             />
             @if (searchTerm()) {
                 <button
@@ -77,14 +74,9 @@
             } @empty {
                 <div class="empty-message">
                     @if (searchTerm()) {
-                        {{
-                            'XTREAM.CATEGORY_MANAGEMENT.NO_RESULTS' | translate
-                        }}
+                        {{ 'No matching categories found' }}
                     } @else {
-                        {{
-                            'XTREAM.CATEGORY_MANAGEMENT.NO_CATEGORIES'
-                                | translate
-                        }}
+                        {{ 'No categories available' }}
                     }
                 </div>
             }
@@ -94,7 +86,7 @@
 
 <mat-dialog-actions align="end">
     <button mat-button (click)="cancel()" [disabled]="isSaving()">
-        {{ 'CLOSE' | translate }}
+        {{ 'Close' }}
     </button>
     <button
         mat-flat-button
@@ -105,7 +97,7 @@
         @if (isSaving()) {
             <mat-spinner diameter="20" />
         } @else {
-            {{ 'XTREAM.CATEGORY_MANAGEMENT.SAVE' | translate }}
+            {{ 'Save' }}
         }
     </button>
 </mat-dialog-actions>

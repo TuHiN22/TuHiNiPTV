@@ -16,16 +16,11 @@ export function buildSettingsPlaylistDeleteSummary(
 export interface RemoveAllProgressLabelInput {
     readonly isRemovingAllPlaylists: boolean;
     readonly progress: DbOperationEvent | null;
-    readonly translate: (
-        key: string,
-        params?: Record<string, number>
-    ) => string;
 }
 
 export function buildRemoveAllProgressLabel({
     isRemovingAllPlaylists,
     progress,
-    translate,
 }: RemoveAllProgressLabelInput): string | null {
     if (!isRemovingAllPlaylists) {
         return null;
@@ -35,11 +30,8 @@ export function buildRemoveAllProgressLabel({
     const total = progress?.total;
 
     if (typeof current === 'number' && typeof total === 'number' && total > 0) {
-        return translate('SETTINGS.REMOVE_ALL_PROGRESS', {
-            current,
-            total,
-        });
+        return `Deleting playlist data… ${current} / ${total}`;
     }
 
-    return translate('SETTINGS.REMOVE_ALL_IN_PROGRESS');
+    return 'Deleting playlist data…';
 }

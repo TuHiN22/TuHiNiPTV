@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
     EmbeddedMpvSession,
     ResolvedPortalPlayback,
@@ -97,7 +96,7 @@ describe('EmbeddedMpvPlayerComponent series navigation', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [EmbeddedMpvPlayerHostComponent, TranslateModule.forRoot()],
+            imports: [EmbeddedMpvPlayerHostComponent],
             providers: [
                 {
                     provide: EmbeddedMpvOverlayVisibilityService,
@@ -195,16 +194,12 @@ describe('EmbeddedMpvPlayerComponent series navigation', () => {
         ).not.toBeNull();
         expect(
             fixture.debugElement.query(
-                By.css(
-                    'button[aria-label="EMBEDDED_MPV.PLAYER.BACK_10_SECONDS"]'
-                )
+                By.css('button[aria-label="Back 10 seconds"]')
             ).nativeElement.disabled
         ).toBe(true);
         expect(
             fixture.debugElement.query(
-                By.css(
-                    'button[aria-label="EMBEDDED_MPV.PLAYER.FORWARD_10_SECONDS"]'
-                )
+                By.css('button[aria-label="Forward 10 seconds"]')
             ).nativeElement.disabled
         ).toBe(true);
         expect(
@@ -213,29 +208,10 @@ describe('EmbeddedMpvPlayerComponent series navigation', () => {
         ).toBe(true);
     });
 
-    it('re-evaluates instant()-based labels when the language changes', () => {
-        const translate = TestBed.inject(TranslateService);
-        translate.setTranslation('en', {
-            EMBEDDED_MPV: { PLAYER: { ENTER_FULLSCREEN: 'Enter fullscreen' } },
-        });
-        translate.use('en');
-        expect(player.fullscreenLabel()).toBe('Enter fullscreen');
-
-        translate.setTranslation('de', {
-            EMBEDDED_MPV: { PLAYER: { ENTER_FULLSCREEN: 'Vollbild starten' } },
-        });
-        translate.use('de');
-
-        // translate.instant() is invisible to the signal graph; the
-        // translationsTick dependency must invalidate the computed.
-        expect(player.fullscreenLabel()).toBe('Vollbild starten');
-    });
-
     describe('timeline scrubbing', () => {
         const slider = () =>
-            fixture.debugElement.query(
-                By.css('.embedded-mpv-player__slider')
-            ).nativeElement as HTMLInputElement;
+            fixture.debugElement.query(By.css('.embedded-mpv-player__slider'))
+                .nativeElement as HTMLInputElement;
 
         const dispatch = (type: string, value: string) => {
             slider().value = value;

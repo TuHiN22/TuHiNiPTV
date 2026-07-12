@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
 import { Channel } from '@iptvnator/shared/interfaces';
 import { ChannelDetailsDialogComponent } from '../channel-details-dialog/channel-details-dialog.component';
 import { FavoritesViewComponent } from './favorites-view.component';
@@ -46,11 +45,7 @@ describe('FavoritesViewComponent', () => {
         };
 
         await TestBed.configureTestingModule({
-            imports: [
-                FavoritesViewComponent,
-                NoopAnimationsModule,
-                TranslateModule.forRoot(),
-            ],
+            imports: [FavoritesViewComponent, NoopAnimationsModule],
             providers: [
                 {
                     provide: MatDialog,

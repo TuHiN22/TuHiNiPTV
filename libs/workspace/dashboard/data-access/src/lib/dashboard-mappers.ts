@@ -23,9 +23,9 @@ export function normalizeActivityType(value: string): PortalActivityType {
 }
 
 export function getActivityTypeLabelKey(type: PortalActivityType): string {
-    if (type === 'live') return 'WORKSPACE.DASHBOARD.TYPE_LIVE';
-    if (type === 'series') return 'WORKSPACE.DASHBOARD.TYPE_SERIES';
-    return 'WORKSPACE.DASHBOARD.TYPE_MOVIE';
+    if (type === 'live') return 'Live';
+    if (type === 'series') return 'Series';
+    return 'Movie';
 }
 
 // ────── Xtream DB → ViewModel ──────

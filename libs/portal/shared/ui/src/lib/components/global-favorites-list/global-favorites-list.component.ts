@@ -28,7 +28,6 @@ import {
     sortFavoriteChannelItems,
     UnifiedFavoriteChannel,
 } from '@iptvnator/portal/shared/util';
-import { TranslateModule } from '@ngx-translate/core';
 
 export interface EnrichedUnifiedFavorite extends UnifiedFavoriteChannel {
     currentEpgProgram: EpgProgram | null;
@@ -47,7 +46,6 @@ export type GlobalFavoritesListMode = 'favorites' | 'recent';
         DragDropModule,
         MatIconModule,
         MatMenuModule,
-        TranslateModule,
     ],
 })
 export class GlobalFavoritesListComponent {

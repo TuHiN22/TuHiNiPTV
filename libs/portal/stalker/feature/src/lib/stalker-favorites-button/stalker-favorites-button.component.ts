@@ -1,7 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, map, of, switchMap } from 'rxjs';
 import { PlaylistsService } from '@iptvnator/services';
 import { StalkerStore } from '@iptvnator/portal/stalker/data-access';
@@ -21,7 +20,7 @@ type FavoriteButtonItem = StalkerSelectedVodItem & {
     selector: 'app-favorites-button',
     templateUrl: './stalker-favorites-button.component.html',
     styleUrls: ['./stalker-favorites-button.component.scss'],
-    imports: [AsyncPipe, MatIconModule, TranslateModule],
+    imports: [AsyncPipe, MatIconModule],
 })
 export class FavoritesButtonComponent {
     private playlistService = inject(PlaylistsService);

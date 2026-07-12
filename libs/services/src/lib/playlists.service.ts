@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
 import {
     aggregateFavoriteChannels,
     createFavoritesPlaylist,
@@ -89,7 +88,6 @@ export function resolvePlaylistParser(parserModule: PlaylistParserModule) {
 export class PlaylistsService {
     private readonly dbService = inject(NgxIndexedDBService);
     private readonly snackBar = inject(MatSnackBar);
-    private readonly translateService = inject(TranslateService);
     private readonly runtime = inject(RuntimeCapabilitiesService);
     private readonly playlistDeleteCleanups =
         inject(PLAYLIST_DELETE_CLEANUP, { optional: true }) ?? [];
@@ -543,8 +541,7 @@ export class PlaylistsService {
                         playlist.detectedEpgUrls,
                     enabledEpgUrls: updatedPlaylist.epgUrls ?? playlist.epgUrls,
                     manualEpgUrls:
-                        updatedPlaylist.manualEpgUrls ??
-                        playlist.manualEpgUrls,
+                        updatedPlaylist.manualEpgUrls ?? playlist.manualEpgUrls,
                     disabledEpgUrls:
                         updatedPlaylist.disabledEpgUrls ??
                         playlist.disabledEpgUrls,
@@ -912,7 +909,7 @@ export class PlaylistsService {
             );
         } catch (error) {
             this.snackBar.open(
-                this.translateService.instant('HOME.PARSING_ERROR'),
+                'Error: Parsing failed, not a valid playlist:',
                 undefined,
                 { duration: 2000 }
             );

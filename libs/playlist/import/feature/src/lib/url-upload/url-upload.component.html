@@ -1,15 +1,17 @@
 <form [formGroup]="form">
     <mat-form-field class="w-full">
-        <mat-label>{{ 'HOME.URL_UPLOAD.PLAYLIST_URL' | translate }}</mat-label>
+        <mat-label>{{ 'Playlist URL (m3u, m3u8)' }}</mat-label>
         <input type="url" matInput formControlName="playlistUrl" />
     </mat-form-field>
     <mat-form-field class="w-full">
-        <mat-label>{{ 'HOME.XTREAM_PLAYLIST.TITLE' | translate }}</mat-label>
+        <mat-label>{{ 'Playlist title' }}</mat-label>
         <input type="text" matInput formControlName="playlistName" />
     </mat-form-field>
     @if (!isDesktop) {
         <p class="cors-note">
-            {{ 'HOME.URL_UPLOAD.CORS_NOTE' | translate }}
+            {{
+                "Note: In order to avoid CORS issues at this point the application uses a public CORS Proxy service. If you want to upload a playlist with sensitive data, it's more secure to import it from a file."
+            }}
         </p>
     }
 </form>

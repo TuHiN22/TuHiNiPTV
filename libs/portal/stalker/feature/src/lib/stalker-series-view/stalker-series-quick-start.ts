@@ -150,8 +150,8 @@ function getLazyVodSeriesLabelKey(
     action: SeriesQuickStartAction | null
 ): string {
     return action && action.kind !== SERIES_QUICK_START_ACTION_KIND.PlayFirst
-        ? 'XTREAM.PLAY_NEXT_EPISODE'
-        : 'XTREAM.PLAY_FIRST_EPISODE';
+        ? 'Play next episode'
+        : 'Play first episode';
 }
 
 function getLazyVodSeriesEpisodeLabel(

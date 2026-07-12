@@ -9,16 +9,20 @@
             <mat-icon>dashboard</mat-icon>
         </div>
         <div class="settings-group__header-text">
-            <h3>{{ 'SETTINGS.DASHBOARD' | translate }}</h3>
-            <p>{{ 'SETTINGS.DASHBOARD_SUBTITLE' | translate }}</p>
+            <h3>{{ 'Dashboard' }}</h3>
+            <p>
+                {{ 'Choose which dashboard rails are shown in the workspace.' }}
+            </p>
         </div>
     </header>
 
     <div class="setting-item">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.SHOW_DASHBOARD' | translate }}</h4>
+            <h4>{{ 'Show dashboard' }}</h4>
             <p>
-                {{ 'SETTINGS.SHOW_DASHBOARD_DESCRIPTION' | translate }}
+                {{
+                    'Keep Dashboard available in the workspace rail. When disabled, Sources becomes the first workspace page.'
+                }}
             </p>
         </div>
         <div class="setting-item__control setting-item__toggle">
@@ -32,9 +36,9 @@
     <div formGroupName="dashboardRails">
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.DASHBOARD_HERO' | translate }}</h4>
+                <h4>{{ 'Hero banner' }}</h4>
                 <p>
-                    {{ 'SETTINGS.DASHBOARD_HERO_DESCRIPTION' | translate }}
+                    {{ 'Show the large top banner for your most recent item.' }}
                 </p>
             </div>
             <div class="setting-item__control setting-item__toggle">
@@ -47,11 +51,10 @@
 
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.DASHBOARD_RAIL_CONTINUE' | translate }}</h4>
+                <h4>{{ 'Continue Watching' }}</h4>
                 <p>
                     {{
-                        'SETTINGS.DASHBOARD_RAIL_CONTINUE_DESCRIPTION'
-                            | translate
+                        'Show recently watched movies and series as cover cards.'
                     }}
                 </p>
             </div>
@@ -65,13 +68,10 @@
 
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{
-                    'SETTINGS.DASHBOARD_RAIL_LIVE_FAVORITES' | translate
-                }}</h4>
+                <h4>{{ 'Live now on your favorites' }}</h4>
                 <p>
                     {{
-                        'SETTINGS.DASHBOARD_RAIL_LIVE_FAVORITES_DESCRIPTION'
-                            | translate
+                        'Show favorite live channels with current EPG progress.'
                     }}
                 </p>
             </div>
@@ -85,13 +85,10 @@
 
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{
-                    'SETTINGS.DASHBOARD_RAIL_RECENT_LIVE' | translate
-                }}</h4>
+                <h4>{{ 'Recently watched live TV' }}</h4>
                 <p>
                     {{
-                        'SETTINGS.DASHBOARD_RAIL_RECENT_LIVE_DESCRIPTION'
-                            | translate
+                        'Show live channels you opened recently with current EPG progress.'
                     }}
                 </p>
             </div>
@@ -105,14 +102,9 @@
 
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{
-                    'SETTINGS.DASHBOARD_RAIL_FAVORITE_VOD' | translate
-                }}</h4>
+                <h4>{{ 'Favorite movies & series' }}</h4>
                 <p>
-                    {{
-                        'SETTINGS.DASHBOARD_RAIL_FAVORITE_VOD_DESCRIPTION'
-                            | translate
-                    }}
+                    {{ 'Show favorited movies and series as cover cards.' }}
                 </p>
             </div>
             <div class="setting-item__control setting-item__toggle">
@@ -125,11 +117,10 @@
 
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.DASHBOARD_RAIL_SOURCES' | translate }}</h4>
+                <h4>{{ 'Recently used sources' }}</h4>
                 <p>
                     {{
-                        'SETTINGS.DASHBOARD_RAIL_SOURCES_DESCRIPTION'
-                            | translate
+                        'Show shortcuts to your most recently used playlists and portals.'
                     }}
                 </p>
             </div>
@@ -143,14 +134,9 @@
 
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{
-                    'SETTINGS.DASHBOARD_RAIL_XTREAM_ADDED' | translate
-                }}</h4>
+                <h4>{{ 'Recently added on Xtream' }}</h4>
                 <p>
-                    {{
-                        'SETTINGS.DASHBOARD_RAIL_XTREAM_ADDED_DESCRIPTION'
-                            | translate
-                    }}
+                    {{ 'Show the newest Xtream movies, series, and channels.' }}
                 </p>
             </div>
             <div class="setting-item__control setting-item__toggle">
@@ -163,11 +149,10 @@
 
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.DASHBOARD_RAIL_TMDB_TRENDING' | translate }}</h4>
+                <h4>{{ 'Trending this week (TMDB)' }}</h4>
                 <p>
                     {{
-                        'SETTINGS.DASHBOARD_RAIL_TMDB_TRENDING_DESCRIPTION'
-                            | translate
+                        'Show weekly trending movies and series from TMDB, matched against your libraries. Requires TMDB metadata to be enabled.'
                     }}
                 </p>
             </div>

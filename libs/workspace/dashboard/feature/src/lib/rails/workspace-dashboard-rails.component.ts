@@ -20,7 +20,6 @@ import { MatIcon } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     EmptyStateComponent,
     PlaylistInfoComponent,
@@ -32,6 +31,7 @@ import {
 } from '@iptvnator/workspace/shell/util';
 import { DialogService } from '@iptvnator/ui/components';
 import { PlaylistActions } from '@iptvnator/m3u-state';
+import { interpolateText } from '@iptvnator/portal/shared/util';
 import {
     PlaylistDeleteActionService,
     RuntimeCapabilitiesService,
@@ -91,7 +91,6 @@ import type { DashboardSourceActionId } from './dashboard-rail.utils';
         MatButtonModule,
         MatIcon,
         RouterLink,
-        TranslatePipe,
     ],
     templateUrl: './workspace-dashboard-rails.component.html',
     styleUrl: './workspace-dashboard-rails.component.scss',
@@ -101,6 +100,7 @@ import type { DashboardSourceActionId } from './dashboard-rail.utils';
     },
 })
 export class WorkspaceDashboardRailsComponent {
+    readonly formatText = interpolateText;
     readonly data = inject(DashboardDataService);
     private readonly dialog = inject(MatDialog);
     private readonly dialogService = inject(DialogService);
@@ -110,11 +110,6 @@ export class WorkspaceDashboardRailsComponent {
     );
     private readonly snackBar = inject(MatSnackBar);
     private readonly store = inject(Store);
-    private readonly translate = inject(TranslateService);
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
     private readonly shellActions = inject(WORKSPACE_SHELL_ACTIONS);
     private readonly epgService = inject(EpgService);
     private readonly runtime = inject(RuntimeCapabilitiesService);
@@ -182,13 +177,7 @@ export class WorkspaceDashboardRailsComponent {
             item.type === 'series' &&
             position?.seasonNumber != null &&
             position?.episodeNumber != null
-                ? this.translate.instant(
-                      'WORKSPACE.DASHBOARD.SEASON_EPISODE_BADGE',
-                      {
-                          season: position.seasonNumber,
-                          episode: position.episodeNumber,
-                      }
-                  )
+                ? `S${position.seasonNumber}·E${position.episodeNumber}`
                 : null;
 
         return {
@@ -213,7 +202,6 @@ export class WorkspaceDashboardRailsComponent {
     });
 
     readonly continueWatchingBaseCards = computed<DashboardRailCard[]>(() => {
-        this.languageTick();
         return this.data
             .globalRecentVodItems()
             .filter(isContinueWatchingRecentItem)
@@ -327,7 +315,6 @@ export class WorkspaceDashboardRailsComponent {
     );
 
     readonly trendingCards = computed<DashboardRailCard[]>(() => {
-        this.languageTick();
         // isAvailable reads the TMDB settings signal — flipping the
         // opt-in off mid-session hides the rail immediately
         if (!this.trendingService.isAvailable) {
@@ -344,7 +331,7 @@ export class WorkspaceDashboardRailsComponent {
             title:
                 playlist.title ||
                 playlist.filename ||
-                this.t('WORKSPACE.DASHBOARD.UNTITLED_SOURCE'),
+                this.t('Untitled source'),
             subtitle: this.data.getPlaylistProvider(playlist),
             icon: playlist.serverUrl
                 ? 'cloud'
@@ -508,13 +495,7 @@ export class WorkspaceDashboardRailsComponent {
             item.type === 'series' &&
             position?.seasonNumber != null &&
             position?.episodeNumber != null
-                ? this.translate.instant(
-                      'WORKSPACE.DASHBOARD.SEASON_EPISODE_BADGE',
-                      {
-                          season: position.seasonNumber,
-                          episode: position.episodeNumber,
-                      }
-                  )
+                ? `S${position.seasonNumber}·E${position.episodeNumber}`
                 : null;
         return {
             id: `recent-${item.id}-${item.playlist_id}-${item.viewed_at}`,
@@ -608,9 +589,7 @@ export class WorkspaceDashboardRailsComponent {
         }
 
         const title =
-            playlist.title ||
-            playlist.filename ||
-            this.t('WORKSPACE.DASHBOARD.UNTITLED_SOURCE');
+            playlist.title || playlist.filename || this.t('Untitled source');
 
         this.shellActions.openAccountInfo({
             playlist: {
@@ -626,10 +605,9 @@ export class WorkspaceDashboardRailsComponent {
 
     private confirmRemovePlaylist(playlist: PlaylistMeta): void {
         this.dialogService.openConfirmDialog({
-            title: this.translate.instant('HOME.PLAYLISTS.REMOVE_DIALOG.TITLE'),
-            message: this.translate.instant(
-                'HOME.PLAYLISTS.REMOVE_DIALOG.MESSAGE'
-            ),
+            title: 'Remove playlist',
+            message:
+                'Are you sure you want to delete this playlist completely?',
             onConfirm: () => {
                 void this.removePlaylist(playlist);
             },
@@ -647,14 +625,12 @@ export class WorkspaceDashboardRailsComponent {
         this.store.dispatch(
             PlaylistActions.removePlaylist({ playlistId: playlist._id })
         );
-        this.snackBar.open(
-            this.translate.instant('HOME.PLAYLISTS.REMOVE_DIALOG.SUCCESS'),
-            undefined,
-            { duration: 2000 }
-        );
+        this.snackBar.open('Playlist was removed successfully', undefined, {
+            duration: 2000,
+        });
     }
 
     private t(key: string): string {
-        return this.translate.instant(key);
+        return key;
     }
 }

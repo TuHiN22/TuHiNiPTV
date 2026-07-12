@@ -3,8 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { provideRouter, RouterOutlet } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
 import {
     XtreamContentInitBlockReason,
     XtreamStore,
@@ -29,12 +27,13 @@ class MockPlaylistErrorViewComponent {
 
 describe('XtreamContentGateComponent', () => {
     let fixture: ComponentFixture<XtreamContentGateComponent>;
-    const contentInitBlockReason =
-        signal<XtreamContentInitBlockReason | null>(null);
-    const isContentInitialized = signal(false);
-    const portalStatus = signal<'active' | 'inactive' | 'expired' | 'unavailable'>(
-        'active'
+    const contentInitBlockReason = signal<XtreamContentInitBlockReason | null>(
+        null
     );
+    const isContentInitialized = signal(false);
+    const portalStatus = signal<
+        'active' | 'inactive' | 'expired' | 'unavailable'
+    >('active');
     const retryContentInitialization = jest.fn().mockResolvedValue(undefined);
 
     beforeEach(async () => {
@@ -47,19 +46,6 @@ describe('XtreamContentGateComponent', () => {
             imports: [XtreamContentGateComponent],
             providers: [
                 provideRouter([]),
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => key,
-                        get: (key: string) => of(key),
-                        stream: (key: string) => of(key),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                    },
-                },
                 {
                     provide: XtreamStore,
                     useValue: {
@@ -78,7 +64,6 @@ describe('XtreamContentGateComponent', () => {
                         MatIconModule,
                         MockPlaylistErrorViewComponent,
                         RouterOutlet,
-                        TranslatePipe,
                         XtreamCachedOfflineNoticeComponent,
                     ],
                 },
@@ -89,11 +74,11 @@ describe('XtreamContentGateComponent', () => {
     });
 
     it.each([
-        ['cancelled', 'PORTALS.ERROR_VIEW.IMPORT_CANCELLED.TITLE'],
-        ['expired', 'PORTALS.ERROR_VIEW.ACCOUNT_EXPIRED.TITLE'],
-        ['inactive', 'PORTALS.ERROR_VIEW.ACCOUNT_INACTIVE.TITLE'],
-        ['unavailable', 'PORTALS.ERROR_VIEW.PORTAL_UNAVAILABLE.TITLE'],
-        ['error', 'PORTALS.ERROR_VIEW.UNKNOWN_ERROR.TITLE'],
+        ['cancelled', 'Import cancelled'],
+        ['expired', 'Account expired'],
+        ['inactive', 'Account inactive'],
+        ['unavailable', 'Portal unavailable'],
+        ['error', 'Something went wrong'],
     ] as const)(
         'renders the blocked error state for %s imports',
         (reason, expectedTitleKey) => {
@@ -110,10 +95,10 @@ describe('XtreamContentGateComponent', () => {
     it('keeps the child outlet available when there is no block reason', () => {
         fixture.detectChanges();
 
+        expect(fixture.nativeElement.querySelector('.mock-error')).toBeNull();
         expect(
-            fixture.nativeElement.querySelector('.mock-error')
-        ).toBeNull();
-        expect(fixture.nativeElement.querySelector('router-outlet')).not.toBeNull();
+            fixture.nativeElement.querySelector('router-outlet')
+        ).not.toBeNull();
     });
 
     it('shows an inline warning when cached content remains available offline', () => {
@@ -125,10 +110,10 @@ describe('XtreamContentGateComponent', () => {
             '[data-testid="xtream-offline-warning"]'
         ) as HTMLElement | null;
 
-        expect(warning?.textContent).toContain(
-            'PORTALS.ERROR_VIEW.PORTAL_UNAVAILABLE.TITLE'
-        );
-        expect(fixture.nativeElement.querySelector('router-outlet')).not.toBeNull();
+        expect(warning?.textContent).toContain('Portal unavailable');
+        expect(
+            fixture.nativeElement.querySelector('router-outlet')
+        ).not.toBeNull();
     });
 
     it('retries content initialization from the blocked state', () => {

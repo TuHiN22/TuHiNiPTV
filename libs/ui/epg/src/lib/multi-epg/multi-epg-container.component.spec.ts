@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
 import { EpgRuntimeBridgeService } from '@iptvnator/epg/data-access';
 import {
     MultiEpgContainerComponent,
@@ -12,7 +10,7 @@ import { COMPONENT_OVERLAY_REF } from './overlay-ref.token';
 
 describe('isSelectedEpgDayToday', () => {
     it('returns true only when the selected EPG day is the actual current day', () => {
-        const now = new Date('2026-05-21T20:00:00.000Z');
+        const now = new Date(2026, 4, 21, 20);
 
         expect(isSelectedEpgDayToday('20260521', now)).toBe(true);
         expect(isSelectedEpgDayToday('20260520', now)).toBe(false);
@@ -48,14 +46,6 @@ describe('MultiEpgContainerComponent runtime gates', () => {
                 {
                     provide: EpgRuntimeBridgeService,
                     useValue: epgBridge,
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                        onLangChange: of(null),
-                    },
                 },
             ],
         })

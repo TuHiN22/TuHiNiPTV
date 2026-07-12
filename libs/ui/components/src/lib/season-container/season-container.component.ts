@@ -17,7 +17,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslateModule } from '@ngx-translate/core';
 import {
     createLogger,
     getPortalPlaybackProgressPercent,
@@ -74,7 +73,6 @@ export interface SeasonContainerPlaybackToggleRequest {
         MatTooltipModule,
         ProgressCapsuleComponent,
         SeasonTabsComponent,
-        TranslateModule,
     ],
 })
 export class SeasonContainerComponent implements OnInit {
@@ -187,9 +185,7 @@ export class SeasonContainerComponent implements OnInit {
                 return;
             }
             this.lastAutoSelectKey = key;
-            this.selectedSeason.set(
-                untracked(() => this.resolveAutoSeason())
-            );
+            this.selectedSeason.set(untracked(() => this.resolveAutoSeason()));
         });
 
         // Fire the lazy-load/enrichment hooks for auto-selected seasons too —

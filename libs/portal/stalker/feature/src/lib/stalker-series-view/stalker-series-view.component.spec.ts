@@ -3,8 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MockPipe } from 'ng-mocks';
 import { SeasonContainerComponent } from '@iptvnator/ui/components';
 import {
     PORTAL_EXTERNAL_PLAYBACK,
@@ -18,7 +16,6 @@ import {
 import { PlaybackPositionData } from '@iptvnator/shared/interfaces';
 import { PortalInlinePlayerComponent } from '@iptvnator/ui/playback';
 import { DownloadsService, TmdbEnrichmentService } from '@iptvnator/services';
-import { EMPTY, of } from 'rxjs';
 import { FavoritesButtonComponent } from '../stalker-favorites-button/stalker-favorites-button.component';
 import { StalkerSeriesViewComponent } from './stalker-series-view.component';
 
@@ -211,19 +208,6 @@ describe('StalkerSeriesViewComponent', () => {
                         open: jest.fn(),
                     },
                 },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => key,
-                        get: (key: string) => of(key),
-                        stream: (key: string) => of(key),
-                        // EMPTY (not of(null)): the real TranslatePipe inside
-                        // the detail shell reads `event.lang` from emissions.
-                        onLangChange: EMPTY,
-                        onTranslationChange: EMPTY,
-                        onDefaultLangChange: EMPTY,
-                    },
-                },
             ],
         })
             .overrideComponent(StalkerSeriesViewComponent, {
@@ -232,7 +216,6 @@ describe('StalkerSeriesViewComponent', () => {
                         FavoritesButtonComponent,
                         PortalInlinePlayerComponent,
                         SeasonContainerComponent,
-                        TranslatePipe,
                     ],
                 },
                 add: {
@@ -240,10 +223,6 @@ describe('StalkerSeriesViewComponent', () => {
                         StubFavoritesButtonComponent,
                         StubPortalInlinePlayerComponent,
                         StubSeasonContainerComponent,
-                        MockPipe(
-                            TranslatePipe,
-                            (value: string | null | undefined) => value ?? ''
-                        ),
                     ],
                 },
             })
@@ -267,9 +246,7 @@ describe('StalkerSeriesViewComponent', () => {
             );
 
         expect(quickStartButton).not.toBeNull();
-        expect(quickStartButton?.textContent).toContain(
-            'XTREAM.PLAY_FIRST_EPISODE'
-        );
+        expect(quickStartButton?.textContent).toContain('Play first episode');
         expect(quickStartButton?.textContent).toContain('S01E01 · Episode 1');
 
         quickStartButton?.click();
@@ -437,9 +414,7 @@ describe('StalkerSeriesViewComponent', () => {
 
         expect(quickStartButton).not.toBeNull();
         expect(quickStartButton?.disabled).toBe(false);
-        expect(quickStartButton?.textContent).toContain(
-            'XTREAM.PLAY_NEXT_EPISODE'
-        );
+        expect(quickStartButton?.textContent).toContain('Play next episode');
         expect(quickStartButton?.textContent).toContain('S01E01');
 
         quickStartButton?.click();
@@ -677,9 +652,7 @@ describe('StalkerSeriesViewComponent', () => {
             );
 
         expect(quickStartButton).not.toBeNull();
-        expect(quickStartButton?.textContent).toContain(
-            'XTREAM.PLAY_NEXT_EPISODE'
-        );
+        expect(quickStartButton?.textContent).toContain('Play next episode');
         expect(quickStartButton?.textContent).toContain('S02E01');
 
         quickStartButton?.click();

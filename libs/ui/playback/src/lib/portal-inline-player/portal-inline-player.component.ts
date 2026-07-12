@@ -9,7 +9,6 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslateModule } from '@ngx-translate/core';
 import {
     PlayerContentInfo,
     ResolvedPortalPlayback,
@@ -30,7 +29,6 @@ import type {
         MatButtonModule,
         MatIconModule,
         MatTooltipModule,
-        TranslateModule,
         WebPlayerViewComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,

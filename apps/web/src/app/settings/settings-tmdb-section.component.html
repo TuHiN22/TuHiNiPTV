@@ -9,16 +9,24 @@
             <mat-icon>movie</mat-icon>
         </div>
         <div class="settings-group__header-text">
-            <h3>{{ 'SETTINGS.TMDB' | translate }}</h3>
-            <p>{{ 'SETTINGS.TMDB_DESCRIPTION' | translate }}</p>
+            <h3>{{ 'Metadata (TMDB)' }}</h3>
+            <p>
+                {{
+                    'Enrich movie and series details with data from The Movie Database'
+                }}
+            </p>
         </div>
     </header>
 
     <div formGroupName="tmdb">
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.TMDB_ENABLE' | translate }}</h4>
-                <p>{{ 'SETTINGS.TMDB_ENABLE_DESCRIPTION' | translate }}</p>
+                <h4>{{ 'Enable TMDB metadata' }}</h4>
+                <p>
+                    {{
+                        'Improves plots, cast, ratings and artwork in detail views. When enabled, movie and series titles are sent to TMDB.'
+                    }}
+                </p>
             </div>
             <div class="setting-item__control setting-item__toggle">
                 <mat-checkbox
@@ -31,8 +39,12 @@
         @if (form().value.tmdb?.enabled === true) {
             <div class="setting-item">
                 <div class="setting-item__meta">
-                    <h4>{{ 'SETTINGS.TMDB_API_KEY' | translate }}</h4>
-                    <p>{{ 'SETTINGS.TMDB_API_KEY_DESCRIPTION' | translate }}</p>
+                    <h4>{{ 'TMDB API key (optional)' }}</h4>
+                    <p>
+                        {{
+                            'Use your own TMDB API key instead of the built-in one'
+                        }}
+                    </p>
                     <p>
                         <a
                             href="https://www.themoviedb.org/settings/api"
@@ -40,7 +52,7 @@
                             rel="noreferrer noopener"
                             data-test-id="tmdb-get-key-link"
                         >
-                            {{ 'SETTINGS.TMDB_GET_KEY_HINT' | translate }}
+                            {{ 'Get a free API key on themoviedb.org' }}
                         </a>
                     </p>
                 </div>
@@ -49,9 +61,7 @@
                         appearance="outline"
                         subscriptSizing="dynamic"
                     >
-                        <mat-label>{{
-                            'SETTINGS.TMDB_API_KEY' | translate
-                        }}</mat-label>
+                        <mat-label>{{ 'TMDB API key (optional)' }}</mat-label>
                         <input
                             matInput
                             type="text"
@@ -75,7 +85,7 @@
                             } @else {
                                 <mat-icon>network_check</mat-icon>
                             }
-                            {{ 'SETTINGS.TMDB_TEST_BUTTON' | translate }}
+                            {{ 'Check key' }}
                         </button>
                         @if (keyTestState() === 'success') {
                             <span
@@ -83,7 +93,9 @@
                                 data-test-id="tmdb-test-success"
                             >
                                 <mat-icon>check_circle</mat-icon>
-                                {{ 'SETTINGS.TMDB_TEST_SUCCESS' | translate }}
+                                {{
+                                    'The key works — TMDB responded successfully'
+                                }}
                             </span>
                         } @else if (keyTestState() === 'error') {
                             <span
@@ -91,7 +103,9 @@
                                 data-test-id="tmdb-test-error"
                             >
                                 <mat-icon>error</mat-icon>
-                                {{ 'SETTINGS.TMDB_TEST_FAILED' | translate }}
+                                {{
+                                    'Check failed — TMDB rejected the key or is unreachable'
+                                }}
                             </span>
                         }
                     </div>
@@ -106,7 +120,11 @@
                     alt="TMDB"
                     style="height: 20px; margin-bottom: 8px"
                 />
-                <p>{{ 'SETTINGS.TMDB_ATTRIBUTION' | translate }}</p>
+                <p>
+                    {{
+                        'This product uses the TMDB API but is not endorsed or certified by TMDB.'
+                    }}
+                </p>
             </div>
         </div>
     </div>

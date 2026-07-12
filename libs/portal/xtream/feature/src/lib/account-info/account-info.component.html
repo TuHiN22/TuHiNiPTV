@@ -16,7 +16,7 @@
         <div class="account-dialog__headline-row">
             <div>
                 <h2 class="account-dialog__title">
-                    {{ 'XTREAM.ACCOUNT_INFO.TITLE' | translate }}
+                    {{ 'Account Information' }}
                 </h2>
                 <p class="account-dialog__subtitle">
                     {{ playlistLabel() }}
@@ -36,9 +36,7 @@
                         <span
                             class="account-dialog__status-pill account-dialog__status-pill--trial"
                         >
-                            {{
-                                'XTREAM.ACCOUNT_INFO.TRIAL_ACCOUNT' | translate
-                            }}
+                            {{ 'Trial Account' }}
                         </span>
                     }
                 </div>
@@ -50,9 +48,7 @@
                 {{ accountInfo()?.user_info?.message }}
             </div>
         } @else if (loadState() === 'loading') {
-            <p class="account-dialog__loading-copy">
-                {{ 'LOADING' | translate }}...
-            </p>
+            <p class="account-dialog__loading-copy">{{ 'LOADING' }}...</p>
         }
     </div>
 
@@ -64,7 +60,7 @@
                         <mat-icon>{{ stat.icon }}</mat-icon>
                     </div>
                     <div class="account-stat__label">
-                        {{ stat.labelKey | translate }}
+                        {{ stat.labelKey }}
                     </div>
                     <div class="account-stat__value">
                         {{ stat.value }}
@@ -91,27 +87,30 @@
                 <mat-icon>signal_wifi_connected_no_internet_4</mat-icon>
             </div>
             <h3>
-                {{ 'PORTALS.ERROR_VIEW.PORTAL_UNAVAILABLE.TITLE' | translate }}
+                {{ 'Portal unavailable' }}
             </h3>
             <p>
                 {{
-                    'PORTALS.ERROR_VIEW.PORTAL_UNAVAILABLE.DESCRIPTION'
-                        | translate
+                    'The portal could not be reached. Check the server URL or retry when the source is available again.'
                 }}
             </p>
             <button mat-flat-button color="primary" (click)="reload()">
-                {{ 'RETRY' | translate }}
+                {{ 'RETRY' }}
             </button>
         </section>
     } @else if (loadState() === 'loading') {
         <div class="account-dialog__grid">
             @for (panel of skeletonPanels; track panel) {
                 <section class="account-panel account-panel--loading">
-                    <div class="account-skeleton account-skeleton--heading"></div>
+                    <div
+                        class="account-skeleton account-skeleton--heading"
+                    ></div>
                     <div class="account-skeleton account-skeleton--row"></div>
                     <div class="account-skeleton account-skeleton--row"></div>
                     <div class="account-skeleton account-skeleton--row"></div>
-                    <div class="account-skeleton account-skeleton--row short"></div>
+                    <div
+                        class="account-skeleton account-skeleton--row short"
+                    ></div>
                 </section>
             }
         </div>
@@ -120,7 +119,7 @@
             <section class="account-panel">
                 <div class="account-panel__header">
                     <p class="account-panel__eyebrow">
-                        {{ 'XTREAM.ACCOUNT_INFO.USER_INFO' | translate }}
+                        {{ 'User Information' }}
                     </p>
                     <h3>{{ info.user_info.username || '-' }}</h3>
                 </div>
@@ -128,7 +127,7 @@
                 <dl class="account-detail-list">
                     @for (row of userDetails(); track row.labelKey) {
                         <div class="account-detail-row">
-                            <dt>{{ row.labelKey | translate }}</dt>
+                            <dt>{{ row.labelKey }}</dt>
                             <dd
                                 [class.account-detail-row__value--mono]="
                                     row.mono
@@ -143,11 +142,7 @@
                                     row.tone === 'warning'
                                 "
                             >
-                                @if (row.translateValue) {
-                                    {{ row.value | translate }}
-                                } @else {
-                                    {{ row.value }}
-                                }
+                                {{ row.value }}
                             </dd>
                         </div>
                     }
@@ -155,7 +150,7 @@
 
                 <div class="account-chip-section">
                     <p class="account-chip-section__label">
-                        {{ 'XTREAM.ACCOUNT_INFO.ALLOWED_FORMATS' | translate }}
+                        {{ 'Allowed Formats' }}
                     </p>
                     <div class="account-chip-group">
                         @for (format of allowedFormats(); track format) {
@@ -174,7 +169,7 @@
             <section class="account-panel">
                 <div class="account-panel__header">
                     <p class="account-panel__eyebrow">
-                        {{ 'XTREAM.ACCOUNT_INFO.SERVER_INFO' | translate }}
+                        {{ 'Server Information' }}
                     </p>
                     <h3>{{ serverHost() }}</h3>
                 </div>
@@ -182,7 +177,7 @@
                 <dl class="account-detail-list">
                     @for (row of serverDetails(); track row.labelKey) {
                         <div class="account-detail-row">
-                            <dt>{{ row.labelKey | translate }}</dt>
+                            <dt>{{ row.labelKey }}</dt>
                             <dd
                                 [class.account-detail-row__value--mono]="
                                     row.mono
@@ -196,12 +191,12 @@
 
                 <div class="account-chip-section">
                     <p class="account-chip-section__label">
-                        {{ 'XTREAM.ACCOUNT_INFO.PORTS' | translate }}
+                        {{ 'Ports' }}
                     </p>
                     <div class="account-chip-group">
                         @for (port of ports(); track port.labelKey) {
                             <span class="account-chip account-chip--mono">
-                                {{ port.labelKey | translate }} {{ port.value }}
+                                {{ port.labelKey }} {{ port.value }}
                             </span>
                         }
                     </div>
@@ -213,6 +208,6 @@
 
 <mat-dialog-actions class="account-dialog__actions">
     <button mat-stroked-button mat-dialog-close class="account-dialog__close">
-        {{ 'CLOSE' | translate }}
+        {{ 'Close' }}
     </button>
 </mat-dialog-actions>

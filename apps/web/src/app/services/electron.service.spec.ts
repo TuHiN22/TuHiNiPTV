@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { DialogService } from '@iptvnator/ui/components';
 import { SettingsStore } from '@iptvnator/services';
@@ -76,12 +75,6 @@ describe('ElectronService', () => {
                     provide: Store,
                     useValue: {
                         dispatch: jest.fn(),
-                    },
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: jest.fn((key: string) => key),
                     },
                 },
             ],

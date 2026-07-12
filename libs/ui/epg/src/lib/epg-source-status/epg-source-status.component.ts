@@ -10,7 +10,6 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslatePipe } from '@ngx-translate/core';
 import {
     EpgProgressService,
     EpgRuntimeBridgeService,
@@ -27,12 +26,7 @@ type BadgeStatus =
 @Component({
     selector: 'app-epg-source-status',
     standalone: true,
-    imports: [
-        MatIconModule,
-        MatProgressSpinnerModule,
-        MatTooltipModule,
-        TranslatePipe,
-    ],
+    imports: [MatIconModule, MatProgressSpinnerModule, MatTooltipModule],
     templateUrl: './epg-source-status.component.html',
     styleUrl: './epg-source-status.component.scss',
 })
@@ -61,10 +55,10 @@ export class EpgSourceStatusComponent implements OnInit {
         return this.isFresh() ? 'fresh' : 'stale';
     });
 
-    readonly errorMessage = computed(() =>
-        this.epgProgress
-            .imports()
-            .find((item) => item.url === this.url())?.error
+    readonly errorMessage = computed(
+        () =>
+            this.epgProgress.imports().find((item) => item.url === this.url())
+                ?.error
     );
 
     constructor() {

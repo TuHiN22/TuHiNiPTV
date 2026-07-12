@@ -1,9 +1,7 @@
 import { computed, inject, Injectable } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { TranslateService } from '@ngx-translate/core';
-import { startWith } from 'rxjs';
 import { PlaylistRefreshActionService } from '@iptvnator/playlist/shared/ui';
 import { XtreamStore } from '@iptvnator/portal/xtream/data-access';
+import { interpolateText } from '@iptvnator/portal/shared/util';
 import { RuntimeCapabilitiesService } from '@iptvnator/services';
 import type { XtreamImportPhaseTone } from './helpers/workspace-shell-constants';
 import {
@@ -15,7 +13,7 @@ import {
     buildXtreamImportTypeLabel,
     buildXtreamRefreshPreparationPhaseLabel,
     buildXtreamRefreshPreparationProgressLabel,
-    formatLocalizedNumber,
+    formatEnglishNumber,
 } from './helpers/workspace-shell-import-labels';
 import { WorkspaceShellRouteStateService } from './workspace-shell-route-state.service';
 
@@ -26,22 +24,16 @@ export class WorkspaceShellXtreamImportService {
         PlaylistRefreshActionService
     );
     private readonly runtime = inject(RuntimeCapabilitiesService);
-    private readonly translate = inject(TranslateService);
     private readonly routeState = inject(WorkspaceShellRouteStateService);
-
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
 
     private get isElectron(): boolean {
         return this.runtime.isElectron;
     }
 
-    private readonly translateText = (
+    private readonly formatText = (
         key: string,
         params?: Record<string, string | number>
-    ): string => this.translate.instant(key, params);
+    ): string => interpolateText(key, params);
 
     readonly xtreamImportCount = this.xtreamStore.getImportCount;
     readonly xtreamItemsToImport = this.xtreamStore.itemsToImport;
@@ -100,34 +92,29 @@ export class WorkspaceShellXtreamImportService {
 
     readonly xtreamImportTitleLabel = computed(() => {
         if (this.activeRefreshPreparation()) {
-            return this.translateText('WORKSPACE.SHELL.XTREAM_REFRESH_TITLE');
+            return this.formatText('Refreshing playlist');
         }
 
-        return this.translateText('WORKSPACE.SHELL.XTREAM_IMPORT_TITLE');
+        return this.formatText('Syncing playlist');
     });
 
     readonly xtreamImportTypeLabel = computed(() => {
-        this.languageTick();
         return buildXtreamImportTypeLabel(
             this.xtreamStore.activeImportContentType(),
-            this.translateText
+            this.formatText
         );
     });
 
     readonly xtreamImportProgressLabel = computed(() => {
         const formatNumber = (value: number): string =>
-            formatLocalizedNumber(
-                value,
-                this.translate.currentLang,
-                this.translate.defaultLang
-            );
+            formatEnglishNumber(value);
         const preparation = this.activeRefreshPreparation();
 
         if (preparation) {
             return buildXtreamRefreshPreparationProgressLabel(
                 this.xtreamActiveImportCount(),
                 this.xtreamActiveItemsToImport(),
-                this.translateText,
+                this.formatText,
                 formatNumber
             );
         }
@@ -136,7 +123,7 @@ export class WorkspaceShellXtreamImportService {
             this.xtreamImportTypeLabel(),
             this.xtreamActiveImportCount(),
             this.xtreamActiveItemsToImport(),
-            this.translateText,
+            this.formatText,
             formatNumber
         );
     });
@@ -152,41 +139,38 @@ export class WorkspaceShellXtreamImportService {
     });
 
     readonly xtreamImportSourceLabel = computed(() => {
-        this.languageTick();
         return buildXtreamImportSourceLabel(
             this.xtreamImportPhaseTone(),
-            this.translateText
+            this.formatText
         );
     });
 
     readonly xtreamImportPhaseLabel = computed(() => {
-        this.languageTick();
         const preparation = this.activeRefreshPreparation();
 
         if (preparation) {
             return buildXtreamRefreshPreparationPhaseLabel(
                 preparation.phase,
-                this.translateText
+                this.formatText
             );
         }
 
         return buildXtreamImportPhaseLabel(
             this.xtreamStore.currentImportPhase(),
-            this.translateText
+            this.formatText
         );
     });
 
     readonly xtreamImportDetailLabel = computed(() => {
-        this.languageTick();
         if (this.activeRefreshPreparation()) {
-            return this.translateText(
-                'WORKSPACE.SHELL.XTREAM_REFRESH_DETAIL_LOCAL'
+            return this.formatText(
+                'Keeping favorites, watch history, hidden categories, and playback progress ready for restore after sync.'
             );
         }
 
         return buildXtreamImportDetailLabel(
             this.xtreamImportPhaseTone(),
-            this.translateText
+            this.formatText
         );
     });
 

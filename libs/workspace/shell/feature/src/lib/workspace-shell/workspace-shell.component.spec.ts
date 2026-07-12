@@ -1,10 +1,4 @@
-import {
-    Component,
-    Directive,
-    input,
-    output,
-    signal,
-} from '@angular/core';
+import { Component, Directive, input, output, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RouterOutlet, provideRouter } from '@angular/router';
 import { By } from '@angular/platform-browser';
@@ -27,8 +21,8 @@ import { WorkspaceKeyboardShortcutsService } from '../workspace-keyboard-shortcu
 class MockWorkspaceShellRailComponent {
     readonly isMacOS = input(false);
     readonly brandLink = input('/workspace/dashboard');
-    readonly brandTooltipKey = input('WORKSPACE.SHELL.RAIL_DASHBOARD');
-    readonly brandAriaLabelKey = input('WORKSPACE.SHELL.OPEN_DASHBOARD');
+    readonly brandTooltipKey = input('Dashboard');
+    readonly brandAriaLabelKey = input('Open dashboard');
     readonly workspaceLinks = input<unknown[]>([]);
     readonly primaryContextLinks = input<unknown[]>([]);
     readonly secondaryContextLinks = input<unknown[]>([]);
@@ -130,8 +124,8 @@ class MockWorkspaceKeyboardShortcutsService {
 
 class MockWorkspaceShellFacade {
     readonly brandLink = signal('/workspace/dashboard');
-    readonly brandTooltipKey = signal('WORKSPACE.SHELL.RAIL_DASHBOARD');
-    readonly brandAriaLabelKey = signal('WORKSPACE.SHELL.OPEN_DASHBOARD');
+    readonly brandTooltipKey = signal('Dashboard');
+    readonly brandAriaLabelKey = signal('Open dashboard');
     readonly workspaceLinks = signal([]);
     readonly primaryContextLinks = signal([]);
     readonly secondaryContextLinks = signal([]);
@@ -144,9 +138,7 @@ class MockWorkspaceShellFacade {
     readonly canOpenAccountInfo = signal(true);
     readonly searchQuery = signal('');
     readonly canUseSearch = signal(true);
-    readonly searchPlaceholder = signal(
-        'WORKSPACE.SHELL.SEARCH_PLAYLIST_PLACEHOLDER'
-    );
+    readonly searchPlaceholder = signal('Search in this playlist...');
     readonly searchScopeLabel = signal('Movies / All Items');
     readonly searchStatusLabel = signal('');
     readonly headerShortcut = signal(null);
@@ -166,17 +158,13 @@ class MockWorkspaceShellFacade {
     readonly xtreamItemsToImport = signal(0);
     readonly xtreamActiveImportCount = signal(0);
     readonly xtreamActiveItemsToImport = signal(0);
-    readonly xtreamImportTitleLabel = signal(
-        'WORKSPACE.SHELL.XTREAM_IMPORT_TITLE'
-    );
-    readonly xtreamImportSourceLabel = signal(
-        'WORKSPACE.SHELL.XTREAM_IMPORT_REMOTE_BADGE'
-    );
+    readonly xtreamImportTitleLabel = signal('Syncing playlist');
+    readonly xtreamImportSourceLabel = signal('Remote source');
     readonly xtreamImportPhaseLabel = signal(
-        'WORKSPACE.SHELL.XTREAM_IMPORT_LOADING'
+        'Fetching playlist data from source...'
     );
     readonly xtreamImportDetailLabel = signal(
-        'WORKSPACE.SHELL.XTREAM_IMPORT_DETAIL_REMOTE'
+        'Waiting on the provider response.'
     );
     readonly xtreamImportProgressLabel = signal('');
     readonly xtreamImportPhaseTone = signal<'remote' | 'local' | null>(

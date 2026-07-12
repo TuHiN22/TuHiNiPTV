@@ -26,7 +26,7 @@
     <div class="content-header">
         <div class="category-meta">
             <h2 class="category-title">
-                {{ titleTranslationString() | translate }}
+                {{ titleTranslationString() }}
             </h2>
             @if (selectedCategoryId()) {
                 <div class="category-subtitle">{{ selectedCategoryId() }}</div>
@@ -59,8 +59,7 @@
                         [date]="item.added_at"
                         [showRemoveButton]="true"
                         [removeTooltip]="
-                            removeTooltip() ||
-                            ('CHANNELS.REMOVE_FAVORITE' | translate)
+                            removeTooltip() || 'Remove from favorites'
                         "
                         (cardClick)="openFavorite(item)"
                         (remove)="removeFromFavorites(item)"

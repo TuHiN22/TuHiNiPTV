@@ -1,10 +1,10 @@
 <div class="apd">
     <div mat-dialog-title class="apd-head">
         <h2 class="apd-title">
-            {{ 'HOME.URL_UPLOAD.ADD_PLAYLIST' | translate }}
+            {{ 'Add playlist' }}
         </h2>
         <p class="apd-sub">
-            {{ 'HOME.ADD_PLAYLIST.PICK_METHOD' | translate }}
+            {{ 'Pick how you want to connect. You can rename it later.' }}
         </p>
     </div>
 
@@ -27,10 +27,10 @@
                         <mat-icon>{{ opt.icon }}</mat-icon>
                     </span>
                     <span class="apd-method__title">
-                        {{ opt.labelKey | translate }}
+                        {{ opt.labelKey }}
                     </span>
                     <span class="apd-method__sub">
-                        {{ opt.subKey | translate }}
+                        {{ opt.subKey }}
                     </span>
                 </button>
             }
@@ -69,13 +69,13 @@
                 [disabled]="isClearDisabled()"
                 (click)="clearCurrentForm()"
             >
-                {{ 'CLEAR' | translate }}
+                {{ 'Clear' }}
             </button>
         </div>
 
         <div class="apd-actions__decision">
             <button mat-button type="button" (click)="closeDialog()">
-                {{ 'CANCEL' | translate }}
+                {{ 'Cancel' }}
             </button>
 
             @switch (playlistType()) {
@@ -87,7 +87,7 @@
                         [disabled]="!urlUpload()?.form?.valid"
                         (click)="submitUrlPlaylist()"
                     >
-                        {{ 'HOME.URL_UPLOAD.ADD_PLAYLIST' | translate }}
+                        {{ 'Add playlist' }}
                     </button>
                 }
                 @case ('file') {
@@ -98,7 +98,7 @@
                         [disabled]="!fileUpload()?.selectedFile()"
                         (click)="fileUpload()?.confirm()"
                     >
-                        {{ 'HOME.URL_UPLOAD.ADD_PLAYLIST' | translate }}
+                        {{ 'Add playlist' }}
                     </button>
                 }
                 @case ('text') {
@@ -113,7 +113,7 @@
                             )
                         "
                     >
-                        {{ 'HOME.TEXT_IMPORT.BUTTON_LABEL' | translate }}
+                        {{ 'Import' }}
                     </button>
                 }
                 @case ('xtream') {
@@ -139,7 +139,7 @@
                         [disabled]="!xtreamImport()?.form?.valid"
                         (click)="xtreamImport()?.addPlaylist()"
                     >
-                        {{ 'HOME.XTREAM_PLAYLIST.ADD' | translate }}
+                        {{ 'Add' }}
                     </button>
                 }
                 @case ('stalker') {
@@ -155,9 +155,8 @@
                     >
                         {{
                             stalkerImport()?.isTestingConnection()
-                                ? ('HOME.STALKER_PORTAL.TESTING' | translate)
-                                : ('HOME.STALKER_PORTAL.TEST_CONNECTION'
-                                  | translate)
+                                ? 'Testing...'
+                                : 'Test Connection'
                         }}
                     </button>
                     @if (stalkerImport()?.isLoading()) {
@@ -167,9 +166,7 @@
                             type="button"
                             disabled
                         >
-                            {{
-                                'HOME.STALKER_PORTAL.VALIDATING' | translate
-                            }}...
+                            {{ 'Validating portal...' }}...
                         </button>
                     } @else {
                         <button
@@ -179,7 +176,7 @@
                             [disabled]="!stalkerImport()?.form?.valid"
                             (click)="stalkerImport()?.addPlaylist()"
                         >
-                            {{ 'HOME.STALKER_PORTAL.ADD' | translate }}
+                            {{ 'Add' }}
                         </button>
                     }
                 }

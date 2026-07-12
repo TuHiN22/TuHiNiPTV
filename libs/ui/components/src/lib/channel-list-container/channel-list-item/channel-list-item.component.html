@@ -58,7 +58,7 @@
                     </div>
                 } @else if (!isRadio()) {
                     <div class="epg-placeholder">
-                        {{ 'EPG.NO_PROGRAM_INFO' | translate }}
+                        {{ 'No program information available' }}
                     </div>
                 }
             }
@@ -70,13 +70,14 @@
         showAuxActionButton()
     ) {
         <div class="action-buttons">
-            @if (showProgramInfoButton() && showEpg() && epgProgram(); as program) {
+            @if (
+                showProgramInfoButton() && showEpg() && epgProgram();
+                as program
+            ) {
                 <button
                     mat-icon-button
                     class="program-info-button"
-                    [matTooltip]="
-                        'EPG.PROGRAM_DIALOG.SHOW_PROGRAM_DETAILS' | translate
-                    "
+                    [matTooltip]="'Show details about this program'"
                     (click)="showProgramDescription(program, $event)"
                 >
                     <mat-icon>info</mat-icon>
@@ -87,10 +88,9 @@
                     mat-icon-button
                     class="favorite-button"
                     [matTooltip]="
-                        (isFavorite()
-                            ? 'CHANNELS.REMOVE_FAVORITE'
-                            : 'CHANNELS.ADD_FAVORITE'
-                        ) | translate
+                        isFavorite()
+                            ? 'Remove from favorites'
+                            : 'Add to favorites'
                     "
                     (click)="onFavoriteClick($event)"
                 >

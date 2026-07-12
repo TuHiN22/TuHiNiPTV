@@ -85,15 +85,15 @@
         <div class="web-player-diagnostic__content">
             <div class="web-player-diagnostic__badge">
                 <mat-icon aria-hidden="true">warning</mat-icon>
-                <span>{{ getDiagnosticTitleKey(issue) | translate }}</span>
+                <span>{{ getDiagnosticTitle(issue) }}</span>
             </div>
 
             <h2 class="web-player-diagnostic__headline">
-                {{ diagnosticHeadlineKey() | translate }}
+                {{ diagnosticHeadline() }}
             </h2>
 
             <div class="web-player-diagnostic__description">
-                {{ getDiagnosticDescriptionKey(issue) | translate }}
+                {{ getDiagnosticDescription(issue) }}
             </div>
 
             @if (getDiagnosticMeta(issue); as meta) {
@@ -107,10 +107,8 @@
                     class="web-player-diagnostic__codec-hint"
                     data-test-id="playback-codec-hint"
                 >
-                    {{
-                        'PLAYBACK_DIAGNOSTICS.CODEC_HINT'
-                            | translate: { codecs: codecHint }
-                    }}
+                    Detected {{ codecHint }}. Chromium/Electron browser players
+                    often have limited support for these codecs.
                 </div>
             }
 
@@ -128,16 +126,10 @@
                         <mat-icon aria-hidden="true">open_in_new</mat-icon>
                         <span class="web-player-diagnostic__player-copy">
                             <span class="web-player-diagnostic__player-label">
-                                {{
-                                    'PLAYBACK_DIAGNOSTICS.ACTION_OPEN_MPV'
-                                        | translate
-                                }}
+                                {{ 'Open in MPV' }}
                             </span>
                             <span class="web-player-diagnostic__player-hint">
-                                {{
-                                    'PLAYBACK_DIAGNOSTICS.ACTION_OPEN_MPV_HINT'
-                                        | translate
-                                }}
+                                {{ 'configured player' }}
                             </span>
                         </span>
                     </button>
@@ -151,16 +143,10 @@
                         <mat-icon aria-hidden="true">open_in_new</mat-icon>
                         <span class="web-player-diagnostic__player-copy">
                             <span class="web-player-diagnostic__player-label">
-                                {{
-                                    'PLAYBACK_DIAGNOSTICS.ACTION_OPEN_VLC'
-                                        | translate
-                                }}
+                                {{ 'Open in VLC' }}
                             </span>
                             <span class="web-player-diagnostic__player-hint">
-                                {{
-                                    'PLAYBACK_DIAGNOSTICS.ACTION_OPEN_VLC_HINT'
-                                        | translate
-                                }}
+                                {{ 'configured player' }}
                             </span>
                         </span>
                     </button>
@@ -176,7 +162,7 @@
                     data-test-id="playback-copy-url"
                 >
                     <mat-icon aria-hidden="true">content_copy</mat-icon>
-                    {{ 'PLAYBACK_DIAGNOSTICS.ACTION_COPY_URL' | translate }}
+                    {{ 'Copy stream URL' }}
                 </button>
 
                 <span
@@ -191,7 +177,7 @@
                     (click)="retryPlayback()"
                 >
                     <mat-icon aria-hidden="true">refresh</mat-icon>
-                    {{ 'PLAYBACK_DIAGNOSTICS.ACTION_RETRY' | translate }}
+                    {{ 'Retry' }}
                 </button>
 
                 <span
@@ -205,7 +191,7 @@
                 >
                     <summary>
                         <mat-icon aria-hidden="true">expand_more</mat-icon>
-                        {{ 'PLAYBACK_DIAGNOSTICS.DETAILS_SUMMARY' | translate }}
+                        {{ 'Technical details' }}
                     </summary>
                     <dl>
                         @for (
@@ -213,7 +199,7 @@
                             track detail.labelKey
                         ) {
                             <div class="web-player-diagnostic__detail-row">
-                                <dt>{{ detail.labelKey | translate }}</dt>
+                                <dt>{{ detail.labelKey }}</dt>
                                 <dd>{{ detail.value }}</dd>
                             </div>
                         }

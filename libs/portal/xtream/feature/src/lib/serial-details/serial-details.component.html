@@ -34,7 +34,7 @@
         <ng-template appDetailMeta>
             @if (info.cast || info.tmdb_cast?.length) {
                 <div class="details__meta-item">
-                    <span class="label">{{ 'XTREAM.CAST' | translate }}</span>
+                    <span class="label">{{ 'Cast' }}</span>
                     @if (info.tmdb_cast?.length) {
                         <div class="details__cast-strip">
                             @for (member of info.tmdb_cast; track member.name) {
@@ -79,9 +79,7 @@
             }
             @if (info.director) {
                 <div class="details__meta-item">
-                    <span class="label">{{
-                        'XTREAM.DIRECTOR' | translate
-                    }}</span>
+                    <span class="label">{{ 'Director' }}</span>
                     <span class="value">{{ info.director }}</span>
                 </div>
             }
@@ -102,7 +100,7 @@
                     </span>
                     <span class="play-btn__copy">
                         <span class="play-btn__label">
-                            {{ action.labelKey | translate }}
+                            {{ action.labelKey }}
                         </span>
                         <span class="play-btn__meta">
                             {{ action.episodeLabel }}
@@ -113,7 +111,7 @@
             @if (!isFavorite()) {
                 <button class="favorite-btn" (click)="toggleFavorite()">
                     <mat-icon>add</mat-icon>
-                    {{ 'PORTALS.ADD_TO_FAVORITES' | translate }}
+                    {{ 'Add to favorites' }}
                 </button>
             } @else {
                 <button
@@ -121,7 +119,7 @@
                     (click)="toggleFavorite()"
                 >
                     <mat-icon>check</mat-icon>
-                    {{ 'PORTALS.REMOVE_FROM_FAVORITES' | translate }}
+                    {{ 'Remove from favorites' }}
                 </button>
             }
         </ng-template>
@@ -167,7 +165,7 @@
         <div detail-extras>
             @if (similarItems().length || similarInPortals().length) {
                 <section class="details__similar" data-test-id="tmdb-similar">
-                    <h3>{{ 'XTREAM.SIMILAR' | translate }}</h3>
+                    <h3>{{ 'Similar' }}</h3>
                     <div class="details__similar-strip">
                         @for (similar of similarItems(); track similar.id) {
                             <button
@@ -197,15 +195,16 @@
                         }
                         @for (
                             item of similarInPortals();
-                            track 'x' + item.match.playlistId + '-' + item.match.xtreamId
+                            track 'x' +
+                                item.match.playlistId +
+                                '-' +
+                                item.match.xtreamId
                         ) {
                             <button
                                 type="button"
                                 class="details__similar-card"
                                 [title]="
-                                    item.title +
-                                    ' — ' +
-                                    item.match.playlistName
+                                    item.title + ' — ' + item.match.playlistName
                                 "
                                 (click)="openSimilarInPortals(item)"
                             >

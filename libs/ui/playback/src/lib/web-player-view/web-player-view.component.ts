@@ -16,7 +16,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { TranslatePipe } from '@ngx-translate/core';
 import {
     Channel,
     ResolvedPortalPlayback,
@@ -38,6 +37,7 @@ import {
 } from '../playback-diagnostics/playback-diagnostics.util';
 import type { SeriesPlaybackNavigation } from '../portal-inline-player/series-playback-navigation';
 import { VjsPlayerComponent } from '../vjs-player/vjs-player.component';
+import { getDefaultPlaybackDiagnosticCopy } from './playback-diagnostic-copy';
 
 type PlaybackDiagnosticDetail = {
     readonly labelKey: string;
@@ -59,7 +59,6 @@ type PlaybackDiagnosticDetail = {
         MatButtonModule,
         MatIconModule,
         MatTooltipModule,
-        TranslatePipe,
         VjsPlayerComponent,
     ],
     encapsulation: ViewEncapsulation.None,
@@ -106,10 +105,10 @@ export class WebPlayerViewComponent {
             this.runtime.supportsManagedExternalPlayers &&
             !!this.visiblePlaybackDiagnostic()?.externalFallbackRecommended
     );
-    readonly diagnosticHeadlineKey = computed(() =>
+    readonly diagnosticHeadline = computed(() =>
         this.canShowExternalFallbackActions()
-            ? 'PLAYBACK_DIAGNOSTICS.NATIVE_FALLBACK_TITLE'
-            : 'PLAYBACK_DIAGNOSTICS.INLINE_FAILURE_TITLE'
+            ? 'Open it in a native player instead'
+            : 'Copy the URL or try again'
     );
 
     readonly resolvedPlayback = computed<ResolvedPortalPlayback>(() => {
@@ -237,33 +236,33 @@ export class WebPlayerViewComponent {
         this.setVjsOptions(playback.streamUrl, this.isLivePlayback(playback));
     }
 
-    getDiagnosticTitleKey(issue: PlaybackDiagnostic): string {
+    getDiagnosticTitle(issue: PlaybackDiagnostic): string {
         if (
             this.streamOfflineOnNetworkError() &&
             issue.code === PlaybackDiagnosticCode.NetworkError
         ) {
-            return 'PLAYBACK_DIAGNOSTICS.STREAM_OFFLINE.TITLE';
+            return 'STREAM is OFFLINE';
         }
 
-        return `${this.getDiagnosticTranslationBase(issue)}.TITLE`;
+        return getDefaultPlaybackDiagnosticCopy(issue.code).title;
     }
 
-    getDiagnosticDescriptionKey(issue: PlaybackDiagnostic): string {
+    getDiagnosticDescription(issue: PlaybackDiagnostic): string {
         if (
             this.streamOfflineOnNetworkError() &&
             issue.code === PlaybackDiagnosticCode.NetworkError
         ) {
-            return 'PLAYBACK_DIAGNOSTICS.STREAM_OFFLINE.DESCRIPTION';
+            return 'The Stalker provider could not deliver this stream. Retry the stream or choose another channel.';
         }
 
         if (
             issue.code === PlaybackDiagnosticCode.BrowserAccessError &&
             !this.runtime.supportsManagedExternalPlayers
         ) {
-            return 'PLAYBACK_DIAGNOSTICS.BROWSER_ACCESS_ERROR.PWA_DESCRIPTION';
+            return 'The request may be blocked by CORS, mixed content, or provider header/proxy restrictions. The PWA cannot launch external players directly; use the Copy stream URL action and open it manually in MPV, VLC, IINA, or another player.';
         }
 
-        return `${this.getDiagnosticTranslationBase(issue)}.DESCRIPTION`;
+        return getDefaultPlaybackDiagnosticCopy(issue.code).description;
     }
 
     getDiagnosticMeta(issue: PlaybackDiagnostic): string {
@@ -284,66 +283,46 @@ export class WebPlayerViewComponent {
     ): readonly PlaybackDiagnosticDetail[] {
         return [
             {
-                labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_CODE',
+                labelKey: 'Diagnostic code',
                 value: issue.code,
             },
             {
-                labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_PLAYER',
+                labelKey: 'Player',
                 value: this.formatPlayer(issue.player),
             },
             {
-                labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_SOURCE',
+                labelKey: 'Source',
                 value: this.formatDiagnosticSource(issue.source),
             },
             {
-                labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_CONTAINER',
+                labelKey: 'Container',
                 value: issue.container,
             },
             {
-                labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_MIME_TYPE',
+                labelKey: 'MIME type',
                 value: issue.mimeType ?? '',
             },
             {
-                labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_VIDEO_CODECS',
+                labelKey: 'Video codecs',
                 value: issue.videoCodecs.join(', '),
             },
             {
-                labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_AUDIO_CODECS',
+                labelKey: 'Audio codecs',
                 value: issue.audioCodecs.join(', '),
             },
             {
-                labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_NATIVE_ERROR_CODE',
+                labelKey: 'Native error code',
                 value: issue.nativeErrorCode?.toString() ?? '',
             },
             {
-                labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_NATIVE_ERROR_MESSAGE',
+                labelKey: 'Native error message',
                 value: issue.nativeErrorMessage ?? '',
             },
             {
-                labelKey: 'PLAYBACK_DIAGNOSTICS.DETAIL_ERROR_DETAILS',
+                labelKey: 'Error details',
                 value: issue.details ?? '',
             },
         ].filter(({ value }) => value.trim().length > 0);
-    }
-
-    private getDiagnosticTranslationBase(issue: PlaybackDiagnostic): string {
-        switch (issue.code) {
-            case PlaybackDiagnosticCode.UnsupportedContainer:
-                return 'PLAYBACK_DIAGNOSTICS.UNSUPPORTED_CONTAINER';
-            case PlaybackDiagnosticCode.UnsupportedCodec:
-                return 'PLAYBACK_DIAGNOSTICS.UNSUPPORTED_CODEC';
-            case PlaybackDiagnosticCode.MediaDecodeError:
-                return 'PLAYBACK_DIAGNOSTICS.MEDIA_DECODE_ERROR';
-            case PlaybackDiagnosticCode.NetworkError:
-                return 'PLAYBACK_DIAGNOSTICS.NETWORK_ERROR';
-            case PlaybackDiagnosticCode.BrowserAccessError:
-                return 'PLAYBACK_DIAGNOSTICS.BROWSER_ACCESS_ERROR';
-            case PlaybackDiagnosticCode.DrmOrEncryption:
-                return 'PLAYBACK_DIAGNOSTICS.DRM_OR_ENCRYPTION';
-            case PlaybackDiagnosticCode.UnknownPlaybackError:
-            default:
-                return 'PLAYBACK_DIAGNOSTICS.UNKNOWN_PLAYBACK_ERROR';
-        }
     }
 
     private isLivePlayback(playback: ResolvedPortalPlayback): boolean {

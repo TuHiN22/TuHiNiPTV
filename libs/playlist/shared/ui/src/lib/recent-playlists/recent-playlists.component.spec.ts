@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { TranslateService } from '@ngx-translate/core';
 import { PlaylistContextFacade } from '@iptvnator/playlist/shared/util';
 import {
     PlaylistActions,
@@ -216,12 +215,6 @@ describe('RecentPlaylistsComponent busy state', () => {
                         ),
                     },
                 },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: jest.fn((key: string) => key),
-                    },
-                },
             ],
         }).compileComponents();
 
@@ -264,7 +257,7 @@ describe('RecentPlaylistsComponent busy state', () => {
 
         expect(component.isDeletePending(item._id)).toBe(true);
         expect(component.getBusyMessage(item)).toBe(
-            'HOME.PLAYLISTS.REMOVE_DIALOG.DELETING_CONTENT'
+            'Removing cached content...'
         );
         expect(component.getBusyProgress(item._id)).toBe(25);
         expect(component.canCancelBusyOperation(item)).toBe(true);
@@ -286,7 +279,7 @@ describe('RecentPlaylistsComponent busy state', () => {
             PlaylistActions.removePlaylist({ playlistId: item._id })
         );
         expect(snackBar.open).toHaveBeenCalledWith(
-            'HOME.PLAYLISTS.REMOVE_DIALOG.SUCCESS',
+            'Playlist was removed successfully',
             undefined,
             { duration: 2000 }
         );
@@ -312,7 +305,7 @@ describe('RecentPlaylistsComponent busy state', () => {
             PlaylistActions.removePlaylist({ playlistId: item._id })
         );
         expect(snackBar.open).toHaveBeenCalledWith(
-            'HOME.PLAYLISTS.REMOVE_DIALOG.SUCCESS',
+            'Playlist was removed successfully',
             undefined,
             { duration: 2000 }
         );
@@ -366,7 +359,7 @@ describe('RecentPlaylistsComponent busy state', () => {
 
         expect(component.isRefreshPending(item._id)).toBe(true);
         expect(component.getBusyMessage(item)).toBe(
-            'HOME.PLAYLISTS.REFRESH_XTREAM_DIALOG.COLLECTING_DATA'
+            'Collecting favorites and recently viewed...'
         );
         expect(component.getBusyProgress(item._id)).toBe(25);
         expect(component.canCancelBusyOperation(item)).toBe(true);

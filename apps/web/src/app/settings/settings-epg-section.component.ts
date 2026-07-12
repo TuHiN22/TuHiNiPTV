@@ -9,7 +9,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EpgViewMode } from '@iptvnator/shared/interfaces';
 import { EpgSourceStatusComponent } from '@iptvnator/ui/epg';
-import { TranslateModule } from '@ngx-translate/core';
 import { EpgViewModeOption } from './settings.models';
 
 @Component({
@@ -24,7 +23,6 @@ import { EpgViewModeOption } from './settings.models';
         MatProgressSpinnerModule,
         MatTooltipModule,
         ReactiveFormsModule,
-        TranslateModule,
     ],
     templateUrl: './settings-epg-section.component.html',
     encapsulation: ViewEncapsulation.None,

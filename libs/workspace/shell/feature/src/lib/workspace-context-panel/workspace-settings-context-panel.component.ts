@@ -1,15 +1,14 @@
 import { Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
 import { SettingsContextService } from '@iptvnator/workspace/shell/util';
 
 @Component({
     selector: 'app-workspace-settings-context-panel',
-    imports: [MatIconModule, TranslateModule],
+    imports: [MatIconModule],
     styleUrls: ['./workspace-settings-context-panel.component.scss'],
     template: `
-        <h2 class="panel-title">{{ 'SETTINGS.TITLE' | translate }}</h2>
+        <h2 class="panel-title">{{ 'Settings' }}</h2>
         <div class="settings-panel-body">
             <div class="nav-list settings-sections-list">
                 @for (section of ctx.sections(); track section.id) {
@@ -20,7 +19,7 @@ import { SettingsContextService } from '@iptvnator/workspace/shell/util';
                         (click)="ctx.navigateToSection(section.id)"
                     >
                         <mat-icon>{{ section.icon }}</mat-icon>
-                        <span>{{ section.label | translate }}</span>
+                        <span>{{ section.label }}</span>
                     </button>
                 }
             </div>
@@ -32,7 +31,7 @@ import { SettingsContextService } from '@iptvnator/workspace/shell/util';
                 (click)="onBack()"
             >
                 <mat-icon>arrow_back</mat-icon>
-                <span>{{ 'SETTINGS.BACK_TO_HOME' | translate }}</span>
+                <span>{{ 'Back' }}</span>
             </button>
         </div>
     `,

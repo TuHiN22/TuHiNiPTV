@@ -6,7 +6,6 @@ import {
 } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 import { KeyboardShortcutDisplayGroup } from '@iptvnator/portal/shared/util';
 
 export interface WorkspaceKeyboardShortcutsDialogData {
@@ -17,7 +16,7 @@ export interface WorkspaceKeyboardShortcutsDialogData {
 
 @Component({
     selector: 'app-workspace-keyboard-shortcuts-dialog',
-    imports: [MatButtonModule, MatDialogModule, MatIconModule, TranslatePipe],
+    imports: [MatButtonModule, MatDialogModule, MatIconModule],
     templateUrl: './workspace-keyboard-shortcuts-dialog.component.html',
     styleUrl: './workspace-keyboard-shortcuts-dialog.component.scss',
 })

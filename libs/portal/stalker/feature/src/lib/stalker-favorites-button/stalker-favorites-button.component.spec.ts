@@ -1,7 +1,6 @@
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
 import { StalkerStore } from '@iptvnator/portal/stalker/data-access';
 import { PlaylistsService } from '@iptvnator/services';
 import { of } from 'rxjs';
@@ -19,11 +18,7 @@ describe('FavoritesButtonComponent', () => {
         });
 
         await TestBed.configureTestingModule({
-            imports: [
-                FavoritesButtonComponent,
-                NoopAnimationsModule,
-                TranslateModule.forRoot(),
-            ],
+            imports: [FavoritesButtonComponent, NoopAnimationsModule],
             providers: [
                 {
                     provide: StalkerStore,

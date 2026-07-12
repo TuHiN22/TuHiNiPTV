@@ -3,7 +3,7 @@
         <header class="downloads__header">
             <div class="downloads__header-left">
                 <div class="settings-group__header-text">
-                    <h1>{{ 'DOWNLOADS.TITLE' | translate }}</h1>
+                    <h1>{{ 'Downloads' }}</h1>
                     @if (activeCount() > 0) {
                         <span class="downloads__badge">{{
                             activeCount()
@@ -16,32 +16,29 @@
                     <div
                         class="downloads__folder-inline"
                         [attr.title]="
-                            downloadFolder() ||
-                            ('DOWNLOADS.NO_FOLDER' | translate)
+                            downloadFolder() || 'No download folder selected'
                         "
                     >
                         <mat-icon>folder_open</mat-icon>
                         <span class="downloads__folder-inline-path">
                             {{
                                 downloadFolder() ||
-                                    ('DOWNLOADS.NO_FOLDER' | translate)
+                                    'No download folder selected'
                             }}
                         </span>
                     </div>
                     <button mat-stroked-button (click)="changeFolder()">
-                        {{ 'DOWNLOADS.CHANGE_FOLDER' | translate }}
+                        {{ 'Change Folder' }}
                     </button>
                     @if (hasClearableDownloads()) {
                         <button
                             mat-stroked-button
                             (click)="clearCompleted()"
-                            [matTooltip]="'DOWNLOADS.CLEAR_COMPLETED' | translate"
-                            [attr.aria-label]="
-                                'DOWNLOADS.CLEAR_COMPLETED' | translate
-                            "
+                            [matTooltip]="'Clear Completed'"
+                            [attr.aria-label]="'Clear Completed'"
                         >
                             <mat-icon>delete_sweep</mat-icon>
-                            {{ 'DOWNLOADS.CLEAR_COMPLETED' | translate }}
+                            {{ 'Clear Completed' }}
                         </button>
                     }
                 }
@@ -51,8 +48,10 @@
         @if (!isAvailable()) {
             <div class="downloads__empty">
                 <mat-icon>desktop_access_disabled</mat-icon>
-                <p>{{ 'DOWNLOADS.NOT_AVAILABLE' | translate }}</p>
-                <span>{{ 'DOWNLOADS.DESKTOP_ONLY' | translate }}</span>
+                <p>{{ 'Downloads not available' }}</p>
+                <span>{{
+                    'This feature is only available in the desktop app'
+                }}</span>
             </div>
         } @else if (!playlistsLoaded()) {
             <div
@@ -61,7 +60,7 @@
                 aria-busy="true"
             >
                 <p class="downloads__loading-label">
-                    {{ 'CHANNELS.LOADING' | translate }}
+                    {{ 'Loading channels...' }}
                 </p>
                 <div
                     class="downloads__list downloads__list--skeleton"
@@ -97,10 +96,10 @@
             <app-empty-state
                 type="no-data"
                 icon="download_for_offline"
-                titleKey="DOWNLOADS.NO_PLAYLISTS_TITLE"
-                descriptionKey="DOWNLOADS.NO_PLAYLISTS_BODY"
-                primaryActionLabelKey="HOME.PLAYLISTS.ADD_YOUR_FIRST"
-                secondaryActionLabelKey="WORKSPACE.SHELL.GO_TO_SOURCES"
+                titleKey="Add a playlist to start downloading"
+                descriptionKey="Once you add a playlist, you can save movies and episodes here for offline playback."
+                primaryActionLabelKey="Add Your First Playlist"
+                secondaryActionLabelKey="Go to Sources"
                 (primaryActionClicked)="addPlaylist()"
                 (secondaryActionClicked)="goToSources()"
             />
@@ -111,7 +110,7 @@
                 aria-busy="true"
             >
                 <p class="downloads__loading-label">
-                    {{ 'CHANNELS.LOADING' | translate }}
+                    {{ 'Loading channels...' }}
                 </p>
                 <div
                     class="downloads__list downloads__list--skeleton"
@@ -147,16 +146,16 @@
             <app-empty-state
                 type="no-data"
                 icon="download_for_offline"
-                titleKey="DOWNLOADS.EMPTY"
-                descriptionKey="DOWNLOADS.NO_ITEMS_BODY"
-                secondaryActionLabelKey="WORKSPACE.SHELL.GO_TO_DASHBOARD"
+                titleKey="No downloads yet"
+                descriptionKey="Use the download button on any movie or episode to save it for offline playback."
+                secondaryActionLabelKey="Back to dashboard"
                 (secondaryActionClicked)="goToDashboard()"
             />
         } @else if (filteredDownloads().length === 0) {
             <div class="downloads__empty">
                 <mat-icon>search_off</mat-icon>
-                <p>{{ 'DOWNLOADS.NO_FILTER_MATCH' | translate }}</p>
-                <span>{{ 'DOWNLOADS.NO_FILTER_MATCH_HINT' | translate }}</span>
+                <p>{{ 'No downloads match the current filter' }}</p>
+                <span>{{ 'Try a different search term' }}</span>
             </div>
         } @else {
             <div class="downloads__list-wrapper">
@@ -177,8 +176,7 @@
                             [attr.tabindex]="isItemNavigable(item) ? 0 : null"
                             [matTooltip]="
                                 !hasSourcePlaylist(item)
-                                    ? ('DOWNLOADS.SOURCE_PLAYLIST_MISSING'
-                                      | translate)
+                                    ? 'This download can no longer open in the library because its source playlist was removed.'
                                     : null
                             "
                             (click)="openInLibrary(item)"
@@ -222,7 +220,6 @@
                                         {{
                                             'DOWNLOADS.STATUS.' +
                                                 item.status.toUpperCase()
-                                                | translate
                                         }}
                                     </span>
 
@@ -266,9 +263,7 @@
                                             $event.stopPropagation();
                                             copyUrl(item)
                                         "
-                                        [matTooltip]="
-                                            'DOWNLOADS.COPY_URL' | translate
-                                        "
+                                        [matTooltip]="'Copy download URL'"
                                     >
                                         <mat-icon>content_copy</mat-icon>
                                     </button>
@@ -280,9 +275,7 @@
                                                     $event.stopPropagation();
                                                     cancel(item)
                                                 "
-                                                [matTooltip]="
-                                                    'DOWNLOADS.CANCEL' | translate
-                                                "
+                                                [matTooltip]="'Cancel'"
                                             >
                                                 <mat-icon>close</mat-icon>
                                             </button>
@@ -294,9 +287,7 @@
                                                     $event.stopPropagation();
                                                     cancel(item)
                                                 "
-                                                [matTooltip]="
-                                                    'DOWNLOADS.CANCEL' | translate
-                                                "
+                                                [matTooltip]="'Cancel'"
                                             >
                                                 <mat-icon>close</mat-icon>
                                             </button>
@@ -309,9 +300,7 @@
                                                     $event.stopPropagation();
                                                     play(item)
                                                 "
-                                                [matTooltip]="
-                                                    'DOWNLOADS.PLAY' | translate
-                                                "
+                                                [matTooltip]="'Play'"
                                             >
                                                 <mat-icon>play_arrow</mat-icon>
                                             </button>
@@ -321,9 +310,7 @@
                                                     $event.stopPropagation();
                                                     reveal(item)
                                                 "
-                                                [matTooltip]="
-                                                    'DOWNLOADS.REVEAL' | translate
-                                                "
+                                                [matTooltip]="'Show in Folder'"
                                             >
                                                 <mat-icon>folder_open</mat-icon>
                                             </button>
@@ -334,9 +321,7 @@
                                                     $event.stopPropagation();
                                                     remove(item)
                                                 "
-                                                [matTooltip]="
-                                                    'DOWNLOADS.REMOVE' | translate
-                                                "
+                                                [matTooltip]="'Remove'"
                                             >
                                                 <mat-icon>delete</mat-icon>
                                             </button>
@@ -349,9 +334,7 @@
                                                     $event.stopPropagation();
                                                     retry(item)
                                                 "
-                                                [matTooltip]="
-                                                    'DOWNLOADS.RETRY' | translate
-                                                "
+                                                [matTooltip]="'Retry'"
                                             >
                                                 <mat-icon>refresh</mat-icon>
                                             </button>
@@ -362,9 +345,7 @@
                                                     $event.stopPropagation();
                                                     remove(item)
                                                 "
-                                                [matTooltip]="
-                                                    'DOWNLOADS.REMOVE' | translate
-                                                "
+                                                [matTooltip]="'Remove'"
                                             >
                                                 <mat-icon>delete</mat-icon>
                                             </button>
@@ -377,9 +358,7 @@
                                                     $event.stopPropagation();
                                                     retry(item)
                                                 "
-                                                [matTooltip]="
-                                                    'DOWNLOADS.RETRY' | translate
-                                                "
+                                                [matTooltip]="'Retry'"
                                             >
                                                 <mat-icon>refresh</mat-icon>
                                             </button>
@@ -390,9 +369,7 @@
                                                     $event.stopPropagation();
                                                     remove(item)
                                                 "
-                                                [matTooltip]="
-                                                    'DOWNLOADS.REMOVE' | translate
-                                                "
+                                                [matTooltip]="'Remove'"
                                             >
                                                 <mat-icon>delete</mat-icon>
                                             </button>

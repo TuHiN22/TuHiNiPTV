@@ -21,7 +21,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Store } from '@ngrx/store';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { EpgRuntimeBridgeService } from '@iptvnator/epg/data-access';
 import { PlaylistActions } from '@iptvnator/m3u-state';
 import { firstValueFrom } from 'rxjs';
@@ -145,7 +144,6 @@ const EPG_URL_PATTERN = /^\s*(http|https|file):\/\/[^ "]+\s*$/;
         MatInputModule,
         MatTooltip,
         ReactiveFormsModule,
-        TranslatePipe,
     ],
 })
 export class PlaylistInfoComponent {
@@ -156,7 +154,6 @@ export class PlaylistInfoComponent {
     private store = inject(Store);
     private databaseService = inject(DatabaseService);
     private snackBar = inject(MatSnackBar);
-    private translate = inject(TranslateService);
     private runtime = inject(RuntimeCapabilitiesService);
     private readonly epgBridge = inject(EpgRuntimeBridgeService);
     private readonly settingsStore = inject(SettingsStore);
@@ -281,22 +278,16 @@ export class PlaylistInfoComponent {
             );
 
             this.snackBar.open(
-                this.translate.instant(
-                    'HOME.PLAYLISTS.PLAYLIST_UPDATE_SUCCESS'
-                ),
-                this.translate.instant('CLOSE'),
+                'Success! The playlist was successfully updated.',
+                'Close',
                 { duration: 3000 }
             );
             this.dialogRef?.close();
         } catch (error) {
             console.error('Error updating playlist:', error);
-            this.snackBar.open(
-                this.translate.instant('HOME.PLAYLISTS.PLAYLIST_UPDATE_FAILED'),
-                this.translate.instant('CLOSE'),
-                {
-                    duration: 3000,
-                }
-            );
+            this.snackBar.open('Failed to update the playlist.', 'Close', {
+                duration: 3000,
+            });
         }
     }
 
@@ -351,10 +342,10 @@ export class PlaylistInfoComponent {
         }
 
         this.snackBar.open(
-            this.translate.instant(
-                result.success ? 'EPG.FETCH_SUCCESS' : 'EPG.ERROR'
-            ),
-            this.translate.instant('CLOSE'),
+            result.success
+                ? 'EPG was fetched successfully'
+                : 'Ooops, EPG could not be loaded.',
+            'Close',
             { duration: 3000 }
         );
     }
@@ -373,11 +364,7 @@ export class PlaylistInfoComponent {
             ]),
         });
 
-        this.snackBar.open(
-            this.translate.instant('SETTINGS.ADD_EPG_SOURCE'),
-            this.translate.instant('CLOSE'),
-            { duration: 3000 }
-        );
+        this.snackBar.open('Add EPG source', 'Close', { duration: 3000 });
     }
 
     isGlobalEpgSource(url: string): boolean {
@@ -410,8 +397,8 @@ export class PlaylistInfoComponent {
                     error
                 );
                 this.snackBar.open(
-                    this.translate.instant('SETTINGS.EPG_DATA_CLEAR_FAILED'),
-                    this.translate.instant('CLOSE'),
+                    'Failed to clear EPG data. Please try again.',
+                    'Close',
                     { duration: 3000 }
                 );
                 return;
@@ -513,10 +500,8 @@ export class PlaylistInfoComponent {
                         playlistAsString
                     );
                     this.snackBar.open(
-                        this.translate.instant(
-                            'HOME.PLAYLISTS.INFO_DIALOG.PLAYLIST_EXPORT_SUCCESS'
-                        ),
-                        this.translate.instant('CLOSE'),
+                        'Playlist was exported successfully.',
+                        'Close',
                         { duration: 3000 }
                     );
                 }
@@ -524,15 +509,9 @@ export class PlaylistInfoComponent {
                 return;
             } catch (error) {
                 console.error('Failed to export playlist:', error);
-                this.snackBar.open(
-                    this.translate.instant(
-                        'HOME.PLAYLISTS.INFO_DIALOG.EXPORT_PLAYLIST_FAILED'
-                    ),
-                    this.translate.instant('CLOSE'),
-                    {
-                        duration: 3000,
-                    }
-                );
+                this.snackBar.open('Failed to export the playlist.', 'Close', {
+                    duration: 3000,
+                });
                 return;
             }
         }
@@ -562,13 +541,9 @@ export class PlaylistInfoComponent {
         if (url) {
             const success = this.clipboard.copy(url);
             if (success) {
-                this.snackBar.open(
-                    this.translate.instant(
-                        'HOME.PLAYLISTS.INFO_DIALOG.URL_COPIED'
-                    ),
-                    this.translate.instant('CLOSE'),
-                    { duration: 2000 }
-                );
+                this.snackBar.open('URL copied to clipboard', 'Close', {
+                    duration: 2000,
+                });
             }
         }
     }

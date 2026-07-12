@@ -4,9 +4,9 @@ import { TmdbApiService } from './tmdb-api.service';
 import { TmdbCacheService } from './tmdb-cache.service';
 import {
     TMDB_DETAILS_CACHE_TTL_MS,
+    TMDB_LANGUAGE,
     TMDB_MATCH_CACHE_TTL_MS,
     TMDB_NEGATIVE_MATCH_CACHE_TTL_MS,
-    tmdbSearchLanguageForTitle,
 } from './tmdb-config';
 import {
     buildDetailsLookupKey,
@@ -16,10 +16,6 @@ import {
     parseProviderTmdbId,
     pickConfidentMatch,
 } from './tmdb-matcher';
-import {
-    detailsFallbackLanguage,
-    fillDetailsFromFallback,
-} from './tmdb-language-fallback';
 import { TmdbPersonService } from './tmdb-person.service';
 import { TmdbRuntimeService } from './tmdb-runtime.service';
 import { TmdbSeasonService } from './tmdb-season.service';
@@ -38,7 +34,7 @@ import {
 /**
  * Best-effort TMDB enrichment orchestrator. Resolves a provider item to a
  * TMDB id (trusting the provider's tmdb_id, else a confidence-gated title
- * search), fetches localized details with credits, and caches every step.
+ * search), fetches English details with credits, and caches every step.
  * Any failure returns `null` — detail views always render provider data.
  *
  * Person and season lookups live in {@link TmdbPersonService} and
@@ -141,10 +137,7 @@ export class TmdbEnrichmentService {
         }
 
         const year = query.year ?? extractYear(null, query.title);
-        const cacheLanguage = tmdbSearchLanguageForTitle(
-            variants[0],
-            this.runtime.appLanguage()
-        );
+        const cacheLanguage = TMDB_LANGUAGE;
         const lookupKey = buildSearchLookupKey(variants[0], year);
 
         const cached = await this.cache.get(
@@ -162,15 +155,7 @@ export class TmdbEnrichmentService {
 
         let match = null;
         for (const variant of variants) {
-            // Cyrillic (and other non-app-script) titles search in their
-            // own language so TMDB returns comparable titles — see
-            // tmdbSearchLanguageForTitle. Search by title only: TMDB's
-            // year params filter strictly; the ±1/season tolerance lives
-            // in pickConfidentMatch instead.
-            const language = tmdbSearchLanguageForTitle(
-                variant,
-                this.runtime.appLanguage()
-            );
+            const language = TMDB_LANGUAGE;
             const results =
                 mediaType === 'movie'
                     ? await this.api.searchMovie(
@@ -211,38 +196,7 @@ export class TmdbEnrichmentService {
         mediaType: TmdbMediaType,
         tmdbId: number
     ): Promise<TmdbDetails | null> {
-        const details = await this.fetchDetails(
-            mediaType,
-            tmdbId,
-            this.runtime.language()
-        );
-        if (!details) {
-            return details;
-        }
-
-        // TMDB language-filters both text and videos: a Russian-only title
-        // has an empty overview AND no trailer in en-US. Retry once in the
-        // content's original language and fill only the missing fields.
-        const fallbackLanguage = detailsFallbackLanguage(
-            details,
-            this.runtime.language()
-        );
-        if (!fallbackLanguage) {
-            return details;
-        }
-        // Best-effort: a failing fallback fetch must never cost the
-        // already-fetched primary payload (cast, artwork, trailer, ...)
-        try {
-            const fallback = await this.fetchDetails(
-                mediaType,
-                tmdbId,
-                fallbackLanguage
-            );
-            return fillDetailsFromFallback(details, fallback);
-        } catch (error) {
-            console.warn('TMDB fallback-language fetch failed:', error);
-            return details;
-        }
+        return this.fetchDetails(mediaType, tmdbId, this.runtime.language());
     }
 
     private async fetchDetails(

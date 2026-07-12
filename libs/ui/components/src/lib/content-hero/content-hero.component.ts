@@ -13,18 +13,12 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
 import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 @Component({
     selector: 'app-content-hero',
     standalone: true,
-    imports: [
-        MatIconModule,
-        MatButtonModule,
-        NgxSkeletonLoaderComponent,
-        TranslateModule,
-    ],
+    imports: [MatIconModule, MatButtonModule, NgxSkeletonLoaderComponent],
     templateUrl: './content-hero.component.html',
     styleUrls: ['./content-hero.component.scss'],
 })
@@ -41,7 +35,8 @@ export class ContentHeroComponent {
     readonly backClicked = output<void>();
     readonly posterError = signal(false);
 
-    readonly descriptionEl = viewChild<ElementRef<HTMLElement>>('descriptionEl');
+    readonly descriptionEl =
+        viewChild<ElementRef<HTMLElement>>('descriptionEl');
     readonly isDescriptionExpanded = signal(false);
     readonly hasDescriptionOverflow = signal(false);
 
@@ -120,7 +115,9 @@ export class ContentHeroComponent {
             this.measureOverflow(el);
             return;
         }
-        this.resizeObserver = new ResizeObserver(() => this.measureOverflow(el));
+        this.resizeObserver = new ResizeObserver(() =>
+            this.measureOverflow(el)
+        );
         this.resizeObserver.observe(el);
     }
 }

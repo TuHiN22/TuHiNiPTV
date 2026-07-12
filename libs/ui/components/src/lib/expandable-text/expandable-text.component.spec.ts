@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { ExpandableTextComponent } from './expandable-text.component';
 
 describe('ExpandableTextComponent', () => {
@@ -22,7 +21,7 @@ describe('ExpandableTextComponent', () => {
         });
 
         await TestBed.configureTestingModule({
-            imports: [ExpandableTextComponent, TranslateModule.forRoot()],
+            imports: [ExpandableTextComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ExpandableTextComponent);
@@ -43,9 +42,9 @@ describe('ExpandableTextComponent', () => {
 
         // Simulate clamped overflow (JSDOM reports zero heights by default)
         // and retrigger the measuring effect via a text change.
-        const paragraph = (
-            fixture.nativeElement as HTMLElement
-        ).querySelector('.expandable-text') as HTMLElement;
+        const paragraph = (fixture.nativeElement as HTMLElement).querySelector(
+            '.expandable-text'
+        ) as HTMLElement;
         Object.defineProperty(paragraph, 'scrollHeight', {
             value: 120,
             configurable: true,
@@ -61,14 +60,14 @@ describe('ExpandableTextComponent', () => {
             '.expandable-text__toggle'
         ) as HTMLButtonElement;
         expect(toggle).toBeTruthy();
-        expect(toggle.textContent).toContain('SHOW_MORE');
+        expect(toggle.textContent).toContain('More');
 
         toggle.click();
         fixture.detectChanges();
 
         expect(fixture.componentInstance.isExpanded()).toBe(true);
-        expect(
-            (fixture.nativeElement as HTMLElement).textContent
-        ).toContain('SHOW_LESS');
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain(
+            'Less'
+        );
     });
 });

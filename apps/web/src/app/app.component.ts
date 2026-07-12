@@ -3,7 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterOutlet } from '@angular/router';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import {
     EpgRuntimeBridgeService,
     EpgService,
@@ -20,7 +19,6 @@ import {
 } from '@iptvnator/services';
 import {
     AUTO_UPDATE_PLAYLISTS,
-    Language,
     OPEN_FILE,
     Settings,
     STORE_KEY,
@@ -56,14 +54,10 @@ export class AppComponent implements OnInit {
     private snackBar = inject(MatSnackBar);
     private router = inject(Router);
     private store = inject(Store);
-    private translate = inject(TranslateService);
     private settingsService = inject(SettingsService);
     private settingsStore = inject(SettingsStore);
     private runtime = inject(RuntimeCapabilitiesService);
     private readonly workspaceShellActions = inject(WORKSPACE_SHELL_ACTIONS);
-
-    /** Default language as fallback */
-    private readonly DEFAULT_LANG = Language.ENGLISH;
 
     constructor() {
         // Body-level class (like 'dark-theme') so layout adjustments also
@@ -112,7 +106,6 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.store.dispatch(PlaylistActions.loadPlaylists());
-        this.translate.setDefaultLang(this.DEFAULT_LANG);
 
         this.initSettings();
         this.triggerAutoUpdatePlaylists();
@@ -130,21 +123,6 @@ export class AppComponent implements OnInit {
                     // No need to send settings to Electron on init
                     // Settings are stored in IndexedDB and loaded by the settings store
                     // Only specific Electron settings (MPV/VLC paths) are sent when changed in settings component
-
-                    const resolvedLang = settings.language ?? this.DEFAULT_LANG;
-                    this.translate.use(resolvedLang);
-                    // Mirror the active language to localStorage so the next
-                    // cold start can read it synchronously in app.config.ts's
-                    // getInitialLanguage() and avoid the English-then-localized
-                    // flash for non-English users.
-                    try {
-                        localStorage.setItem(
-                            'iptvnator:preferred-language',
-                            resolvedLang
-                        );
-                    } catch {
-                        // Ignore quota / privacy mode errors.
-                    }
 
                     // Fetch EPG if URLs are configured (only fetch stale data)
                     if (
@@ -206,8 +184,8 @@ export class AppComponent implements OnInit {
                 // Show snackbar if all EPG sources are fresh (no stale URLs)
                 if (result.staleUrls.length === 0) {
                     this.snackBar.open(
-                        this.translate.instant('EPG.UP_TO_DATE'),
-                        this.translate.instant('CLOSE'),
+                        'EPG is up-to-date, no sync needed',
+                        'Close',
                         { duration: 3000 }
                     );
                 }

@@ -5,8 +5,6 @@ import { Location } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MockPipe } from 'ng-mocks';
 import {
     ContentHeroComponent,
     SeasonContainerComponent,
@@ -205,17 +203,6 @@ describe('SerialDetailsComponent', () => {
                     },
                 },
                 {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => key,
-                        get: (key: string) => of(key),
-                        stream: (key: string) => of(key),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
-                    },
-                },
-                {
                     provide: Location,
                     useValue: {
                         back: jest.fn(),
@@ -229,7 +216,6 @@ describe('SerialDetailsComponent', () => {
                         MatIcon,
                         PortalInlinePlayerComponent,
                         SeasonContainerComponent,
-                        TranslatePipe,
                     ],
                 },
                 add: {
@@ -237,10 +223,6 @@ describe('SerialDetailsComponent', () => {
                         StubMatIconComponent,
                         StubPortalInlinePlayerComponent,
                         StubSeasonContainerComponent,
-                        MockPipe(
-                            TranslatePipe,
-                            (value: string | null | undefined) => value ?? ''
-                        ),
                     ],
                 },
             })
@@ -335,9 +317,7 @@ describe('SerialDetailsComponent', () => {
             );
 
         expect(quickStartButton).not.toBeNull();
-        expect(quickStartButton?.textContent).toContain(
-            'XTREAM.PLAY_FIRST_EPISODE'
-        );
+        expect(quickStartButton?.textContent).toContain('Play first episode');
         expect(quickStartButton?.textContent).toContain('S01E01 · Episode 1');
 
         quickStartButton?.click();
@@ -390,9 +370,7 @@ describe('SerialDetailsComponent', () => {
                 '[data-testid="series-quick-start"]'
             );
 
-        expect(quickStartButton?.textContent).toContain(
-            'XTREAM.RESUME_EPISODE'
-        );
+        expect(quickStartButton?.textContent).toContain('Resume episode');
         expect(quickStartButton?.textContent).toContain('S01E01 · Episode 1');
 
         quickStartButton?.click();

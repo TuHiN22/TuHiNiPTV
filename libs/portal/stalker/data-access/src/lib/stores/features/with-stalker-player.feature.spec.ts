@@ -2,11 +2,13 @@ import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { PORTAL_PLAYER } from '@iptvnator/portal/shared/util';
 import { DataService, PlaylistsService } from '@iptvnator/services';
 import { of } from 'rxjs';
-import { PlaylistMeta, StalkerPortalActions } from '@iptvnator/shared/interfaces';
+import {
+    PlaylistMeta,
+    StalkerPortalActions,
+} from '@iptvnator/shared/interfaces';
 import { StalkerSessionService } from '../../stalker-session.service';
 import { withStalkerPlayer } from './with-stalker-player.feature';
 
@@ -122,12 +124,6 @@ describe('withStalkerPlayer', () => {
                     provide: MatSnackBar,
                     useValue: {
                         open: jest.fn(),
-                    },
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: jest.fn((key: string) => key),
                     },
                 },
                 {

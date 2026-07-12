@@ -9,52 +9,21 @@
             <mat-icon>settings</mat-icon>
         </div>
         <div class="settings-group__header-text">
-            <h3>{{ 'SETTINGS.GENERAL' | translate }}</h3>
-            <p>{{ 'SETTINGS.GENERAL_SUBTITLE' | translate }}</p>
+            <h3>{{ 'General' }}</h3>
+            <p>{{ 'Change the configuration of the application' }}</p>
         </div>
     </header>
 
-    <div class="setting-item">
-        <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.LANGUAGE' | translate }}</h4>
-            <p>{{ 'SETTINGS.LANGUAGE_DESCRIPTION' | translate }}</p>
-        </div>
-        <div class="setting-item__control">
-            <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                <mat-label>{{
-                    'SETTINGS.VIDEO_PLAYER_PLACEHOLDER' | translate
-                }}</mat-label>
-                <mat-select
-                    formControlName="language"
-                    data-test-id="select-language"
-                >
-                    @for (
-                        language of languageEnum() | keyvalue;
-                        track language
-                    ) {
-                        <mat-option
-                            [value]="language.value"
-                            [attr.data-test-id]="language.value"
-                            >{{
-                                'LANGUAGES.' + language.key | translate
-                            }}</mat-option
-                        >
-                    }
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </div>
-
     <div class="setting-item setting-item--full-control">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.THEME' | translate }}</h4>
-            <p>{{ 'SETTINGS.THEME_DESCRIPTION' | translate }}</p>
+            <h4>{{ 'Visual theme' }}</h4>
+            <p>{{ 'Select visual theme of the application' }}</p>
         </div>
         <div class="setting-item__control">
             <div
                 class="theme-switcher"
                 role="radiogroup"
-                [attr.aria-label]="'SETTINGS.THEME' | translate"
+                [attr.aria-label]="'Visual theme'"
                 data-test-id="select-theme"
             >
                 @for (themeOption of themeOptions(); track themeOption.value) {
@@ -72,7 +41,7 @@
                         (click)="selectTheme.emit(themeOption.value)"
                     >
                         <mat-icon>{{ themeOption.icon }}</mat-icon>
-                        <span>{{ themeOption.labelKey | translate }}</span>
+                        <span>{{ themeOption.labelKey }}</span>
                     </button>
                 }
             </div>
@@ -81,14 +50,18 @@
 
     <div class="setting-item setting-item--full-control">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.COVER_SIZE' | translate }}</h4>
-            <p>{{ 'SETTINGS.COVER_SIZE_DESCRIPTION' | translate }}</p>
+            <h4>{{ 'Cover size' }}</h4>
+            <p>
+                {{
+                    'Adjust the size of poster cards across grids and rails. Larger sizes are easier to see on TVs; smaller sizes show more content per row on big monitors.'
+                }}
+            </p>
         </div>
         <div class="setting-item__control">
             <div
                 class="theme-switcher"
                 role="radiogroup"
-                [attr.aria-label]="'SETTINGS.COVER_SIZE' | translate"
+                [attr.aria-label]="'Cover size'"
                 data-test-id="select-cover-size"
             >
                 @for (option of coverSizeOptions(); track option.value) {
@@ -106,7 +79,7 @@
                         (click)="selectCoverSize.emit(option.value)"
                     >
                         <mat-icon>{{ option.icon }}</mat-icon>
-                        <span>{{ option.labelKey | translate }}</span>
+                        <span>{{ option.labelKey }}</span>
                     </button>
                 }
             </div>
@@ -115,16 +88,16 @@
 
     <div class="setting-item">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.STARTUP_BEHAVIOR' | translate }}</h4>
+            <h4>{{ 'Startup view' }}</h4>
             <p>
-                {{ 'SETTINGS.STARTUP_BEHAVIOR_DESCRIPTION' | translate }}
+                {{
+                    'Choose whether TuHiN iPTV opens the first available workspace view or restores your last section-level view. First view means Dashboard when enabled, otherwise Sources.'
+                }}
             </p>
         </div>
         <div class="setting-item__control">
             <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                <mat-label>{{
-                    'SETTINGS.STARTUP_BEHAVIOR' | translate
-                }}</mat-label>
+                <mat-label>{{ 'Startup view' }}</mat-label>
                 <mat-select
                     formControlName="startupBehavior"
                     data-test-id="select-startup-behavior"
@@ -137,7 +110,7 @@
                             [value]="option.value"
                             [attr.data-test-id]="option.value"
                         >
-                            {{ option.labelKey | translate }}
+                            {{ option.labelKey }}
                         </mat-option>
                     }
                 </mat-select>
@@ -147,9 +120,9 @@
 
     <div class="setting-item">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.SHOW_CAPTIONS' | translate }}</h4>
+            <h4>{{ 'Show subtitles' }}</h4>
             <p>
-                {{ 'SETTINGS.SHOW_CAPTIONS_DESCRIPTION' | translate }}
+                {{ 'Show or hide subtitles by default' }}
             </p>
         </div>
         <div class="setting-item__control setting-item__toggle">

@@ -34,7 +34,7 @@
     <ng-template appDetailMeta>
         @if (meta.actors || meta.tmdbCast?.length) {
             <div class="details__meta-item">
-                <span class="label">{{ 'XTREAM.ACTORS' | translate }}</span>
+                <span class="label">{{ 'Actors' }}</span>
                 @if (meta.tmdbCast?.length) {
                     <div class="details__cast-strip">
                         @for (member of meta.tmdbCast; track member.name) {
@@ -77,15 +77,13 @@
         }
         @if (meta.director) {
             <div class="details__meta-item">
-                <span class="label">{{ 'XTREAM.DIRECTOR' | translate }}</span>
+                <span class="label">{{ 'Director' }}</span>
                 <span class="value">{{ meta.director }}</span>
             </div>
         }
         @if (meta.ratingKinopoisk) {
             <div class="details__meta-item">
-                <span class="label">{{
-                    'XTREAM.KINOPOISK_RATING' | translate
-                }}</span>
+                <span class="label">{{ 'Rating Kinopoisk' }}</span>
                 <span class="value">{{ meta.ratingKinopoisk }}</span>
             </div>
         }
@@ -115,7 +113,7 @@
                     @if (externalPrimaryLabel(); as label) {
                         {{ label }}
                     } @else {
-                        {{ 'XTREAM.RESUME' | translate }}
+                        {{ 'Resume' }}
                         {{ formattedPosition() }}
                     }
                 </span>
@@ -123,7 +121,7 @@
             @if (!isExternalStopAction()) {
                 <button class="play-btn play-btn--restart" (click)="onPlay()">
                     <mat-icon>replay</mat-icon>
-                    {{ 'XTREAM.RESTART' | translate }}
+                    {{ 'Start Over' }}
                 </button>
             }
         } @else {
@@ -147,7 +145,7 @@
                     @if (externalPrimaryLabel(); as label) {
                         {{ label }}
                     } @else {
-                        {{ 'XTREAM.PLAY' | translate }}
+                        {{ 'Play' }}
                     }
                 </span>
             </button>
@@ -157,7 +155,7 @@
         @if (!isFavorite()) {
             <button class="favorite-btn" (click)="toggleFavorite()">
                 <mat-icon>add</mat-icon>
-                {{ 'PORTALS.ADD_TO_FAVORITES' | translate }}
+                {{ 'Add to favorites' }}
             </button>
         } @else {
             <button
@@ -165,7 +163,7 @@
                 (click)="toggleFavorite()"
             >
                 <mat-icon>check</mat-icon>
-                {{ 'PORTALS.REMOVE_FROM_FAVORITES' | translate }}
+                {{ 'Remove from favorites' }}
             </button>
         }
 
@@ -177,17 +175,17 @@
                     (click)="playFromLocal()"
                 >
                     <mat-icon>play_circle</mat-icon>
-                    {{ 'DOWNLOADS.PLAY_LOCAL' | translate }}
+                    {{ 'Play Local' }}
                 </button>
             } @else if (isDownloading()) {
                 <button class="download-btn download-btn--downloading" disabled>
                     <mat-icon>downloading</mat-icon>
-                    {{ 'DOWNLOADS.STATUS.DOWNLOADING' | translate }}
+                    {{ 'Downloading' }}
                 </button>
             } @else {
                 <button class="download-btn" (click)="onDownload()">
                     <mat-icon>download</mat-icon>
-                    {{ 'DOWNLOADS.DOWNLOAD' | translate }}
+                    {{ 'Download' }}
                 </button>
             }
         }
@@ -211,7 +209,7 @@
     <div detail-extras>
         @if (similarInPortals().length) {
             <section class="details__similar" data-test-id="tmdb-similar">
-                <h3>{{ 'XTREAM.SIMILAR' | translate }}</h3>
+                <h3>{{ 'Similar' }}</h3>
                 <div class="details__similar-strip">
                     @for (
                         item of similarInPortals();
@@ -254,7 +252,7 @@
         <!-- YouTube Trailer (provider or TMDB enrichment) -->
         @if (trailerEmbedUrl(); as trailerUrl) {
             <div class="youtube-trailer">
-                <h3>{{ 'XTREAM.YOUTUBE_TRAILER' | translate }}</h3>
+                <h3>{{ 'YouTube Trailer' }}</h3>
                 <div class="trailer-wrapper">
                     <iframe
                         [src]="trailerUrl | safe"

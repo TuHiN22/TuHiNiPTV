@@ -7,7 +7,7 @@
     />
 } @else if (isLoading()) {
     <div class="collection-header">
-        <span class="collection-title">{{ title() | translate }}</span>
+        <span class="collection-title">{{ title() }}</span>
         <div class="collection-header-toggles">
             <span class="toggle-placeholder"></span>
             @if (showScopeToggle()) {
@@ -46,7 +46,7 @@
     }
 } @else {
     <div class="collection-header">
-        <span class="collection-title">{{ title() | translate }}</span>
+        <span class="collection-title">{{ title() }}</span>
 
         @if (showFavSortButton()) {
             <button
@@ -54,22 +54,16 @@
                 mat-icon-button
                 class="favorites-sort-button"
                 [matMenuTriggerFor]="favoritesSortMenu"
-                [matTooltip]="
-                    ('WORKSPACE.SORT_LABEL' | translate) +
-                    (favSortLabelKey() | translate)
-                "
-                [attr.aria-label]="'WORKSPACE.SORT_LABEL' | translate"
+                [matTooltip]="'Sort: ' + favSortLabelKey()"
+                [attr.aria-label]="'Sort: '"
             >
                 <mat-icon>sort_by_alpha</mat-icon>
             </button>
             <mat-menu #favoritesSortMenu="matMenu">
                 @for (option of favSortOptions; track option.mode) {
-                    <button
-                        mat-menu-item
-                        (click)="setFavSortMode(option.mode)"
-                    >
+                    <button mat-menu-item (click)="setFavSortMode(option.mode)">
                         <mat-icon>{{ option.icon }}</mat-icon>
-                        <span>{{ option.translationKey | translate }}</span>
+                        <span>{{ option.label }}</span>
                         @if (favSortMode() === option.mode) {
                             <mat-icon class="sort-check">check</mat-icon>
                         }
@@ -84,12 +78,11 @@
                 mat-icon-button
                 class="collection-sidebar-toggle"
                 [attr.aria-label]="
-                    (isSidebarCollapsed()
-                        ? 'LAYOUT.SHOW_CHANNELS_LIST'
-                        : 'LAYOUT.HIDE_CHANNELS_LIST'
-                    ) | translate
+                    isSidebarCollapsed()
+                        ? 'Show channels list'
+                        : 'Hide channels list'
                 "
-                [matTooltip]="'LAYOUT.TOGGLE_SIDEBAR_TOOLTIP' | translate"
+                [matTooltip]="'Toggle channels list (⌘/Ctrl+B)'"
                 [attr.aria-pressed]="isSidebarCollapsed()"
                 (click)="toggleSidebar()"
             >
@@ -109,17 +102,17 @@
                 >
                     @if (hasLive()) {
                         <mat-button-toggle value="live">
-                            {{ 'PORTALS.LIVE_TV' | translate }}
+                            {{ 'Live TV' }}
                         </mat-button-toggle>
                     }
                     @if (hasMovies()) {
                         <mat-button-toggle value="movie">
-                            {{ 'PORTALS.MOVIES' | translate }}
+                            {{ 'Movies' }}
                         </mat-button-toggle>
                     }
                     @if (hasSeries()) {
                         <mat-button-toggle value="series">
-                            {{ 'PORTALS.SERIES' | translate }}
+                            {{ 'Series' }}
                         </mat-button-toggle>
                     }
                 </mat-button-toggle-group>
@@ -134,15 +127,11 @@
                 >
                     <mat-button-toggle value="playlist">
                         <mat-icon>playlist_play</mat-icon>
-                        <span class="toggle-label">{{
-                            'PORTALS.THIS_PLAYLIST' | translate
-                        }}</span>
+                        <span class="toggle-label">{{ 'This playlist' }}</span>
                     </mat-button-toggle>
                     <mat-button-toggle value="all">
                         <mat-icon>public</mat-icon>
-                        <span class="toggle-label">{{
-                            'PORTALS.ALL_PLAYLISTS' | translate
-                        }}</span>
+                        <span class="toggle-label">{{ 'All playlists' }}</span>
                     </mat-button-toggle>
                 </mat-button-toggle-group>
             }
@@ -152,22 +141,8 @@
                     type="button"
                     mat-icon-button
                     (click)="clearAllCurrent()"
-                    [matTooltip]="
-                        clearButtonTooltipKey()
-                            | translate
-                                : {
-                                      type:
-                                          currentTypeLabelKey() | translate,
-                                  }
-                    "
-                    [attr.aria-label]="
-                        clearButtonTooltipKey()
-                            | translate
-                                : {
-                                      type:
-                                          currentTypeLabelKey() | translate,
-                                  }
-                    "
+                    [matTooltip]="clearButtonTooltip()"
+                    [attr.aria-label]="clearButtonTooltip()"
                 >
                     <mat-icon>delete_sweep</mat-icon>
                 </button>
@@ -225,7 +200,7 @@
             <div class="empty-state">
                 <mat-icon class="empty-icon">search_off</mat-icon>
                 <p class="empty-title">
-                    {{ 'WORKSPACE.GLOBAL_FAVORITES.NO_RESULTS' | translate }}
+                    {{ 'No results' }}
                 </p>
             </div>
         } @else {
@@ -234,7 +209,7 @@
                 [icon]="emptyStateIcon()"
                 [titleKey]="emptyStateTitleKey()"
                 [descriptionKey]="emptyStateBodyKey()"
-                secondaryActionLabelKey="WORKSPACE.SHELL.GO_TO_DASHBOARD"
+                secondaryActionLabelKey="Back to dashboard"
                 (secondaryActionClicked)="goToDashboard()"
             />
         }

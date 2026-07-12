@@ -22,7 +22,6 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 import { DatabaseService } from '@iptvnator/services';
 import { ContentCardComponent } from '@iptvnator/portal/shared/ui';
 import { SearchLayoutComponent } from '@iptvnator/portal/shared/ui';
@@ -88,7 +87,6 @@ function groupResultsByPlaylistId(
         MatIconButton,
         MatProgressSpinner,
         SearchLayoutComponent,
-        TranslatePipe,
     ],
     providers: [],
     templateUrl: './search-results.component.html',
@@ -147,17 +145,14 @@ export class SearchResultsComponent implements AfterViewInit {
         {
             key: 'live' as keyof SearchFilters,
             label: 'Live TV',
-            translationKey: 'PORTALS.SIDEBAR.LIVE_TV',
         },
         {
             key: 'movie' as keyof SearchFilters,
             label: 'Movies',
-            translationKey: 'PORTALS.SIDEBAR.MOVIES',
         },
         {
             key: 'series' as keyof SearchFilters,
             label: 'Series',
-            translationKey: 'PORTALS.SIDEBAR.SERIES',
         },
     ];
 
@@ -511,8 +506,8 @@ export class SearchResultsComponent implements AfterViewInit {
 
     get initialDescriptionKey(): string {
         return this.isGlobalSearch
-            ? 'PORTALS.SEARCH_VIEW.GLOBAL_INITIAL_DESCRIPTION'
-            : 'PORTALS.SEARCH_VIEW.INITIAL_DESCRIPTION';
+            ? 'Enter at least 2 characters to search across Xtream and M3U playlists.'
+            : 'Enter at least 3 characters to search across live TV, movies and series.';
     }
 
     getDisplayType(item: XtreamSearchResultItem): string {

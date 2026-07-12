@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * Reasons the timeline ribbon has nothing to show. `none` means programmes are
@@ -37,51 +36,54 @@ const PRESETS: Record<
     'empty-day': {
         icon: 'event_busy',
         tone: 'neutral',
-        titleKey: 'EPG.TIMELINE.EMPTY_DAY_TITLE',
-        subKey: 'EPG.TIMELINE.EMPTY_DAY_DESCRIPTION',
+        titleKey: 'No programme for this day',
+        subKey: "The schedule for the selected day hasn't arrived yet. Other days have data.",
     },
     'channel-unmapped': {
         icon: 'tv_off',
         tone: 'neutral',
-        titleKey: 'EPG.TIMELINE.CHANNEL_UNMAPPED_TITLE',
-        subKey: 'EPG.TIMELINE.CHANNEL_UNMAPPED_DESCRIPTION',
+        titleKey: 'No programme for this channel',
+        subKey: "This channel isn't matched to the EPG source (no tvg-id found). Other channels are unaffected.",
     },
     'provider-no-epg': {
         icon: 'cell_tower',
         tone: 'neutral',
-        titleKey: 'EPG.TIMELINE.PROVIDER_NO_EPG_TITLE',
-        subKey: 'EPG.TIMELINE.PROVIDER_NO_EPG_DESCRIPTION',
+        titleKey: "Provider doesn't supply a guide",
+        subKey: "This source doesn't expose a TV guide for any channel. If you need a schedule, ask your provider.",
     },
     'm3u-needs-setup': {
         icon: 'cable',
         tone: 'action',
-        titleKey: 'EPG.TIMELINE.M3U_SETUP_TITLE',
-        subKey: 'EPG.TIMELINE.M3U_SETUP_DESCRIPTION',
+        titleKey: 'Connect a programme guide',
+        subKey: 'M3U playlists need an external EPG source (XMLTV). Add a url-tvg link and the schedule will appear here.',
     },
     error: {
         icon: 'error_outline',
         tone: 'warn',
-        titleKey: 'EPG.TIMELINE.ERROR_TITLE',
-        subKey: 'EPG.TIMELINE.ERROR_DESCRIPTION',
+        titleKey: "Couldn't load the guide",
+        subKey: "The EPG source didn't respond. Check your connection or refresh the source.",
     },
 };
 
 @Component({
     selector: 'app-epg-timeline-empty-state',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatButton, MatIcon, TranslatePipe],
+    imports: [MatButton, MatIcon],
     template: `
         @let activePreset = preset();
         @if (activePreset) {
             <div class="epg-empty">
-                <div class="epg-empty__icon" [class]="'tone-' + activePreset.tone">
+                <div
+                    class="epg-empty__icon"
+                    [class]="'tone-' + activePreset.tone"
+                >
                     <mat-icon>{{ activePreset.icon }}</mat-icon>
                 </div>
                 <div class="epg-empty__title">
-                    {{ activePreset.titleKey | translate }}
+                    {{ activePreset.titleKey }}
                 </div>
                 <div class="epg-empty__sub">
-                    {{ activePreset.subKey | translate }}
+                    {{ activePreset.subKey }}
                 </div>
 
                 @switch (reason()) {
@@ -94,7 +96,7 @@ const PRESETS: Record<
                                 (click)="jumpToday.emit()"
                             >
                                 <mat-icon>my_location</mat-icon>
-                                {{ 'EPG.TIMELINE.JUMP_TODAY' | translate }}
+                                {{ 'Go to today' }}
                             </button>
                             @if (hasOtherDays()) {
                                 <button
@@ -102,7 +104,7 @@ const PRESETS: Record<
                                     type="button"
                                     (click)="jumpNearest.emit()"
                                 >
-                                    {{ 'EPG.TIMELINE.JUMP_NEAREST' | translate }}
+                                    {{ 'Nearest day with programme' }}
                                 </button>
                             }
                         </div>
@@ -116,7 +118,7 @@ const PRESETS: Record<
                                 (click)="openSettings.emit()"
                             >
                                 <mat-icon>settings</mat-icon>
-                                {{ 'EPG.TIMELINE.OPEN_EPG_SETTINGS' | translate }}
+                                {{ 'Open EPG settings' }}
                             </button>
                         </div>
                     }
@@ -129,7 +131,7 @@ const PRESETS: Record<
                                 (click)="retry.emit()"
                             >
                                 <mat-icon>refresh</mat-icon>
-                                {{ 'EPG.TIMELINE.RETRY' | translate }}
+                                {{ 'Retry' }}
                             </button>
                         </div>
                     }

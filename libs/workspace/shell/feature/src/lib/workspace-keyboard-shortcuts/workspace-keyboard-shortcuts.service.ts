@@ -57,8 +57,8 @@ export class WorkspaceKeyboardShortcutsService {
                     platform === 'mac' ? 'laptop_mac' : 'desktop_windows',
                 platformLabelKey:
                     platform === 'mac'
-                        ? 'WORKSPACE.SHORTCUTS.PLATFORM.MAC'
-                        : 'WORKSPACE.SHORTCUTS.PLATFORM.OTHER',
+                        ? 'macOS layout'
+                        : 'Windows/Linux layout',
             },
         });
 
@@ -94,5 +94,4 @@ export class WorkspaceKeyboardShortcutsService {
 
         return /Mac|iPhone|iPad|iPod/i.test(platform) ? 'mac' : 'other';
     }
-
 }

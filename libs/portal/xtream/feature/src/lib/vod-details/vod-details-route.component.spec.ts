@@ -2,7 +2,6 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { Location } from '@angular/common';
 import { ContentHeroComponent } from '@iptvnator/ui/components';
@@ -107,19 +106,6 @@ describe('VodDetailsRouteComponent', () => {
                                 categoryId: '235',
                             },
                         },
-                    },
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => key,
-                        get: (key: string) => of(key),
-                        stream: (key: string) => of(key),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
-                        currentLang: 'en',
-                        defaultLang: 'en',
                     },
                 },
                 {
@@ -234,11 +220,11 @@ describe('VodDetailsRouteComponent', () => {
         expect(
             host.querySelector('[data-testid="xtream-vod-fallback"]')
                 ?.textContent
-        ).toContain('XTREAM.DETAIL_FALLBACK.NOTE');
+        ).toContain('Extended metadata was not provided by this portal.');
         expect(
             host.querySelector('[data-testid="xtream-vod-fallback-status"]')
                 ?.textContent
-        ).toContain('XTREAM.DETAIL_FALLBACK.STATUS');
+        ).toContain('Portal metadata unavailable');
         expect(host.querySelector('button.play-btn')).toBeNull();
         expect(host.querySelector('button.favorite-btn')).toBeNull();
         expect(host.querySelector('button.download-btn')).toBeNull();

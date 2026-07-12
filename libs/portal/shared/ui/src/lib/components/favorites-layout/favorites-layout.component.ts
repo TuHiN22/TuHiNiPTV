@@ -5,7 +5,6 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
 import { PlaylistSwitcherComponent } from '@iptvnator/playlist/shared/ui';
 import { isWorkspaceLayoutRoute } from '@iptvnator/portal/shared/util';
-import { TranslatePipe } from '@ngx-translate/core';
 import { ResizableDirective } from '@iptvnator/ui/components';
 import {
     StalkerPortalItem,
@@ -57,7 +56,6 @@ export interface FavoriteLayoutItem {
         MatIconButton,
         PlaylistSwitcherComponent,
         ResizableDirective,
-        TranslatePipe,
         MatTooltip,
     ],
 })
@@ -69,7 +67,7 @@ export class FavoritesLayoutComponent {
     readonly playlistSubtitle = input<string>('');
     readonly playlistTitle = input<string>('Playlist');
     readonly selectedCategoryId = input<string>('movie');
-    readonly titleTranslationString = input<string>('CHANNELS.FAVORITES');
+    readonly titleTranslationString = input<string>('Favorites');
     readonly removeTooltip = input<string>('');
     readonly emptyIcon = input<string>('favorite_border');
     readonly showHeaderAction = input<boolean>(false);

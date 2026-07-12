@@ -36,8 +36,8 @@
                 (input)="onSearchInput($event)"
                 (keydown.enter)="onSearchEnter($event)"
                 [disabled]="!canUseSearch()"
-                [placeholder]="searchPlaceholder() | translate"
-                [attr.aria-label]="'WORKSPACE.SHELL.SEARCH_LABEL' | translate"
+                [placeholder]="searchPlaceholder()"
+                [attr.aria-label]="'Search'"
             />
             @if (searchStatusLabel()) {
                 <span class="search-chip search-chip--status">
@@ -48,12 +48,8 @@
                 type="button"
                 class="command-trigger"
                 (click)="onCommandPaletteRequested()"
-                [matTooltip]="
-                    'WORKSPACE.SHELL.COMMAND_PALETTE_SHORTCUT' | translate
-                "
-                [attr.aria-label]="
-                    'WORKSPACE.SHELL.OPEN_COMMAND_PALETTE' | translate
-                "
+                [matTooltip]="'Command palette (Ctrl/Cmd+K)'"
+                [attr.aria-label]="'Open command palette'"
             >
                 {{ commandShortcutLabel }}
             </button>
@@ -70,8 +66,8 @@
             type="button"
             mat-icon-button
             (click)="onShortcutsRequested()"
-            [matTooltip]="'WORKSPACE.SHORTCUTS.OPEN_TOOLTIP' | translate"
-            [attr.aria-label]="'WORKSPACE.SHORTCUTS.OPEN_ARIA' | translate"
+            [matTooltip]="'Keyboard shortcuts (?)'"
+            [attr.aria-label]="'Open keyboard shortcuts'"
         >
             <mat-icon>keyboard</mat-icon>
         </button>
@@ -79,8 +75,8 @@
             type="button"
             mat-icon-button
             (click)="onAddPlaylistRequested()"
-            [matTooltip]="'WORKSPACE.SHELL.ADD_PLAYLIST_ALL' | translate"
-            [attr.aria-label]="'WORKSPACE.SHELL.ADD_PLAYLIST' | translate"
+            [matTooltip]="'Add playlist'"
+            [attr.aria-label]="'Add playlist'"
         >
             <mat-icon>add</mat-icon>
         </button>
@@ -91,8 +87,8 @@
                     class="header-shortcut"
                     mat-icon-button
                     (click)="onHeaderShortcutRequested()"
-                    [matTooltip]="action.tooltipKey | translate"
-                    [attr.aria-label]="action.ariaLabelKey | translate"
+                    [matTooltip]="action.tooltipKey"
+                    [attr.aria-label]="action.ariaLabelKey"
                 >
                     <mat-icon>{{ action.icon }}</mat-icon>
                 </button>
@@ -128,12 +124,8 @@
                     [class.is-active]="isDownloadsView()"
                     [class.has-activity]="hasActiveDownloads()"
                     (click)="onDownloadsRequested()"
-                    [matTooltip]="
-                        'WORKSPACE.SHELL.RAIL_DOWNLOADS' | translate
-                    "
-                    [attr.aria-label]="
-                        'WORKSPACE.SHELL.OPEN_DOWNLOADS' | translate
-                    "
+                    [matTooltip]="'Downloads'"
+                    [attr.aria-label]="'Open downloads'"
                 >
                     <mat-icon>download</mat-icon>
                 </button>

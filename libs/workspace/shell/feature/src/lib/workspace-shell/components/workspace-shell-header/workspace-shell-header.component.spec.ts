@@ -1,16 +1,9 @@
-import {
-    Component,
-    input,
-    output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
-import { TranslatePipe } from '@ngx-translate/core';
 import { WorkspaceShellHeaderComponent } from './workspace-shell-header.component';
 
 @Component({
@@ -39,21 +32,6 @@ describe('WorkspaceShellHeaderComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [WorkspaceShellHeaderComponent, NoopAnimationsModule],
-            providers: [
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => key,
-                        get: (key: string) => of(key),
-                        stream: (key: string) => of(key),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                    },
-                },
-            ],
         })
             .overrideComponent(WorkspaceShellHeaderComponent, {
                 set: {
@@ -62,7 +40,6 @@ describe('WorkspaceShellHeaderComponent', () => {
                         MatIconButton,
                         MatTooltip,
                         MockPlaylistSwitcherComponent,
-                        TranslatePipe,
                     ],
                 },
             })
@@ -76,7 +53,7 @@ describe('WorkspaceShellHeaderComponent', () => {
         fixture.componentRef.setInput('canUseSearch', true);
         fixture.componentRef.setInput(
             'searchPlaceholder',
-            'WORKSPACE.SHELL.SEARCH_PLAYLIST_PLACEHOLDER'
+            'Search in this playlist...'
         );
         fixture.detectChanges();
     });
@@ -84,8 +61,9 @@ describe('WorkspaceShellHeaderComponent', () => {
     it('emits search input changes as user types', () => {
         const emitted: string[] = [];
         component.searchChanged.subscribe((value) => emitted.push(value));
-        const input: HTMLInputElement =
-            fixture.nativeElement.querySelector('input[type="search"]');
+        const input: HTMLInputElement = fixture.nativeElement.querySelector(
+            'input[type="search"]'
+        );
 
         input.value = 'matrix';
         input.dispatchEvent(new Event('input'));
@@ -94,8 +72,9 @@ describe('WorkspaceShellHeaderComponent', () => {
     });
 
     it('focuses and selects the search input on request', () => {
-        const input: HTMLInputElement =
-            fixture.nativeElement.querySelector('input[type="search"]');
+        const input: HTMLInputElement = fixture.nativeElement.querySelector(
+            'input[type="search"]'
+        );
         input.value = 'matrix';
         input.blur();
 
@@ -111,7 +90,7 @@ describe('WorkspaceShellHeaderComponent', () => {
         component.addPlaylistRequested.subscribe(requested);
 
         const button: HTMLButtonElement = fixture.nativeElement.querySelector(
-            'button[aria-label="WORKSPACE.SHELL.ADD_PLAYLIST"]'
+            'button[aria-label="Add playlist"]'
         );
         button.click();
 
@@ -123,7 +102,7 @@ describe('WorkspaceShellHeaderComponent', () => {
         component.shortcutsRequested.subscribe(requested);
 
         const button: HTMLButtonElement = fixture.nativeElement.querySelector(
-            'button[aria-label="WORKSPACE.SHORTCUTS.OPEN_ARIA"]'
+            'button[aria-label="Open keyboard shortcuts"]'
         );
         button.click();
 
@@ -133,7 +112,7 @@ describe('WorkspaceShellHeaderComponent', () => {
     it('does not render the removed global favorites shortcut', () => {
         const button: HTMLButtonElement | null =
             fixture.nativeElement.querySelector(
-                'button[aria-label="WORKSPACE.SHELL.OPEN_GLOBAL_FAVORITES"]'
+                'button[aria-label="Open global favorites"]'
             );
 
         expect(button).toBeNull();

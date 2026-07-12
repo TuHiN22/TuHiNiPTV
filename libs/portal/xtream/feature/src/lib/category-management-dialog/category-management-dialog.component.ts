@@ -16,7 +16,6 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslatePipe } from '@ngx-translate/core';
 import { DatabaseService, XCategoryFromDb } from '@iptvnator/services';
 import { createLogger } from '@iptvnator/portal/shared/util';
 
@@ -38,7 +37,6 @@ interface CategoryWithSelection extends XCategoryFromDb {
         MatCheckboxModule,
         MatIconModule,
         MatProgressSpinnerModule,
-        TranslatePipe,
     ],
     templateUrl: './category-management-dialog.component.html',
     styleUrl: './category-management-dialog.component.scss',
@@ -178,8 +176,12 @@ export class CategoryManagementDialogComponent implements OnInit {
         this.isSaving.set(true);
         try {
             const categories = this.categories();
-            const toHide = categories.filter((c) => !c.selected).map((c) => c.id);
-            const toShow = categories.filter((c) => c.selected).map((c) => c.id);
+            const toHide = categories
+                .filter((c) => !c.selected)
+                .map((c) => c.id);
+            const toShow = categories
+                .filter((c) => c.selected)
+                .map((c) => c.id);
 
             if (toHide.length > 0) {
                 await this.dbService.updateCategoryVisibility(toHide, true);

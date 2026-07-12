@@ -4,7 +4,6 @@ import {
     computed,
     input,
 } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
 import { ChannelListSkeletonComponent } from '../channel-list-container/channel-list-skeleton/channel-list-skeleton.component';
 
 @Component({
@@ -12,7 +11,7 @@ import { ChannelListSkeletonComponent } from '../channel-list-container/channel-
     templateUrl: './channel-list-loading-state.component.html',
     styleUrl: './channel-list-loading-state.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, ChannelListSkeletonComponent],
+    imports: [ChannelListSkeletonComponent],
 })
 export class ChannelListLoadingStateComponent {
     readonly view = input<string>('all');

@@ -28,7 +28,7 @@ import {
 } from '../playback-diagnostics/playback-diagnostics.util';
 import { SeriesPlaybackNavigationControlsComponent } from '../portal-inline-player/series-playback-navigation-controls.component';
 import type { SeriesPlaybackNavigation } from '../portal-inline-player/series-playback-navigation';
-import { isCodecFailure } from '../playback-diagnostics/playback-error-patterns.util';
+import { ArtPlayerHlsRecovery } from './art-player-hls-recovery';
 
 Artplayer.AUTO_PLAYBACK_TIMEOUT = 10000;
 
@@ -58,16 +58,7 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
     private mpegtsPlayer: mpegts.Player | null = null;
     private settingsMenu: ArtPlayerSettingsMenu | null = null;
 
-    /**
-     * Bounded counters for hls.js self-recovery. hls.js can transparently
-     * recover from many transient network stalls (via `startLoad()`) and media
-     * decode hiccups (via `recoverMediaError()`), so we retry a few times
-     * before surfacing the "stream could not be loaded" diagnostic overlay.
-     */
-    private hlsNetworkRecoveryAttempts = 0;
-    private hlsMediaRecoveryAttempts = 0;
-    private static readonly MAX_HLS_NETWORK_RECOVERY_ATTEMPTS = 3;
-    private static readonly MAX_HLS_MEDIA_RECOVERY_ATTEMPTS = 2;
+    private readonly hlsRecovery = new ArtPlayerHlsRecovery();
 
     private readonly elementRef = inject(ElementRef);
 
@@ -185,8 +176,7 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
                         if (this.hls) {
                             this.hls.destroy();
                         }
-                        this.hlsNetworkRecoveryAttempts = 0;
-                        this.hlsMediaRecoveryAttempts = 0;
+                        this.hlsRecovery.reset();
                         this.hls = new Hls();
                         this.hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
                             this.handleHlsManifestParsed(url, data);
@@ -337,7 +327,10 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
         // media errors that clear once loading is restarted, so we retry a
         // bounded number of times and only surface the diagnostic overlay when
         // recovery is exhausted or the error is unrecoverable.
-        if (this.hls && this.tryRecoverHls(data)) {
+        if (
+            this.hls &&
+            this.hlsRecovery.tryRecover(this.hls, data, Hls.ErrorTypes)
+        ) {
             return;
         }
 
@@ -353,58 +346,6 @@ export class ArtPlayerComponent implements OnInit, OnDestroy, OnChanges {
                 this.createSourceMetadata(url, 'application/x-mpegURL')
             )
         );
-    }
-
-    /**
-     * Runs hls.js self-recovery for recoverable fatal errors. Returns `true`
-     * when a recovery step was triggered (so the caller should suppress the
-     * diagnostic overlay), or `false` when the error is unrecoverable or the
-     * retry budget is spent.
-     */
-    private tryRecoverHls(data: ErrorData): boolean {
-        if (!this.hls) {
-            return false;
-        }
-
-        // `Hls.ErrorTypes` may be absent when hls.js is mocked (unit tests) or
-        // built without the enum; guard so recovery degrades to "no recovery"
-        // instead of throwing.
-        const errorTypes = Hls.ErrorTypes;
-        if (!errorTypes) {
-            return false;
-        }
-
-        if (data.type === errorTypes.NETWORK_ERROR) {
-            if (
-                this.hlsNetworkRecoveryAttempts >=
-                ArtPlayerComponent.MAX_HLS_NETWORK_RECOVERY_ATTEMPTS
-            ) {
-                return false;
-            }
-            this.hlsNetworkRecoveryAttempts += 1;
-            this.hls.startLoad();
-            return true;
-        }
-
-        if (data.type === errorTypes.MEDIA_ERROR) {
-            // Codec failures are typed as MEDIA_ERROR but are not fixed by
-            // `recoverMediaError()` retries — surface them immediately so the
-            // external-player fallback is offered without a delay.
-            if (isCodecFailure((data.details ?? '').toLowerCase())) {
-                return false;
-            }
-            if (
-                this.hlsMediaRecoveryAttempts >=
-                ArtPlayerComponent.MAX_HLS_MEDIA_RECOVERY_ATTEMPTS
-            ) {
-                return false;
-            }
-            this.hlsMediaRecoveryAttempts += 1;
-            this.hls.recoverMediaError();
-            return true;
-        }
-
-        return false;
     }
 
     private getVideoType(url: string): string {

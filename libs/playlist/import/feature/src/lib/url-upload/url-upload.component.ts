@@ -8,18 +8,12 @@ import {
 } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslatePipe } from '@ngx-translate/core';
 import { RuntimeCapabilitiesService } from '@iptvnator/services';
 
 @Component({
     selector: 'app-url-upload',
     templateUrl: './url-upload.component.html',
-    imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        TranslatePipe,
-    ],
+    imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule],
 })
 export class UrlUploadComponent implements OnInit {
     private readonly fb = inject(FormBuilder);

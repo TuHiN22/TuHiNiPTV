@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import {
     EpgProgressService,
     EpgRuntimeBridgeService,
@@ -24,7 +23,7 @@ describe('EpgSourceStatusComponent', () => {
         imports.set([]);
 
         await TestBed.configureTestingModule({
-            imports: [EpgSourceStatusComponent, TranslateModule.forRoot()],
+            imports: [EpgSourceStatusComponent],
             providers: [
                 {
                     provide: EpgProgressService,

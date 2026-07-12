@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { PlaylistActions, selectAllPlaylistsMeta } from '@iptvnator/m3u-state';
 import { firstValueFrom, map } from 'rxjs';
 import {
@@ -50,7 +49,6 @@ export class UnifiedFavoritesDataService {
     private readonly store = inject(Store);
     private readonly dbService = inject(DatabaseService);
     private readonly playlistsService = inject(PlaylistsService);
-    private readonly translate = inject(TranslateService);
     private readonly runtime = inject(RuntimeCapabilitiesService);
     private readonly xtreamDataSource = inject(XTREAM_DATA_SOURCE);
 
@@ -682,20 +680,11 @@ export class UnifiedFavoritesDataService {
             const poster = extractStalkerItemPoster(fav) || null;
             return {
                 uid: buildCollectionUid('stalker', meta._id, stalkerId),
-                name:
-                    extractStalkerItemTitle(fav) ||
-                    this.translate.instant(
-                        'WORKSPACE.GLOBAL_FAVORITES.UNKNOWN_CHANNEL'
-                    ),
+                name: extractStalkerItemTitle(fav) || 'Unknown',
                 contentType: ct,
                 sourceType: 'stalker' as const,
                 playlistId: meta._id,
-                playlistName:
-                    meta.title ||
-                    meta.filename ||
-                    this.translate.instant(
-                        'WORKSPACE.DASHBOARD.STALKER_PORTAL'
-                    ),
+                playlistName: meta.title || meta.filename || 'Stalker Portal',
                 logo: ct === 'live' ? poster : null,
                 posterUrl: ct !== 'live' ? poster : null,
                 tvgId: ct === 'live' ? stalkerId : undefined,

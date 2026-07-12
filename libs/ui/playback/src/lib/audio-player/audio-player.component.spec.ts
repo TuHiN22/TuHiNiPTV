@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
-import { TranslateModule } from '@ngx-translate/core';
 import { AudioPlayerComponent } from './audio-player.component';
 
 describe('AudioPlayerComponent', () => {
@@ -25,7 +24,7 @@ describe('AudioPlayerComponent', () => {
             .mockImplementation(() => undefined);
 
         await TestBed.configureTestingModule({
-            imports: [AudioPlayerComponent, TranslateModule.forRoot()],
+            imports: [AudioPlayerComponent],
             providers: [{ provide: Store, useValue: store }],
         }).compileComponents();
     });

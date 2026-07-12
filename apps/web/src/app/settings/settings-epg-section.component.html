@@ -9,21 +9,25 @@
             <mat-icon>list_alt</mat-icon>
         </div>
         <div class="settings-group__header-text">
-            <h3>{{ 'SETTINGS.EPG_SOURCES' | translate }}</h3>
-            <p>{{ 'SETTINGS.EPG_SOURCES_DESCRIPTION' | translate }}</p>
+            <h3>{{ 'EPG sources' }}</h3>
+            <p>{{ 'Add one or more URLs as EPG sources' }}</p>
         </div>
     </header>
 
     <div class="setting-item setting-item--full-control">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.EPG_VIEW_MODE' | translate }}</h4>
-            <p>{{ 'SETTINGS.EPG_VIEW_MODE_DESCRIPTION' | translate }}</p>
+            <h4>{{ 'Guide view' }}</h4>
+            <p>
+                {{
+                    'Choose how the programme guide under the player is shown: a horizontal timeline ribbon or a vertical, single-day list.'
+                }}
+            </p>
         </div>
         <div class="setting-item__control">
             <div
                 class="theme-switcher"
                 role="radiogroup"
-                [attr.aria-label]="'SETTINGS.EPG_VIEW_MODE' | translate"
+                [attr.aria-label]="'Guide view'"
                 data-test-id="select-epg-view-mode"
             >
                 @for (option of epgViewModeOptions(); track option.value) {
@@ -41,7 +45,7 @@
                         (click)="selectEpgViewMode.emit(option.value)"
                     >
                         <mat-icon>{{ option.icon }}</mat-icon>
-                        <span>{{ option.labelKey | translate }}</span>
+                        <span>{{ option.labelKey }}</span>
                     </button>
                 }
             </div>
@@ -60,10 +64,12 @@
                             >event_busy</mat-icon
                         >
                         <h4 class="epg-sources-empty__title">
-                            {{ 'SETTINGS.EPG_EMPTY_TITLE' | translate }}
+                            {{ 'No EPG sources yet' }}
                         </h4>
                         <p class="epg-sources-empty__hint">
-                            {{ 'SETTINGS.EPG_EMPTY_HINT' | translate }}
+                            {{
+                                'Add a URL to fetch program data for your channels.'
+                            }}
                         </p>
                     </div>
                 } @else {
@@ -75,10 +81,7 @@
                                     subscriptSizing="dynamic"
                                     class="w-full"
                                 >
-                                    <mat-label>{{
-                                        'SETTINGS.EPG_URL_PLACEHOLDER'
-                                            | translate
-                                    }}</mat-label>
+                                    <mat-label>{{ 'Enter an URL' }}</mat-label>
                                     <input
                                         matInput
                                         type="url"
@@ -86,7 +89,7 @@
                                         #epgField
                                     />
                                     <mat-error>{{
-                                        'SETTINGS.EPG_URL_ERROR' | translate
+                                        'The value is not a valid URL'
                                     }}</mat-error>
                                 </mat-form-field>
                                 @if (epgField.value) {
@@ -96,9 +99,7 @@
                                 }
                                 <button
                                     mat-icon-button
-                                    [matTooltip]="
-                                        'SETTINGS.REFRESH_EPG' | translate
-                                    "
+                                    [matTooltip]="'Refresh EPG'"
                                     type="button"
                                     [disabled]="epgField.value === ''"
                                     (click)="refreshEpg.emit(epgUrl().value[i])"
@@ -107,9 +108,7 @@
                                 </button>
                                 <button
                                     mat-icon-button
-                                    [matTooltip]="
-                                        'SETTINGS.REMOVE_EPG_SOURCE' | translate
-                                    "
+                                    [matTooltip]="'Remove EPG source'"
                                     type="button"
                                     (click)="removeEpgSource.emit(i)"
                                 >
@@ -125,8 +124,12 @@
 
     <div class="setting-item">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.PREFER_UPLOADED_EPG_TITLE' | translate }}</h4>
-            <p>{{ 'SETTINGS.PREFER_UPLOADED_EPG_HINT' | translate }}</p>
+            <h4>{{ 'Prefer your EPG sources for Xtream playlists' }}</h4>
+            <p>
+                {{
+                    'By default, Xtream playlists use the program guide from your provider, and your uploaded EPG only fills missing channels. Turn this on to use your uploaded EPG first instead.'
+                }}
+            </p>
         </div>
         <div class="setting-item__control setting-item__toggle">
             <mat-checkbox
@@ -140,7 +143,7 @@
         <div class="inline-actions">
             <button mat-button type="button" (click)="addEpgSource.emit()">
                 <mat-icon>add</mat-icon>
-                {{ 'SETTINGS.ADD_EPG_SOURCE' | translate }}
+                {{ 'Add EPG source' }}
             </button>
             <button
                 mat-button
@@ -149,7 +152,7 @@
                 (click)="refreshAllEpg.emit()"
             >
                 <mat-icon>refresh</mat-icon>
-                {{ 'SETTINGS.REFRESH_ALL_EPG' | translate }}
+                {{ 'Refresh all' }}
             </button>
             <button
                 mat-button
@@ -164,9 +167,9 @@
                         diameter="16"
                         mode="indeterminate"
                     />
-                    {{ 'SETTINGS.CLEARING_EPG_DATA' | translate }}
+                    {{ 'Clearing…' }}
                 } @else {
-                    {{ 'SETTINGS.CLEAR_EPG_DATA' | translate }}
+                    {{ 'Clear EPG data' }}
                 }
             </button>
         </div>

@@ -19,7 +19,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { TranslatePipe } from '@ngx-translate/core';
 import { ResizableDirective } from '@iptvnator/ui/components';
 import {
     getM3uArchiveDays,
@@ -131,7 +130,6 @@ const M3U_SIDEBAR_DEFAULT_WIDTH = 460;
         PortalEmptyStateComponent,
         ResizableDirective,
         SidebarComponent,
-        TranslatePipe,
         WebPlayerViewComponent,
     ],
     templateUrl: './video-player.component.html',
@@ -160,9 +158,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     readonly activePlaybackUrl = this.store.selectSignal(
         selectActivePlaybackUrl
     );
-    readonly activeEpgProgram = this.store.selectSignal(
-        selectActiveEpgProgram
-    );
+    readonly activeEpgProgram = this.store.selectSignal(selectActiveEpgProgram);
     readonly activeEpgProgramOrNull = computed(
         () => this.activeEpgProgram() ?? null
     );
@@ -189,9 +185,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     private readonly epgChannelLogo = toSignal(
         toObservable(this.activeChannel).pipe(
             switchMap((channel) => {
-                const key = channel
-                    ? resolveChannelEpgLookupKey(channel)
-                    : '';
+                const key = channel ? resolveChannelEpgLookupKey(channel) : '';
                 if (!key) {
                     return of('');
                 }
@@ -300,9 +294,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         )
     );
     readonly liveEpgPanelSummaryLabelKey = computed(() =>
-        this.activeEpgProgramOrNull()
-            ? 'EPG.ARCHIVE_PLAYBACK'
-            : 'EPG.CURRENT_PROGRAM'
+        this.activeEpgProgramOrNull() ? 'Archive playback' : 'Current program'
     );
     readonly showReturnToLive = computed(
         () => this.activeEpgProgramOrNull() !== null
@@ -1035,12 +1027,11 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         this.workspaceHeaderContext.setAction({
             id: M3U_MULTI_EPG_HEADER_ACTION_ID,
             icon: 'view_list',
-            tooltipKey: 'TOP_MENU.OPEN_MULTI_EPG',
-            ariaLabelKey: 'TOP_MENU.OPEN_MULTI_EPG',
+            tooltipKey: 'Open Multi-EPG view',
+            ariaLabelKey: 'Open Multi-EPG view',
             palette: {
-                labelKey: 'TOP_MENU.OPEN_MULTI_EPG',
-                descriptionKey:
-                    'WORKSPACE.SHELL.COMMANDS.OPEN_MULTI_EPG_DESCRIPTION',
+                labelKey: 'Open Multi-EPG view',
+                descriptionKey: 'Open the multi-channel EPG view',
                 keywords: ['epg', 'guide', 'schedule'],
                 priority: 10,
             },

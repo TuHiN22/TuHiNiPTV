@@ -1,11 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 import { XtreamStore } from '@iptvnator/portal/xtream/data-access';
 
 @Component({
     selector: 'app-xtream-cached-offline-notice',
-    imports: [MatIconModule, TranslatePipe],
+    imports: [MatIconModule],
     template: `
         @if (showWarning()) {
             <div
@@ -17,15 +21,11 @@ import { XtreamStore } from '@iptvnator/portal/xtream/data-access';
 
                 <div class="xtream-cached-offline-notice__copy">
                     <strong>
-                        {{
-                            'PORTALS.ERROR_VIEW.PORTAL_UNAVAILABLE.TITLE'
-                                | translate
-                        }}
+                        {{ 'Portal unavailable' }}
                     </strong>
                     <span>
                         {{
-                            'PORTALS.ERROR_VIEW.PORTAL_UNAVAILABLE.DESCRIPTION'
-                                | translate
+                            'The portal could not be reached. Check the server URL or retry when the source is available again.'
                         }}
                     </span>
                 </div>

@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { EpgProgram } from '@iptvnator/shared/interfaces';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { EpgListViewComponent } from './epg-list-view.component';
 import { EpgListRow } from './epg-list-view.utils';
@@ -45,14 +44,6 @@ describe('EpgListViewComponent', () => {
                     provide: MatDialog,
                     useValue: {
                         open: () => ({ afterClosed: () => dialogResult }),
-                    },
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                        onLangChange: new BehaviorSubject(null),
                     },
                 },
             ],

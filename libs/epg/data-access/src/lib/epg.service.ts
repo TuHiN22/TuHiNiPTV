@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, forkJoin, from, Observable, of } from 'rxjs';
 import {
     catchError,
@@ -36,7 +35,6 @@ const debugEpgService = createDevLogger('EpgService');
 })
 export class EpgService {
     private snackBar = inject(MatSnackBar);
-    private translate = inject(TranslateService);
     private readonly epgBridge = inject(EpgRuntimeBridgeService);
     private readonly settingsStore = inject(SettingsStore);
 
@@ -125,8 +123,8 @@ export class EpgService {
      * Shows error snackbar
      */
     private showErrorSnackbar(message?: string): void {
-        const errorMessage = message || this.translate.instant('EPG.ERROR');
-        this.snackBar.open(errorMessage, this.translate.instant('CLOSE'), {
+        const errorMessage = message || 'Ooops, EPG could not be loaded.';
+        this.snackBar.open(errorMessage, 'Close', {
             duration: 3000,
             horizontalPosition: 'start',
         });

@@ -6,7 +6,6 @@ import {
     MatDialogRef,
 } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
 import { XtreamSerieEpisode } from '@iptvnator/shared/interfaces';
 
 export interface EpisodeInfoDialogData {
@@ -25,9 +24,7 @@ export function buildEpisodeInfoDialogData(
     fallbackSeasonKey: string | undefined
 ): EpisodeInfoDialogData {
     const info =
-        !episode.info || Array.isArray(episode.info)
-            ? undefined
-            : episode.info;
+        !episode.info || Array.isArray(episode.info) ? undefined : episode.info;
     const seasonNumber = Number(episode.season || fallbackSeasonKey || 1);
     const episodeNumber = Number(episode.episode_num || 1);
     return {
@@ -53,7 +50,7 @@ export const EPISODE_INFO_PLAY = 'play' as const;
 @Component({
     selector: 'app-episode-info-dialog',
     standalone: true,
-    imports: [MatButtonModule, MatDialogModule, MatIconModule, TranslateModule],
+    imports: [MatButtonModule, MatDialogModule, MatIconModule],
     template: `
         <div class="episode-info">
             @if (data.thumbnailUrl) {
@@ -94,7 +91,7 @@ export const EPISODE_INFO_PLAY = 'play' as const;
         </div>
         <div mat-dialog-actions align="end">
             <button mat-button mat-dialog-close type="button">
-                {{ 'CLOSE' | translate }}
+                {{ 'Close' }}
             </button>
             <button
                 mat-flat-button
@@ -103,7 +100,7 @@ export const EPISODE_INFO_PLAY = 'play' as const;
                 (click)="play()"
             >
                 <mat-icon>play_arrow</mat-icon>
-                {{ 'XTREAM.PLAY' | translate }}
+                {{ 'Play' }}
             </button>
         </div>
     `,

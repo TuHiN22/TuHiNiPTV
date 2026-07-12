@@ -18,7 +18,6 @@ import {
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import {
@@ -68,7 +67,6 @@ interface XtreamCategoryLike {
         ChannelListSkeletonComponent,
         MatIcon,
         ScrollingModule,
-        TranslatePipe,
     ],
 })
 export class PortalChannelsListComponent implements AfterViewInit, OnDestroy {

@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { DatabaseService, PlaylistsService } from '@iptvnator/services';
 import {
@@ -185,12 +184,6 @@ describe('UnifiedFavoritesDataService', () => {
                 {
                     provide: PlaylistsService,
                     useValue: playlistsService,
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => key,
-                    },
                 },
             ],
         });

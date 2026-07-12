@@ -6,12 +6,7 @@
             let i = $index
         ) {
             <app-channel-list-item
-                [name]="
-                    i +
-                    1 +
-                    '. ' +
-                    (item.channel.name || 'CHANNELS.UNNAMED_CHANNEL' | translate)
-                "
+                [name]="i + 1 + '. ' + (item.channel.name || 'Unnamed Channel')"
                 [logo]="item.logo"
                 [showEpg]="shouldShowEpg()"
                 [isRadio]="item.channel.radio === 'true'"
@@ -21,9 +16,7 @@
                 [showDetailsContextMenu]="true"
                 [showAuxActionButton]="true"
                 [auxActionIcon]="'delete'"
-                [auxActionTooltip]="
-                    'WORKSPACE.DASHBOARD.REMOVE_FROM_HISTORY' | translate
-                "
+                [auxActionTooltip]="'Remove from history'"
                 (clicked)="onChannelClick(item.channel)"
                 (activated)="onChannelActivate(item.channel)"
                 (contextMenuRequested)="
@@ -36,17 +29,19 @@
         <div class="empty-recent">
             <strong>
                 @if (searchTerm()) {
-                    {{ 'CHANNELS.NO_SEARCH_RESULTS' | translate }}
+                    {{ 'No channels found' }}
                 } @else {
-                    {{ 'WORKSPACE.DASHBOARD.NO_HISTORY' | translate }}
+                    {{ 'No items found for this filter.' }}
                 }
             </strong>
         </div>
         <div class="empty-recent-hint">
             @if (searchTerm()) {
-                {{ 'CHANNELS.TRY_DIFFERENT_SEARCH' | translate }}
+                {{ 'Try a different search term' }}
             } @else {
-                {{ 'WORKSPACE.DASHBOARD.NO_HISTORY_HINT' | translate }}
+                {{
+                    'Your watching history will appear here once you start playing content from your playlists.'
+                }}
             }
         </div>
     }
@@ -64,10 +59,10 @@
 <mat-menu #channelContextMenu="matMenu">
     <button mat-menu-item (click)="openChannelDetails()">
         <mat-icon>info</mat-icon>
-        <span>{{ 'CHANNELS.SHOW_DETAILS' | translate }}</span>
+        <span>{{ 'Show channel details' }}</span>
     </button>
     <button mat-menu-item (click)="removeContextMenuChannel()">
         <mat-icon>delete</mat-icon>
-        <span>{{ 'WORKSPACE.DASHBOARD.REMOVE_FROM_HISTORY' | translate }}</span>
+        <span>{{ 'Remove from history' }}</span>
     </button>
 </mat-menu>

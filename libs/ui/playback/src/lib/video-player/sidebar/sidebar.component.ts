@@ -3,7 +3,6 @@ import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PlaylistSwitcherComponent } from '@iptvnator/playlist/shared/ui';
 import { PlaylistContextFacade } from '@iptvnator/playlist/shared/util';
 import { Channel } from '@iptvnator/shared/interfaces';
@@ -20,7 +19,6 @@ import { ChannelListContainerComponent } from '@iptvnator/ui/components';
         MatTooltip,
         PlaylistSwitcherComponent,
         RouterLink,
-        TranslatePipe,
     ],
 })
 export class SidebarComponent {
@@ -34,7 +32,6 @@ export class SidebarComponent {
     readonly sidebarToggleRequested = output<void>();
 
     private readonly playlistContext = inject(PlaylistContextFacade);
-    private readonly translate = inject(TranslateService);
 
     readonly activePlaylist = this.playlistContext.activePlaylist;
     readonly playlistTitle = computed(() => {
@@ -51,11 +48,11 @@ export class SidebarComponent {
 
     readonly subtitle = computed(() => {
         if (this.channelsLoading()) {
-            return this.translate.instant('CHANNELS.LOADING');
+            return 'Loading channels...';
         }
 
         const count = this.channels()?.length ?? 0;
-        return `${count} ${this.translate.instant('HOME.PLAYLISTS.CHANNELS')}`;
+        return `${count} ${'Channels'}`;
     });
 
     onSidebarWidthRequested(width: number): void {

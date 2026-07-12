@@ -8,7 +8,6 @@ import {
     output,
 } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
-import { TranslatePipe } from '@ngx-translate/core';
 import { WorkspaceContextErrorViewComponent } from './workspace-context-error-view.component';
 
 interface WorkspaceCategoryViewItem {
@@ -21,7 +20,7 @@ interface WorkspaceCategoryViewItem {
 
 @Component({
     selector: 'app-workspace-context-category-view',
-    imports: [MatListModule, TranslatePipe, WorkspaceContextErrorViewComponent],
+    imports: [MatListModule, WorkspaceContextErrorViewComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './workspace-context-category-view.component.html',
     styleUrl: './workspace-context-category-view.component.scss',

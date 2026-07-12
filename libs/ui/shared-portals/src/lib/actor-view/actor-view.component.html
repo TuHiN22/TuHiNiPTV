@@ -3,7 +3,7 @@
         class="actor-view__back"
         type="button"
         (click)="backClicked.emit()"
-        [attr.aria-label]="'BACK' | translate"
+        [attr.aria-label]="'Back'"
     >
         <mat-icon>arrow_back</mat-icon>
     </button>
@@ -29,7 +29,7 @@
                 <h1>{{ person.name }}</h1>
                 @if (person.birthday) {
                     <p class="actor-view__born">
-                        {{ 'XTREAM.ACTOR_BORN' | translate }}
+                        {{ 'Born' }}
                         {{ person.birthday }}
                         @if (person.placeOfBirth) {
                             · {{ person.placeOfBirth }}
@@ -44,7 +44,7 @@
 
         <section class="actor-view__filmography">
             <h2>
-                {{ 'XTREAM.ACTOR_FILMOGRAPHY' | translate }}
+                {{ 'Filmography' }}
                 @if (showScopeToggle()) {
                     <span class="actor-view__filter">
                         <button
@@ -55,7 +55,7 @@
                             "
                             (click)="scopeChanged.emit('portal')"
                         >
-                            {{ 'XTREAM.ACTOR_SCOPE_THIS_PORTAL' | translate }}
+                            {{ 'This portal' }}
                         </button>
                         <button
                             type="button"
@@ -65,7 +65,7 @@
                             "
                             (click)="scopeChanged.emit('global')"
                         >
-                            {{ 'XTREAM.ACTOR_SCOPE_ALL_PORTALS' | translate }}
+                            {{ 'All portals' }}
                         </button>
                     </span>
                 }
@@ -79,7 +79,7 @@
                             "
                             (click)="filterMode.set('all')"
                         >
-                            {{ 'XTREAM.ACTOR_FILTER_ALL' | translate }}
+                            {{ 'All' }}
                         </button>
                         <button
                             type="button"
@@ -89,7 +89,7 @@
                             "
                             (click)="filterMode.set('available')"
                         >
-                            {{ 'XTREAM.ACTOR_IN_LIBRARY' | translate }}
+                            {{ 'In your library' }}
                         </button>
                     </span>
                 }
@@ -101,7 +101,7 @@
             } @else if (visibleItems().length === 0) {
                 <div class="actor-view__empty">
                     <mat-icon>search_off</mat-icon>
-                    <p>{{ 'XTREAM.ACTOR_NO_RESULTS' | translate }}</p>
+                    <p>{{ 'Nothing found for this filter' }}</p>
                 </div>
             }
             <div class="actor-view__grid">
@@ -144,16 +144,14 @@
                         ) {
                             <span class="actor-view__badge">
                                 <mat-icon>check_circle</mat-icon>
-                                {{ 'XTREAM.ACTOR_IN_LIBRARY' | translate }}
+                                {{ 'In your library' }}
                             </span>
                         } @else if (!item.available) {
                             <span
                                 class="actor-view__badge actor-view__badge--search"
                             >
                                 <mat-icon>search</mat-icon>
-                                {{
-                                    'XTREAM.ACTOR_SEARCH_IN_PORTAL' | translate
-                                }}
+                                {{ 'Search in portal' }}
                             </span>
                         }
                         <span class="actor-view__card-title">

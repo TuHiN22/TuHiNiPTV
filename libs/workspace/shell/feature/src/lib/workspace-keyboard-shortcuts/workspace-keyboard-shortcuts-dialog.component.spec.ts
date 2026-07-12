@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
 import { WorkspaceKeyboardShortcutsDialogComponent } from './workspace-keyboard-shortcuts-dialog.component';
 
 describe('WorkspaceKeyboardShortcutsDialogComponent', () => {
@@ -17,13 +15,12 @@ describe('WorkspaceKeyboardShortcutsDialogComponent', () => {
                         groups: [
                             {
                                 id: 'global',
-                                labelKey: 'WORKSPACE.SHORTCUTS.GROUPS.GLOBAL',
+                                labelKey: 'Global',
                                 icon: 'keyboard',
                                 items: [
                                     {
                                         id: 'open-command-palette',
-                                        labelKey:
-                                            'WORKSPACE.SHORTCUTS.ITEMS.OPEN_COMMAND_PALETTE',
+                                        labelKey: 'Open command palette',
                                         icon: 'terminal',
                                         chords: [
                                             {
@@ -49,7 +46,7 @@ describe('WorkspaceKeyboardShortcutsDialogComponent', () => {
                                     {
                                         id: 'play-pause',
                                         labelKey:
-                                            'WORKSPACE.SHORTCUTS.ITEMS.PLAY_PAUSE',
+                                            'Play or pause embedded MPV playback',
                                         icon: 'play_arrow',
                                         chords: [
                                             {
@@ -82,25 +79,12 @@ describe('WorkspaceKeyboardShortcutsDialogComponent', () => {
                             },
                         ],
                         platformIcon: 'laptop_mac',
-                        platformLabelKey: 'WORKSPACE.SHORTCUTS.PLATFORM.MAC',
+                        platformLabelKey: 'macOS layout',
                     },
                 },
                 {
                     provide: MatDialogRef,
                     useValue: { close: jest.fn() },
-                },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => key,
-                        get: (key: string) => of(key),
-                        stream: (key: string) => of(key),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                    },
                 },
             ],
         }).compileComponents();
@@ -114,25 +98,21 @@ describe('WorkspaceKeyboardShortcutsDialogComponent', () => {
     it('renders the dialog title and groups', () => {
         const text = fixture.nativeElement.textContent;
 
-        expect(text).toContain('WORKSPACE.SHORTCUTS.TITLE');
-        expect(text).toContain('WORKSPACE.SHORTCUTS.GROUPS.GLOBAL');
+        expect(text).toContain('Keyboard shortcuts');
+        expect(text).toContain('Global');
     });
 
     it('renders shortcut labels and multiple keys', () => {
         const text = fixture.nativeElement.textContent;
 
-        expect(text).toContain(
-            'WORKSPACE.SHORTCUTS.ITEMS.OPEN_COMMAND_PALETTE'
-        );
-        expect(text).toContain('WORKSPACE.SHORTCUTS.ITEMS.PLAY_PAUSE');
+        expect(text).toContain('Open command palette');
+        expect(text).toContain('Play or pause embedded MPV playback');
         expect(text).toContain('Cmd');
         expect(text).toContain('Space');
         expect(text).toContain('K');
     });
 
     it('renders the detected platform label', () => {
-        expect(fixture.nativeElement.textContent).toContain(
-            'WORKSPACE.SHORTCUTS.PLATFORM.MAC'
-        );
+        expect(fixture.nativeElement.textContent).toContain('macOS layout');
     });
 });

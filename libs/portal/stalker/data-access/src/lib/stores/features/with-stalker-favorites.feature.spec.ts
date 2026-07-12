@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { PlaylistActions } from '@iptvnator/m3u-state';
 import { PlaylistsService } from '@iptvnator/services';
@@ -53,9 +52,7 @@ describe('withStalkerFavorites', () => {
             addPortalFavorite: jest.fn(() =>
                 of({ favorites: [{ id: '42', title: 'Movie Title' }] })
             ),
-            removeFromPortalFavorites: jest.fn(() =>
-                of({ favorites: [] })
-            ),
+            removeFromPortalFavorites: jest.fn(() => of({ favorites: [] })),
         };
         snackBar = { open: jest.fn() };
         ngrxStore = { dispatch: jest.fn() };
@@ -65,10 +62,6 @@ describe('withStalkerFavorites', () => {
                 TestFavoritesStore,
                 { provide: PlaylistsService, useValue: playlistService },
                 { provide: MatSnackBar, useValue: snackBar },
-                {
-                    provide: TranslateService,
-                    useValue: { instant: jest.fn((key: string) => key) },
-                },
                 { provide: Store, useValue: ngrxStore },
             ],
         });
@@ -108,7 +101,7 @@ describe('withStalkerFavorites', () => {
                 })
             );
             expect(snackBar.open).toHaveBeenCalledWith(
-                'PORTALS.ADDED_TO_FAVORITES',
+                'Added to favorites',
                 undefined,
                 { duration: 1000 }
             );
@@ -169,7 +162,7 @@ describe('withStalkerFavorites', () => {
                 })
             );
             expect(snackBar.open).toHaveBeenCalledWith(
-                'PORTALS.REMOVED_FROM_FAVORITES',
+                'Removed from favorites',
                 undefined,
                 { duration: 1000 }
             );

@@ -9,7 +9,6 @@ import {
     DEFAULT_DASHBOARD_RAILS_SETTINGS,
     DEFAULT_TMDB_SETTINGS,
     EpgViewMode,
-    Language,
     normalizeDashboardRailsSettings,
     normalizeExternalPlayerArguments,
     Settings,
@@ -36,7 +35,6 @@ export function createSettingsForm(
             : {}),
         streamFormat: StreamFormat.AutoStreamFormat,
         openStreamOnDoubleClick: false,
-        language: Language.ENGLISH,
         showCaptions: false,
         showDashboard: true,
         dashboardRails: formBuilder.group({
@@ -115,7 +113,6 @@ export function createSettingsFromFormValue(
         player: value.player ?? VideoPlayer.VideoJs,
         streamFormat: value.streamFormat ?? StreamFormat.AutoStreamFormat,
         openStreamOnDoubleClick: value.openStreamOnDoubleClick ?? false,
-        language: value.language ?? Language.ENGLISH,
         showCaptions: value.showCaptions ?? false,
         showDashboard: value.showDashboard ?? true,
         dashboardRails: normalizeDashboardRailsSettings(value.dashboardRails),

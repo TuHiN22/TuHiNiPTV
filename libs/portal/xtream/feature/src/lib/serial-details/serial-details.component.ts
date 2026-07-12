@@ -13,7 +13,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     DetailActionsTemplateDirective,
     DetailMetaTemplateDirective,
@@ -74,7 +73,6 @@ import {
         PortalInlinePlayerComponent,
         SeasonContainerComponent,
         SlicePipe,
-        TranslatePipe,
     ],
 })
 export class SerialDetailsComponent implements OnInit, OnDestroy {
@@ -85,7 +83,6 @@ export class SerialDetailsComponent implements OnInit, OnDestroy {
     private readonly xtreamStore = inject(XtreamStore);
     private readonly playback = inject(SerialDetailsPlaybackService);
     private readonly snackBar = inject(MatSnackBar);
-    private readonly translateService = inject(TranslateService);
 
     readonly selectedItem = signal<XtreamSerieDetailsView | null>(null);
     readonly selectedContentType = this.xtreamStore.selectedContentType;
@@ -158,8 +155,7 @@ export class SerialDetailsComponent implements OnInit, OnDestroy {
     });
 
     private readonly loadCrossPortalSimilar = effect(() => {
-        const recommendations =
-            this.selectedItem()?.info?.tmdb_recommendations;
+        const recommendations = this.selectedItem()?.info?.tmdb_recommendations;
         const playlistId = this.xtreamStore.currentPlaylist()?.id;
         untracked(() => {
             this.crossPortalItems.set([]);
@@ -386,13 +382,9 @@ export class SerialDetailsComponent implements OnInit, OnDestroy {
     }
 
     showCopyNotification(): void {
-        this.snackBar.open(
-            this.translateService.instant('PORTALS.STREAM_URL_COPIED'),
-            undefined,
-            {
-                duration: 2000,
-            }
-        );
+        this.snackBar.open('Stream URL copied to clipboard', undefined, {
+            duration: 2000,
+        });
     }
 
     private initializeSerialDetails(

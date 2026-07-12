@@ -20,8 +20,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ChannelListSkeletonComponent, DialogService } from '@iptvnator/ui/components';
+import {
+    ChannelListSkeletonComponent,
+    DialogService,
+} from '@iptvnator/ui/components';
 import {
     buildGlobalCollectionDetailNavigationTarget,
     buildCollectionViewState,
@@ -54,7 +56,10 @@ import {
     UnifiedFavoritesDataService,
     UnifiedRecentDataService,
 } from '@iptvnator/portal/shared/data-access';
-import { selectAllPlaylistsMeta, selectPlaylistsLoadingFlag } from '@iptvnator/m3u-state';
+import {
+    selectAllPlaylistsMeta,
+    selectPlaylistsLoadingFlag,
+} from '@iptvnator/m3u-state';
 import { EmptyStateComponent } from '@iptvnator/playlist/shared/ui';
 import { UnifiedLiveTabComponent } from './unified-live-tab.component';
 import { UnifiedGridTabComponent } from './unified-grid-tab.component';
@@ -77,7 +82,6 @@ import {
         MatIconModule,
         MatMenuModule,
         MatTooltip,
-        TranslatePipe,
         UnifiedGridTabComponent,
         UnifiedLiveTabComponent,
     ],
@@ -98,8 +102,9 @@ export class UnifiedCollectionPageComponent implements AfterContentInit {
     private readonly favoritesData = inject(UnifiedFavoritesDataService);
     private readonly recentData = inject(UnifiedRecentDataService);
     private readonly dialogService = inject(DialogService);
-    private readonly translate = inject(TranslateService);
-    private readonly workspaceViewCommands = inject(WorkspaceViewCommandService);
+    private readonly workspaceViewCommands = inject(
+        WorkspaceViewCommandService
+    );
     private readonly liveSidebarStateService = inject(
         LiveLayoutSidebarStateService
     );
@@ -236,24 +241,23 @@ export class UnifiedCollectionPageComponent implements AfterContentInit {
     readonly currentTypeLabelKey = computed(() => {
         switch (this.selectedContentType()) {
             case 'live':
-                return 'PORTALS.LIVE_TV';
+                return 'Live TV';
             case 'movie':
-                return 'PORTALS.MOVIES';
+                return 'Movies';
             case 'series':
-                return 'PORTALS.SERIES';
+                return 'Series';
         }
     });
 
-    readonly clearButtonTooltipKey = computed(() =>
-        this.mode() === 'favorites'
-            ? 'WORKSPACE.SHELL.CLEAR_FAVORITES_TYPE'
-            : 'WORKSPACE.SHELL.CLEAR_RECENTLY_VIEWED_TYPE'
-    );
+    readonly clearButtonTooltip = computed(() => {
+        const type = this.currentTypeLabelKey();
+        return this.mode() === 'favorites'
+            ? `Clear ${type} favorites`
+            : `Clear recently viewed ${type}`;
+    });
 
     readonly title = computed(() => {
-        return this.mode() === 'favorites'
-            ? 'PORTALS.FAVORITES'
-            : 'PORTALS.RECENTLY_VIEWED';
+        return this.mode() === 'favorites' ? 'Favorites' : 'Recently viewed';
     });
 
     readonly favSortMode = signal<FavoritesChannelSortMode>(
@@ -274,27 +278,27 @@ export class UnifiedCollectionPageComponent implements AfterContentInit {
     );
     readonly favSortOptions: ReadonlyArray<{
         mode: FavoritesChannelSortMode;
-        translationKey: string;
+        label: string;
         icon: string;
     }> = [
         {
             mode: 'custom',
-            translationKey: 'WORKSPACE.SORT_CUSTOM',
+            label: 'Custom order',
             icon: 'drag_indicator',
         },
         {
             mode: 'name-asc',
-            translationKey: 'WORKSPACE.SORT_NAME_ASC',
+            label: 'Name A-Z',
             icon: 'sort_by_alpha',
         },
         {
             mode: 'name-desc',
-            translationKey: 'WORKSPACE.SORT_NAME_DESC',
+            label: 'Name Z-A',
             icon: 'sort_by_alpha',
         },
         {
             mode: 'date-desc',
-            translationKey: 'WORKSPACE.SORT_DATE_DESC',
+            label: 'Date Added (Latest First)',
             icon: 'schedule',
         },
     ];
@@ -386,19 +390,22 @@ export class UnifiedCollectionPageComponent implements AfterContentInit {
             id: `unified-collection-clear-current-${this.mode()}`,
             group: 'view',
             icon: 'delete_sweep',
-            labelKey: this.clearButtonTooltipKey(),
-            labelParams: () => ({
-                type: this.translate.instant(this.currentTypeLabelKey()),
-            }),
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.CLEAR_CURRENT_VIEW_DESCRIPTION',
-            descriptionParams: () => ({
-                type: this.translate.instant(this.currentTypeLabelKey()),
-            }),
+            labelKey: this.clearButtonTooltip(),
+            descriptionKey: `Clear all visible ${this.currentTypeLabelKey()} items in this view`,
             keywords: () =>
                 this.mode() === 'favorites'
-                    ? ['clear', 'favorites', 'remove', this.selectedContentType()]
-                    : ['clear', 'recent', 'history', this.selectedContentType()],
+                    ? [
+                          'clear',
+                          'favorites',
+                          'remove',
+                          this.selectedContentType(),
+                      ]
+                    : [
+                          'clear',
+                          'recent',
+                          'history',
+                          this.selectedContentType(),
+                      ],
             priority: 10,
             run: () => this.clearAllCurrent(),
         });
@@ -442,15 +449,13 @@ export class UnifiedCollectionPageComponent implements AfterContentInit {
     );
 
     readonly emptyStateTitleKey = computed(() =>
-        this.mode() === 'favorites'
-            ? 'WORKSPACE.GLOBAL_FAVORITES.NO_ITEMS_TITLE'
-            : 'WORKSPACE.GLOBAL_RECENT.NO_ITEMS_TITLE'
+        this.mode() === 'favorites' ? 'No favorites yet' : 'Nothing watched yet'
     );
 
     readonly emptyStateBodyKey = computed(() =>
         this.mode() === 'favorites'
-            ? 'WORKSPACE.GLOBAL_FAVORITES.NO_ITEMS_BODY'
-            : 'WORKSPACE.GLOBAL_RECENT.NO_ITEMS_BODY'
+            ? 'Tap the star icon on any channel, movie, or series to save it here.'
+            : 'Start watching anything from your library and it will show up here.'
     );
 
     goToDashboard(): void {
@@ -541,22 +546,22 @@ export class UnifiedCollectionPageComponent implements AfterContentInit {
         }
 
         const isFavorites = this.mode() === 'favorites';
-        const type = this.translate.instant(this.currentTypeLabelKey());
+        const type = this.currentTypeLabelKey();
         const isPlaylistScope = this.effectiveScope() === 'playlist';
         const titleKey = isFavorites
-            ? 'WORKSPACE.SHELL.CLEAR_FAVORITES_DIALOG_TITLE'
-            : 'WORKSPACE.SHELL.CLEAR_RECENTLY_VIEWED_DIALOG_TITLE';
+            ? 'Remove all {{type}} favorites?'
+            : 'Clear recently viewed {{type}}?';
         const messageKey = isFavorites
             ? isPlaylistScope
-                ? 'WORKSPACE.SHELL.CLEAR_FAVORITES_DIALOG_MESSAGE_PLAYLIST'
-                : 'WORKSPACE.SHELL.CLEAR_FAVORITES_DIALOG_MESSAGE_ALL'
+                ? 'All {{type}} favorites from this playlist will be removed. This action cannot be undone.'
+                : 'All {{type}} favorites across all playlists will be removed. This action cannot be undone.'
             : isPlaylistScope
-              ? 'WORKSPACE.SHELL.CLEAR_RECENTLY_VIEWED_DIALOG_MESSAGE_PLAYLIST'
-              : 'WORKSPACE.SHELL.CLEAR_RECENTLY_VIEWED_DIALOG_MESSAGE_ALL';
+              ? 'All {{type}} items from this playlist will be removed from your recently viewed history. This action cannot be undone.'
+              : 'All {{type}} items across all playlists will be removed from your recently viewed history. This action cannot be undone.';
 
         this.dialogService.openConfirmDialog({
-            title: this.translate.instant(titleKey, { type }),
-            message: this.translate.instant(messageKey, { type }),
+            title: titleKey.replace('{{type}}', type),
+            message: messageKey.replace('{{type}}', type),
             onConfirm: async () => {
                 if (isFavorites) {
                     await this.clearCurrentFavorites(itemsToRemove);

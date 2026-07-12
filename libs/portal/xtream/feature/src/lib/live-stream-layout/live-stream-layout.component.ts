@@ -19,7 +19,6 @@ import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslatePipe } from '@ngx-translate/core';
 import { ResizableDirective } from '@iptvnator/ui/components';
 import {
     GridListComponent,
@@ -105,7 +104,6 @@ interface XtreamLiveChannelItem {
         PortalChannelsListComponent,
         PortalEmptyStateComponent,
         ResizableDirective,
-        TranslatePipe,
         WebPlayerViewComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -219,9 +217,7 @@ export class LiveStreamLayoutComponent implements OnInit, OnDestroy {
         )
     );
     readonly liveEpgPanelSummaryLabelKey = computed(() =>
-        this.activeCatchupProgram()
-            ? 'EPG.ARCHIVE_PLAYBACK'
-            : 'EPG.CURRENT_PROGRAM'
+        this.activeCatchupProgram() ? 'Archive playback' : 'Current program'
     );
     readonly showReturnToLive = computed(
         () => this.activeCatchupProgram() !== null

@@ -10,13 +10,9 @@
 
 ## Locale Strategy
 
-- Date display should follow the user-selected app language from `TranslateService`.
-- When a template renders localized month or weekday names, pass the normalized app locale explicitly to `DatePipe`.
-- Angular locale data is registered in [apps/web/src/app/app-date-locales.ts](/apps/web/src/app/app-date-locales.ts).
-- App language aliases are normalized in [libs/ui/pipes/src/lib/date-format.util.ts](/libs/ui/pipes/src/lib/date-format.util.ts):
-    - `ary` -> `ar-MA`
-    - `by` -> `be`
-    - `zhtw` -> `zh-Hant`
+- The application is English-only. Date and number formatting use `en-US`.
+- Angular's built-in English locale is sufficient; do not register additional locale data.
+- When a template renders month or weekday names, pass `en-US` explicitly when the locale must be deterministic.
 
 ## Parsing Boundaries
 

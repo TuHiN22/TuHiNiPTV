@@ -632,7 +632,7 @@ This project uses modern Angular signal-based APIs and patterns. **ALWAYS** use 
 - Opt-in via `Settings > Metadata (TMDB)` (sends titles to TMDB); optional user API key overrides the embedded default (`DEFAULT_TMDB_API_KEY` in `libs/services/src/lib/tmdb/tmdb-config.ts` — an empty placeholder in the repo by design; the real key lives in the `TMDB_API_KEY` GitHub Actions secret and is injected at CI build time by `tools/tmdb/inject-tmdb-key.mjs`)
 - Match confidence: provider `tmdb_id` trusted fully; otherwise normalized-title + year (±1) search with a strict gate — no confident match means no enrichment
 - Detail views render provider data immediately; enrichment patches the selection asynchronously (staleness-guarded)
-- Cached in SQLite `tmdb_metadata` (via DB worker ops `DB_GET/SET_TMDB_METADATA`); localized via the app language setting
+- Cached in SQLite `tmdb_metadata` (via DB worker ops `DB_GET/SET_TMDB_METADATA`); all requests use English (`en-US`)
 - Service layer: `libs/services/src/lib/tmdb/`; store glue: `libs/portal/xtream/data-access/src/lib/stores/xtream-tmdb-enrichment.ts` and `libs/portal/stalker/data-access/src/lib/stores/stalker-tmdb-enrichment.ts` (hooked in `withStalkerSelection().setSelectedItem`)
 - TMDB attribution (logo + disclaimer) is required and shown in the settings TMDB section and About
 - See `docs/architecture/tmdb-metadata-enrichment.md`
@@ -642,9 +642,9 @@ This project uses modern Angular signal-based APIs and patterns. **ALWAYS** use 
 - Per-playlist favorites and global favorites
 - Recently viewed tracks watch history
 
-**Internationalization**:
+**Language**:
 
-- Uses `@ngx-translate` with 18 language files in `apps/web/src/assets/i18n/`
+- The UI and TMDB metadata are English-only; user-facing copy is stored directly in components and services
 
 ## Development Notes
 

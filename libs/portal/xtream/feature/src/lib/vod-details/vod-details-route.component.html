@@ -34,7 +34,7 @@
         <ng-template appDetailMeta>
             @if (info.actors || info.cast || info.tmdb_cast?.length) {
                 <div class="details__meta-item">
-                    <span class="label">{{ 'XTREAM.ACTORS' | translate }}</span>
+                    <span class="label">{{ 'Actors' }}</span>
                     @if (info.tmdb_cast?.length) {
                         <div class="details__cast-strip">
                             @for (member of info.tmdb_cast; track member.name) {
@@ -81,17 +81,13 @@
             }
             @if (info.director) {
                 <div class="details__meta-item">
-                    <span class="label">{{
-                        'XTREAM.DIRECTOR' | translate
-                    }}</span>
+                    <span class="label">{{ 'Director' }}</span>
                     <span class="value">{{ info.director }}</span>
                 </div>
             }
             @if (info.rating_kinopoisk) {
                 <div class="details__meta-item">
-                    <span class="label">{{
-                        'XTREAM.KINOPOISK_RATING' | translate
-                    }}</span>
+                    <span class="label">{{ 'Rating Kinopoisk' }}</span>
                     <span class="value">{{ info.rating_kinopoisk }}</span>
                 </div>
             }
@@ -119,7 +115,7 @@
                         @if (externalPrimaryLabel(); as label) {
                             {{ label }}
                         } @else {
-                            {{ 'XTREAM.RESUME' | translate }}
+                            {{ 'Resume' }}
                             {{ formatPosition() }}
                         }
                     </span>
@@ -130,7 +126,7 @@
                         (click)="playVod(item)"
                     >
                         <mat-icon>replay</mat-icon>
-                        {{ 'XTREAM.RESTART' | translate }}
+                        {{ 'Start Over' }}
                     </button>
                 }
             } @else {
@@ -154,7 +150,7 @@
                         @if (externalPrimaryLabel(); as label) {
                             {{ label }}
                         } @else {
-                            {{ 'XTREAM.PLAY' | translate }}
+                            {{ 'Play' }}
                         }
                     </span>
                 </button>
@@ -162,7 +158,7 @@
             @if (!isFavorite()) {
                 <button class="favorite-btn" (click)="toggleFavorite()">
                     <mat-icon>add</mat-icon>
-                    {{ 'PORTALS.ADD_TO_FAVORITES' | translate }}
+                    {{ 'Add to favorites' }}
                 </button>
             } @else {
                 <button
@@ -170,7 +166,7 @@
                     (click)="toggleFavorite()"
                 >
                     <mat-icon>check</mat-icon>
-                    {{ 'PORTALS.REMOVE_FROM_FAVORITES' | translate }}
+                    {{ 'Remove from favorites' }}
                 </button>
             }
             @if (isElectron()) {
@@ -180,7 +176,7 @@
                         (click)="playFromLocal()"
                     >
                         <mat-icon>play_circle</mat-icon>
-                        {{ 'DOWNLOADS.PLAY_LOCAL' | translate }}
+                        {{ 'Play Local' }}
                     </button>
                 } @else if (isDownloading()) {
                     <button
@@ -188,12 +184,12 @@
                         disabled
                     >
                         <mat-icon>downloading</mat-icon>
-                        {{ 'DOWNLOADS.STATUS.DOWNLOADING' | translate }}
+                        {{ 'Downloading' }}
                     </button>
                 } @else {
                     <button class="download-btn" (click)="downloadVod(item)">
                         <mat-icon>download</mat-icon>
-                        {{ 'DOWNLOADS.DOWNLOAD' | translate }}
+                        {{ 'Download' }}
                     </button>
                 }
             }
@@ -216,7 +212,7 @@
         <div detail-extras>
             @if (trailerEmbedUrl(); as trailerUrl) {
                 <div class="youtube-trailer">
-                    <h3>{{ 'XTREAM.YOUTUBE_TRAILER' | translate }}</h3>
+                    <h3>{{ 'YouTube Trailer' }}</h3>
                     <div class="trailer-wrapper">
                         <iframe
                             [src]="trailerUrl | safe"
@@ -239,7 +235,7 @@
 
             @if (similarItems().length || similarInPortals().length) {
                 <section class="details__similar" data-test-id="tmdb-similar">
-                    <h3>{{ 'XTREAM.SIMILAR' | translate }}</h3>
+                    <h3>{{ 'Similar' }}</h3>
                     <div class="details__similar-strip">
                         @for (item of similarItems(); track item.id) {
                             <button
@@ -269,15 +265,16 @@
                         }
                         @for (
                             item of similarInPortals();
-                            track 'x' + item.match.playlistId + '-' + item.match.xtreamId
+                            track 'x' +
+                                item.match.playlistId +
+                                '-' +
+                                item.match.xtreamId
                         ) {
                             <button
                                 type="button"
                                 class="details__similar-card"
                                 [title]="
-                                    item.title +
-                                    ' — ' +
-                                    item.match.playlistName
+                                    item.title + ' — ' + item.match.playlistName
                                 "
                                 (click)="openSimilarInPortals(item)"
                             >
@@ -319,7 +316,7 @@
                 class="details__tag details__tag--status"
                 data-testid="xtream-vod-fallback-status"
             >
-                {{ 'XTREAM.DETAIL_FALLBACK.STATUS' | translate }}
+                {{ 'Portal metadata unavailable' }}
             </span>
             @if (fallback.year) {
                 <span class="details__tag">{{ fallback.year }}</span>
@@ -342,12 +339,12 @@
                 class="details__fallback-note"
                 data-testid="xtream-vod-fallback"
             >
-                {{ 'XTREAM.DETAIL_FALLBACK.NOTE' | translate }}
+                {{ 'Extended metadata was not provided by this portal.' }}
             </div>
 
             @for (fact of fallback.facts; track fact.labelKey) {
                 <div class="details__meta-item details__meta-item--fallback">
-                    <span class="label">{{ fact.labelKey | translate }}</span>
+                    <span class="label">{{ fact.labelKey }}</span>
                     <span class="value" [class.value--mono]="fact.monospace">
                         {{ fact.value }}
                     </span>

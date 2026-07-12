@@ -14,7 +14,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 
 export interface DashboardRailAction {
     id: string;
@@ -82,13 +81,7 @@ export interface DashboardRailActionSelection {
 
 @Component({
     selector: 'lib-dashboard-rail',
-    imports: [
-        MatButtonModule,
-        MatIcon,
-        MatMenuModule,
-        RouterLink,
-        TranslatePipe,
-    ],
+    imports: [MatButtonModule, MatIcon, MatMenuModule, RouterLink],
     templateUrl: './dashboard-rail.component.html',
     styleUrl: './dashboard-rail.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

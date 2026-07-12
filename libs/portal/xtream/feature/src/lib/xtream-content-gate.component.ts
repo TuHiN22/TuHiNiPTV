@@ -7,7 +7,6 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterOutlet } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 import { PlaylistErrorViewComponent } from '@iptvnator/portal/shared/ui';
 import { XtreamStore } from '@iptvnator/portal/xtream/data-access';
 import { XtreamCachedOfflineNoticeComponent } from './xtream-cached-offline-notice.component';
@@ -20,15 +19,14 @@ import { XtreamCachedOfflineNoticeComponent } from './xtream-cached-offline-noti
         MatIconModule,
         PlaylistErrorViewComponent,
         RouterOutlet,
-        TranslatePipe,
         XtreamCachedOfflineNoticeComponent,
     ],
     template: `
         @if (contentInitBlockReason(); as blockReason) {
             <div class="xtream-content-gate">
                 <app-playlist-error-view
-                    [title]="titleKey() | translate"
-                    [description]="descriptionKey() | translate"
+                    [title]="errorView().title"
+                    [description]="errorView().description"
                 />
 
                 <div class="xtream-content-gate__actions">
@@ -39,7 +37,7 @@ import { XtreamCachedOfflineNoticeComponent } from './xtream-cached-offline-noti
                         (click)="retryContentInitialization()"
                     >
                         <mat-icon>refresh</mat-icon>
-                        {{ 'DOWNLOADS.RETRY' | translate }}
+                        {{ 'Retry' }}
                     </button>
                 </div>
             </div>
@@ -69,27 +67,40 @@ export class XtreamContentGateComponent {
     private readonly xtreamStore = inject(XtreamStore);
 
     readonly contentInitBlockReason = this.xtreamStore.contentInitBlockReason;
-    private readonly errorViewKey = computed(() => {
+    readonly errorView = computed(() => {
         switch (this.contentInitBlockReason()) {
             case 'cancelled':
-                return 'IMPORT_CANCELLED';
+                return {
+                    title: 'Import cancelled',
+                    description:
+                        'The playlist import was cancelled. Retry when you want to continue loading this source.',
+                };
             case 'expired':
-                return 'ACCOUNT_EXPIRED';
+                return {
+                    title: 'Account expired',
+                    description:
+                        'This account has been expired. Please check the credentials in playlist settings or remove it.',
+                };
             case 'inactive':
-                return 'ACCOUNT_INACTIVE';
+                return {
+                    title: 'Account inactive',
+                    description:
+                        'This account is inactive. Please check the credentials in playlist settings or remove it.',
+                };
             case 'unavailable':
-                return 'PORTAL_UNAVAILABLE';
+                return {
+                    title: 'Portal unavailable',
+                    description:
+                        'The portal could not be reached. Check the server URL or retry when the source is available again.',
+                };
             case 'error':
             default:
-                return 'UNKNOWN_ERROR';
+                return {
+                    title: 'Something went wrong',
+                    description: 'Unknown error, please try again later',
+                };
         }
     });
-    readonly titleKey = computed(
-        () => `PORTALS.ERROR_VIEW.${this.errorViewKey()}.TITLE`
-    );
-    readonly descriptionKey = computed(
-        () => `PORTALS.ERROR_VIEW.${this.errorViewKey()}.DESCRIPTION`
-    );
 
     retryContentInitialization(): void {
         void this.xtreamStore.retryContentInitialization();

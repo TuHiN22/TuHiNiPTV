@@ -14,10 +14,7 @@
             <h3>{{ xtreamImport.xtreamImportTitleLabel() }}</h3>
         </div>
         @if (xtreamImport.xtreamImportPhaseLabel()) {
-            <p
-                class="workspace-loading-overlay__phase"
-                aria-live="polite"
-            >
+            <p class="workspace-loading-overlay__phase" aria-live="polite">
                 {{ xtreamImport.xtreamImportPhaseLabel() }}
             </p>
         }
@@ -55,10 +52,9 @@
                 (click)="onCancel()"
             >
                 {{
-                    (xtreamImport.isCancellingXtreamImport()
-                        ? 'WORKSPACE.SHELL.XTREAM_IMPORT_CANCELLING'
-                        : 'WORKSPACE.SHELL.XTREAM_IMPORT_CANCEL'
-                    ) | translate
+                    xtreamImport.isCancellingXtreamImport()
+                        ? 'Stopping sync...'
+                        : 'Stop sync'
                 }}
             </button>
         }

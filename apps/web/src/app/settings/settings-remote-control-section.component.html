@@ -9,15 +9,15 @@
             <mat-icon>settings_remote</mat-icon>
         </div>
         <div class="settings-group__header-text">
-            <h3>{{ 'SETTINGS.REMOTE_CONTROL' | translate }}</h3>
-            <p>{{ 'SETTINGS.REMOTE_CONTROL_DESCRIPTION' | translate }}</p>
+            <h3>{{ 'Remote control' }}</h3>
+            <p>{{ 'Enable remote control of the application.' }}</p>
         </div>
     </header>
 
     <div class="setting-item">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.REMOTE_CONTROL' | translate }}</h4>
-            <p>{{ 'SETTINGS.REMOTE_CONTROL_DESCRIPTION' | translate }}</p>
+            <h4>{{ 'Remote control' }}</h4>
+            <p>{{ 'Enable remote control of the application.' }}</p>
         </div>
         <div class="setting-item__control setting-item__toggle">
             <mat-checkbox
@@ -30,16 +30,16 @@
     @if (form().value.remoteControl === true) {
         <div class="setting-item">
             <div class="setting-item__meta">
-                <h4>{{ 'SETTINGS.REMOTE_CONTROL_PORT' | translate }}</h4>
+                <h4>{{ 'Remote control port' }}</h4>
                 <p>
-                    {{ 'SETTINGS.REMOTE_CONTROL_PORT_DESCRIPTION' | translate }}
+                    {{
+                        'Port used for remote control of the application. Port 8765 is used by default.'
+                    }}
                 </p>
             </div>
             <div class="setting-item__control">
                 <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                    <mat-label>{{
-                        'SETTINGS.PORT_RANGE_LABEL' | translate
-                    }}</mat-label>
+                    <mat-label>{{ 'Port (1-65535)' }}</mat-label>
                     <input
                         matInput
                         type="number"
@@ -53,24 +53,18 @@
                     @if (
                         form().get('remoteControlPort')?.hasError('required')
                     ) {
-                        <mat-error>{{
-                            'SETTINGS.PORT_REQUIRED' | translate
-                        }}</mat-error>
+                        <mat-error>{{ 'Port is required' }}</mat-error>
                     }
                     @if (form().get('remoteControlPort')?.hasError('min')) {
-                        <mat-error>{{
-                            'SETTINGS.PORT_MIN' | translate
-                        }}</mat-error>
+                        <mat-error>{{ 'Port must be at least 1' }}</mat-error>
                     }
                     @if (form().get('remoteControlPort')?.hasError('max')) {
                         <mat-error>{{
-                            'SETTINGS.PORT_MAX' | translate
+                            'Port must be at most 65535'
                         }}</mat-error>
                     }
                     @if (form().get('remoteControlPort')?.hasError('pattern')) {
-                        <mat-error>{{
-                            'SETTINGS.PORT_PATTERN' | translate
-                        }}</mat-error>
+                        <mat-error>{{ 'Only digits are allowed' }}</mat-error>
                     }
                 </mat-form-field>
             </div>
@@ -79,11 +73,10 @@
         @if (localIpAddresses().length > 0) {
             <div class="setting-item">
                 <div class="setting-item__meta">
-                    <h4>{{ 'SETTINGS.REMOTE_CONTROL_URL' | translate }}</h4>
+                    <h4>{{ 'Remote control URL' }}</h4>
                     <p>
                         {{
-                            'SETTINGS.REMOTE_CONTROL_URL_DESCRIPTION'
-                                | translate
+                            'Access the remote control from another device on the same network.'
                         }}
                     </p>
                 </div>
@@ -109,9 +102,7 @@
                                     mat-icon-button
                                     type="button"
                                     (click)="toggleQrCode.emit(ip)"
-                                    [matTooltip]="
-                                        'SETTINGS.SHOW_QR_CODE' | translate
-                                    "
+                                    [matTooltip]="'Show QR code'"
                                 >
                                     <mat-icon>qr_code_2</mat-icon>
                                 </button>

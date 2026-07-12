@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import {
     selectActiveTypeFilters,
@@ -73,40 +72,6 @@ describe('WorkspaceSourcesComponent', () => {
                         openAddPlaylistDialog: jest.fn(),
                     },
                 },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (
-                            key: string,
-                            params?: Record<string, string | number>
-                        ) => {
-                            if (key === 'WORKSPACE.SOURCES.ALL_PLAYLISTS') {
-                                return 'All Playlists';
-                            }
-                            if (
-                                key === 'WORKSPACE.SOURCES.PLAYLIST_COUNT_ONE'
-                            ) {
-                                return '1 playlist';
-                            }
-                            if (
-                                key === 'WORKSPACE.SOURCES.PLAYLIST_COUNT_OTHER'
-                            ) {
-                                return `${params?.['count']} playlists`;
-                            }
-                            if (key === 'HOME.SORT_OPTIONS.NEWEST') {
-                                return 'Date added (Newest first)';
-                            }
-                            return key;
-                        },
-                        get: (key: string) => of(key),
-                        stream: (key: string) => of(key),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                    },
-                },
             ],
         })
             .overrideComponent(WorkspaceSourcesComponent, {
@@ -116,7 +81,6 @@ describe('WorkspaceSourcesComponent', () => {
                         MatIconModule,
                         MatMenuModule,
                         MockRecentPlaylistsComponent,
-                        TranslatePipe,
                     ],
                 },
             })
@@ -131,8 +95,9 @@ describe('WorkspaceSourcesComponent', () => {
 
         const header: HTMLElement =
             fixture.nativeElement.querySelector('.sources-header');
-        const meta: HTMLElement =
-            fixture.nativeElement.querySelector('.sources-header__meta');
+        const meta: HTMLElement = fixture.nativeElement.querySelector(
+            '.sources-header__meta'
+        );
         const title: HTMLElement =
             fixture.nativeElement.querySelector('.sources-title');
         const subtitle: HTMLElement =

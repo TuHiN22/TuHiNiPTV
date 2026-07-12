@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * Reusable horizontal-rail chrome: label + count badge + "see all" link,
@@ -26,7 +25,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-content-rail-shell',
     standalone: true,
-    imports: [MatIcon, RouterLink, TranslatePipe],
+    imports: [MatIcon, RouterLink],
     templateUrl: './content-rail-shell.component.html',
     styleUrl: './content-rail-shell.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,7 +44,8 @@ export class ContentRailShellComponent implements AfterViewInit, OnDestroy {
     /** Optional active-accent decoration (e.g. the currently-scoped section). */
     readonly active = input<boolean>(false);
 
-    private readonly track = viewChild.required<ElementRef<HTMLDivElement>>('track');
+    private readonly track =
+        viewChild.required<ElementRef<HTMLDivElement>>('track');
 
     readonly canScrollLeft = signal(false);
     readonly canScrollRight = signal(false);
@@ -65,7 +65,9 @@ export class ContentRailShellComponent implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void {
         this.viewReady.set(true);
         this.updateScrollState();
-        this.resizeObserver = new ResizeObserver(() => this.updateScrollState());
+        this.resizeObserver = new ResizeObserver(() =>
+            this.updateScrollState()
+        );
         this.resizeObserver.observe(this.track().nativeElement);
     }
 

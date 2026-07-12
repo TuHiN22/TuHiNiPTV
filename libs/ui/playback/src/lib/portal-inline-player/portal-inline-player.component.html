@@ -7,15 +7,15 @@
                     type="button"
                     class="player-shell__back"
                     data-testid="inline-player-back"
-                    [attr.aria-label]="'BACK' | translate"
-                    [matTooltip]="'BACK' | translate"
+                    [attr.aria-label]="'Back'"
+                    [matTooltip]="'Back'"
                     (click)="onBack()"
                 >
                     <mat-icon>arrow_back</mat-icon>
                 </button>
                 <div class="player-shell__heading">
                     <div class="player-shell__eyebrow">
-                        {{ 'PORTALS.NOW_PLAYING' | translate }}
+                        {{ 'Now playing' }}
                     </div>
                     <h3 class="player-shell__title" [matTooltip]="title()">
                         {{ title() }}
@@ -35,7 +35,7 @@
                         (click)="onCopied()"
                     >
                         <mat-icon>content_copy</mat-icon>
-                        {{ 'PORTALS.COPY_STREAM_URL' | translate }}
+                        {{ 'Copy Stream URL' }}
                     </button>
                     <button
                         mat-stroked-button
@@ -43,7 +43,7 @@
                         (click)="onClose()"
                     >
                         <mat-icon>close</mat-icon>
-                        {{ 'PORTALS.CLOSE_PLAYER' | translate }}
+                        {{ 'Close player' }}
                     </button>
                 </div>
             </div>

@@ -13,8 +13,7 @@
             (click)="toggleCollapsed()"
             [attr.aria-expanded]="!collapsed()"
             [attr.aria-label]="
-                (collapsed() ? 'EPG.EXPAND_PANEL' : 'EPG.COLLAPSE_PANEL')
-                    | translate
+                collapsed() ? 'Expand EPG panel' : 'Collapse EPG panel'
             "
         >
             <span class="epg-timeline__collapse-icon">
@@ -43,32 +42,32 @@
 
         @if (collapsed()) {
             @if (loading()) {
-                <span class="epg-timeline__summary-title">{{
-                    'EPG.LOADING' | translate
-                }}</span>
+                <span class="epg-timeline__summary-title">{{ 'Loading' }}</span>
             } @else if (hasSummary()) {
                 @if (isLivePlayback()) {
                     <span class="epg-timeline__summary-tag is-live">{{
-                        'EPG.TIMELINE.ON_NOW' | translate
+                        'On now'
                     }}</span>
                     <span class="epg-timeline__summary-title">{{
                         summary()?.title
                     }}</span>
                     @if (progress() !== null) {
-                        <span class="epg-timeline__summary-bar" aria-hidden="true">
+                        <span
+                            class="epg-timeline__summary-bar"
+                            aria-hidden="true"
+                        >
                             <i [style.width.%]="progress()"></i>
                         </span>
                     }
                     @if (minutesLeft() !== null) {
                         <span class="epg-timeline__summary-meta"
-                            >{{ minutesLeft() }}
-                            {{ 'EPG.TIMELINE.MINUTES_LEFT' | translate }}</span
+                            >{{ minutesLeft() }} {{ 'min left' }}</span
                         >
                     }
                 } @else {
                     <span class="epg-timeline__summary-tag is-arch">
                         <mat-icon>play_arrow</mat-icon>
-                        {{ 'EPG.ARCHIVE_PLAYBACK' | translate }}
+                        {{ 'Archive playback' }}
                     </span>
                     <span class="epg-timeline__summary-title">{{
                         summary()?.title
@@ -83,7 +82,7 @@
             } @else {
                 <span
                     class="epg-timeline__summary-title epg-timeline__summary-title--muted"
-                    >{{ 'EPG.NO_PROGRAM_INFO' | translate }}</span
+                    >{{ 'No program information available' }}</span
                 >
             }
         } @else {
@@ -93,7 +92,7 @@
                     class="epg-timeline__livebtn"
                     (click)="returnToLive.emit()"
                 >
-                    {{ 'EPG.TIMELINE.RETURN_TO_LIVE' | translate }}
+                    {{ 'Return to live' }}
                 </button>
             }
             @if (showRibbonControls()) {
@@ -101,15 +100,12 @@
                     type="button"
                     class="epg-timeline__jump"
                     (click)="jumpToNow()"
-                    [matTooltip]="'EPG.TIMELINE.JUMP_NOW' | translate"
+                    [matTooltip]="'Jump to now'"
                 >
                     <mat-icon>my_location</mat-icon>
-                    {{ 'EPG.TIMELINE.NOW' | translate }}
+                    {{ 'Now' }}
                 </button>
-                <label
-                    class="epg-timeline__zoom"
-                    [matTooltip]="zoomLabelKey() | translate"
-                >
+                <label class="epg-timeline__zoom" [matTooltip]="zoomLabelKey()">
                     <mat-icon>zoom_in</mat-icon>
                     <input
                         #zoomInput
@@ -119,7 +115,7 @@
                         [step]="zoomStep"
                         [value]="scale()"
                         (input)="onZoom(zoomInput.valueAsNumber)"
-                        [attr.aria-label]="'EPG.TIMELINE.ZOOM' | translate"
+                        [attr.aria-label]="'Zoom'"
                     />
                 </label>
             }
@@ -128,7 +124,7 @@
                     <button
                         type="button"
                         class="epg-timeline__nav"
-                        [attr.aria-label]="'EPG.PREVIOUS_DAY' | translate"
+                        [attr.aria-label]="'Previous day'"
                         (click)="stepDay('prev')"
                     >
                         <mat-icon>chevron_left</mat-icon>
@@ -136,7 +132,7 @@
                     <div class="epg-timeline__day">
                         <span class="epg-timeline__day-main">
                             @if (isViewToday()) {
-                                {{ 'EPG.TIMELINE.TODAY' | translate }}
+                                {{ 'Today' }}
                             } @else {
                                 {{
                                     viewDate()
@@ -145,13 +141,14 @@
                             }
                         </span>
                         <small>{{
-                            viewDate() | date: 'EEE, d MMM' : '' : currentLocale()
+                            viewDate()
+                                | date: 'EEE, d MMM' : '' : currentLocale()
                         }}</small>
                     </div>
                     <button
                         type="button"
                         class="epg-timeline__nav"
-                        [attr.aria-label]="'EPG.NEXT_DAY' | translate"
+                        [attr.aria-label]="'Next day'"
                         (click)="stepDay('next')"
                     >
                         <mat-icon>chevron_right</mat-icon>
@@ -166,13 +163,17 @@
         @if (state === 'ribbon' && !archivePlaybackAvailable()) {
             <div class="epg-timeline__notice" role="note">
                 <mat-icon>info</mat-icon>
-                <span>{{ 'EPG.TIMELINE.SCHEDULE_ONLY_NOTICE' | translate }}</span>
+                <span>{{
+                    "Schedule only. This provider exposes programme history but not catch-up — past programmes can't be played."
+                }}</span>
             </div>
         }
 
         @switch (state) {
             @case ('loading') {
-                <div class="epg-timeline__ribbon epg-timeline__ribbon--skeleton">
+                <div
+                    class="epg-timeline__ribbon epg-timeline__ribbon--skeleton"
+                >
                     @for (width of skeletonWidths; track $index) {
                         <div
                             class="epg-timeline__sk"

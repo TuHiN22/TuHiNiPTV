@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
 import { EpgTimelineTrackComponent } from './epg-timeline-track.component';
 import { TimelineRenderBlock } from './epg-timeline.utils';
 
@@ -43,21 +41,6 @@ describe('EpgTimelineTrackComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [EpgTimelineTrackComponent],
-            providers: [
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                        onLangChange: new BehaviorSubject(null),
-                        onTranslationChange: new BehaviorSubject(null),
-                        onDefaultLangChange: new BehaviorSubject(null),
-                        get: () => new BehaviorSubject(''),
-                        stream: () => new BehaviorSubject(''),
-                        instant: (key: string) => key,
-                    },
-                },
-            ],
         });
         fixture = TestBed.createComponent(EpgTimelineTrackComponent);
         component = fixture.componentInstance;
@@ -86,7 +69,11 @@ describe('EpgTimelineTrackComponent', () => {
         const item = renderBlock({ tier: 'wide' });
         component.onBlockEnter(item, {
             currentTarget: {
-                getBoundingClientRect: () => ({ left: 0, width: 200, bottom: 0 }),
+                getBoundingClientRect: () => ({
+                    left: 0,
+                    width: 200,
+                    bottom: 0,
+                }),
             },
         } as unknown as Event);
         expect(component.popover()).toBeNull();

@@ -2,7 +2,6 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { of, Subject } from 'rxjs';
 import {
     FavoriteItem,
@@ -90,32 +89,6 @@ describe('PortalChannelsListComponent', () => {
         await TestBed.configureTestingModule({
             imports: [PortalChannelsListComponent, NoopAnimationsModule],
             providers: [
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) =>
-                            key === 'CHANNELS.LOADING'
-                                ? 'Loading channels...'
-                                : key,
-                        get: (key: string) =>
-                            of(
-                                key === 'CHANNELS.LOADING'
-                                    ? 'Loading channels...'
-                                    : key
-                            ),
-                        stream: (key: string) =>
-                            of(
-                                key === 'CHANNELS.LOADING'
-                                    ? 'Loading channels...'
-                                    : key
-                            ),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                    },
-                },
                 {
                     provide: XtreamStore,
                     useValue: storeSignals,

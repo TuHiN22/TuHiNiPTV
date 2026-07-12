@@ -1,6 +1,6 @@
 <div class="recently-added-page">
     <h2 class="recently-added-page__title">
-        {{ 'PORTALS.SIDEBAR.RECENTLY_ADDED' | translate }}
+        {{ 'Recently added' }}
     </h2>
 
     @if (isLoading()) {
@@ -25,7 +25,7 @@
         @if (recentlyAddedVod().length > 0) {
             <app-content-rail-shell
                 class="recently-added-page__rail"
-                [label]="'PORTALS.SIDEBAR.MOVIES' | translate"
+                [label]="'Movies'"
                 [totalCount]="recentlyAddedVod().length"
                 [seeAllLink]="vodSeeAllLink()"
                 [seeAllLabel]="vodSeeAllLabel()"
@@ -45,7 +45,7 @@
         @if (recentlyAddedSeries().length > 0) {
             <app-content-rail-shell
                 class="recently-added-page__rail"
-                [label]="'PORTALS.SIDEBAR.SERIES' | translate"
+                [label]="'Series'"
                 [totalCount]="recentlyAddedSeries().length"
                 [seeAllLink]="seriesSeeAllLink()"
                 [seeAllLabel]="seriesSeeAllLabel()"
@@ -65,7 +65,7 @@
         @if (recentlyAddedLive().length > 0) {
             <app-content-rail-shell
                 class="recently-added-page__rail"
-                [label]="'PORTALS.SIDEBAR.LIVE_TV' | translate"
+                [label]="'Live TV'"
                 [totalCount]="recentlyAddedLive().length"
                 [seeAllLink]="liveSeeAllLink()"
                 [seeAllLabel]="liveSeeAllLabel()"

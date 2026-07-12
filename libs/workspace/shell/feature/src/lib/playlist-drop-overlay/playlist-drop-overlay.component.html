@@ -12,19 +12,13 @@
             </mat-icon>
         </div>
         <h2 class="drop-overlay__title">
-            {{
-                (isRejected()
-                    ? rejectionKey()
-                    : 'WORKSPACE.SHELL.DROP_OVERLAY_TITLE'
-                ) | translate
-            }}
+            {{ isRejected() ? rejectionKey() : 'Drop to add playlist' }}
         </h2>
         <p class="drop-overlay__body">
             {{
-                (isRejected()
-                    ? 'WORKSPACE.SHELL.DROP_OVERLAY_REJECTED_BODY'
-                    : 'WORKSPACE.SHELL.DROP_OVERLAY_BODY'
-                ) | translate
+                isRejected()
+                    ? 'Please drop an .m3u or .m3u8 file. Press Esc to dismiss.'
+                    : 'Release an .m3u or .m3u8 file anywhere in the workspace to import it.'
             }}
         </p>
     </div>

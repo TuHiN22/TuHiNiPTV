@@ -8,16 +8,22 @@
             <mat-icon>backup</mat-icon>
         </div>
         <div class="settings-group__header-text">
-            <h3>{{ 'SETTINGS.BACKUP' | translate }}</h3>
-            <p>{{ 'SETTINGS.BACKUP_DESCRIPTION' | translate }}</p>
+            <h3>{{ 'Backup' }}</h3>
+            <p>
+                {{
+                    'Export your library as a snapshot, or restore from a previous backup.'
+                }}
+            </p>
         </div>
     </header>
 
     <div class="setting-item">
         <div class="setting-item__meta">
-            <h4>{{ 'SETTINGS.IMPORT_EXPORT_DATA' | translate }}</h4>
+            <h4>{{ 'Import/export playlist backups' }}</h4>
             <p>
-                {{ 'SETTINGS.IMPORT_EXPORT_DATA_DESCRIPTION' | translate }}
+                {{
+                    'Export or restore playlist backups including M3U snapshots, Xtream/Stalker connection metadata, user state, and EPG source URLs.'
+                }}
             </p>
         </div>
         <div class="setting-item__control inline-actions">
@@ -31,7 +37,7 @@
                     importData.emit()
                 "
             >
-                {{ 'SETTINGS.IMPORT_DATA' | translate }}
+                {{ 'Import' }}
             </button>
             <button
                 mat-button
@@ -52,12 +58,10 @@
                         mode="indeterminate"
                     />
                     <span class="inline-actions__label">{{
-                        'SETTINGS.EXPORTING_DATA' | translate
+                        'Exporting…'
                     }}</span>
                 } @else {
-                    <span class="inline-actions__label">{{
-                        'SETTINGS.EXPORT_DATA' | translate
-                    }}</span>
+                    <span class="inline-actions__label">{{ 'Export' }}</span>
                 }
             </button>
         </div>
@@ -65,7 +69,9 @@
 
     @if (isPwa()) {
         <div class="settings-note">
-            {{ 'SETTINGS.EPG_NOTE' | translate }}
+            {{
+                'Currently EPG is available only in the electron-based version of TuHiN iPTV.'
+            }}
         </div>
     }
 </section>

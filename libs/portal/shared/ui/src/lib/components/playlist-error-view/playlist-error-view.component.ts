@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PlaylistInfoComponent } from '@iptvnator/playlist/shared/ui';
 import { PlaylistContextFacade } from '@iptvnator/playlist/shared/util';
 import { DialogService } from '@iptvnator/ui/components';
@@ -14,7 +13,7 @@ import { PlaylistActions } from '@iptvnator/m3u-state';
     selector: 'app-playlist-error-view',
     templateUrl: './playlist-error-view.component.html',
     styleUrls: ['./playlist-error-view.component.scss'],
-    imports: [MatButtonModule, MatIconModule, RouterLink, TranslateModule],
+    imports: [MatButtonModule, MatIconModule, RouterLink],
 })
 export class PlaylistErrorViewComponent {
     private dialog = inject(MatDialog);
@@ -22,7 +21,6 @@ export class PlaylistErrorViewComponent {
     private readonly playlistContext = inject(PlaylistContextFacade);
     private router = inject(Router);
     private store = inject(Store);
-    private translate = inject(TranslateService);
 
     private readonly currentPlaylist = this.playlistContext.activePlaylist;
 
@@ -47,10 +45,9 @@ export class PlaylistErrorViewComponent {
         }
 
         this.dialogService.openConfirmDialog({
-            title: this.translate.instant('HOME.PLAYLISTS.REMOVE_DIALOG.TITLE'),
-            message: this.translate.instant(
-                'HOME.PLAYLISTS.REMOVE_DIALOG.MESSAGE'
-            ),
+            title: 'Remove playlist',
+            message:
+                'Are you sure you want to delete this playlist completely?',
             onConfirm: (): void => this.removePlaylist(currentPlaylist._id),
         });
     }

@@ -13,7 +13,6 @@ import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { TranslatePipe } from '@ngx-translate/core';
 import { EpgItemDescriptionComponent } from '@iptvnator/ui/epg';
 import { EpgProgram } from '@iptvnator/shared/interfaces';
 
@@ -29,7 +28,6 @@ import { EpgProgram } from '@iptvnator/shared/interfaces';
         MatIconButton,
         MatTooltip,
         NgStyle,
-        TranslatePipe,
     ],
 })
 export class ChannelListItemComponent {

@@ -14,7 +14,6 @@ import {
     MatDialogRef,
 } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
 import {
     WorkspaceCommandGroup,
     WorkspaceCommandSelection,
@@ -36,7 +35,7 @@ interface WorkspaceCommandGroupSection {
 
 @Component({
     selector: 'app-workspace-command-palette',
-    imports: [MatDialogModule, MatIconModule, TranslatePipe],
+    imports: [MatDialogModule, MatIconModule],
     templateUrl: './workspace-command-palette.component.html',
     styleUrl: './workspace-command-palette.component.scss',
 })
@@ -250,15 +249,15 @@ export class WorkspaceCommandPaletteComponent implements AfterViewInit {
 
     getGroupTitleKey(group: PaletteSectionGroup): string {
         if (group === 'recent') {
-            return 'WORKSPACE.COMMAND_PALETTE.GROUP_RECENT';
+            return 'Recently used';
         }
         if (group === 'view') {
-            return 'WORKSPACE.COMMAND_PALETTE.GROUP_VIEW';
+            return 'Current view';
         }
         if (group === 'playlist') {
-            return 'WORKSPACE.COMMAND_PALETTE.GROUP_PLAYLIST';
+            return 'This playlist';
         }
-        return 'WORKSPACE.COMMAND_PALETTE.GROUP_GLOBAL';
+        return 'Global actions';
     }
 
     private moveSelection(direction: 1 | -1): void {

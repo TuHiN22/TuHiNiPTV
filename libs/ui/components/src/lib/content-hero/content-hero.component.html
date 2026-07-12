@@ -159,10 +159,7 @@
                             [attr.aria-expanded]="isDescriptionExpanded()"
                         >
                             <span>{{
-                                (isDescriptionExpanded()
-                                    ? 'SHOW_LESS'
-                                    : 'SHOW_MORE'
-                                ) | translate
+                                isDescriptionExpanded() ? 'Less' : 'More'
                             }}</span>
                             <mat-icon aria-hidden="true">
                                 {{

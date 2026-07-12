@@ -2,8 +2,6 @@ import { computed, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { StalkerStore } from '@iptvnator/portal/stalker/data-access';
 import { WORKSPACE_CATEGORY_SORT_STORAGE_KEY } from '@iptvnator/portal/shared/util';
@@ -12,20 +10,6 @@ import {
     XtreamStore,
 } from '@iptvnator/portal/xtream/data-access';
 import { WorkspaceContextPanelComponent } from './workspace-context-panel.component';
-
-const translations: Record<string, string> = {
-    'WORKSPACE.CONTEXT.MANAGE_CATEGORIES': 'Manage categories',
-    'WORKSPACE.CONTEXT.RADIO_CATEGORIES': 'Radio Categories',
-    'WORKSPACE.CONTEXT.XTREAM_SYNCING_LIVE': 'Syncing live categories...',
-    'WORKSPACE.CONTEXT.XTREAM_SYNCING_MOVIES': 'Syncing movie categories...',
-    'WORKSPACE.CATEGORY_SORT_ARIA': 'Sort categories',
-    'WORKSPACE.SORT_LABEL': 'Sort: ',
-    'WORKSPACE.SORT_NAME_ASC': 'Name A-Z',
-    'WORKSPACE.SORT_NAME_DESC': 'Name Z-A',
-    'WORKSPACE.SORT_SERVER': 'Server sorting',
-    'WORKSPACE.SHELL.XTREAM_IMPORT_LOADING':
-        'Fetching playlist data from source...',
-};
 
 interface RouteSnapshotStub {
     routeConfig: { path: string } | null;
@@ -139,19 +123,6 @@ describe('WorkspaceContextPanelComponent', () => {
         await TestBed.configureTestingModule({
             imports: [WorkspaceContextPanelComponent, NoopAnimationsModule],
             providers: [
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (key: string) => translations[key] ?? key,
-                        get: (key: string) => of(translations[key] ?? key),
-                        stream: (key: string) => of(translations[key] ?? key),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                    },
-                },
                 {
                     provide: XtreamStore,
                     useValue: xtreamStore,
@@ -308,7 +279,7 @@ describe('WorkspaceContextPanelComponent', () => {
         );
     });
 
-    it('uses translated category sort labels and distinct mode icons', () => {
+    it('uses formatted category sort labels and distinct mode icons', () => {
         fixture.componentRef.setInput('section', 'vod');
         xtreamSelectedTypeContentState.set('ready');
         fixture.detectChanges();
@@ -319,29 +290,29 @@ describe('WorkspaceContextPanelComponent', () => {
 
         expect(sortButton?.getAttribute('aria-label')).toBe('Sort categories');
         expect(fixture.componentInstance.categorySortLabelKey()).toBe(
-            'WORKSPACE.SORT_SERVER'
+            'Server sorting'
         );
         expect(fixture.componentInstance.categorySortIcon()).toBe('dns');
         expect(
             fixture.componentInstance.categorySortOptions.map((option) => ({
                 mode: option.mode,
-                translationKey: option.translationKey,
+                label: option.label,
                 icon: option.icon,
             }))
         ).toEqual([
             {
                 mode: 'server',
-                translationKey: 'WORKSPACE.SORT_SERVER',
+                label: 'Server sorting',
                 icon: 'dns',
             },
             {
                 mode: 'name-asc',
-                translationKey: 'WORKSPACE.SORT_NAME_ASC',
+                label: 'Name A-Z',
                 icon: 'sort_by_alpha',
             },
             {
                 mode: 'name-desc',
-                translationKey: 'WORKSPACE.SORT_NAME_DESC',
+                label: 'Name Z-A',
                 icon: 'arrow_downward',
             },
         ]);
@@ -350,7 +321,7 @@ describe('WorkspaceContextPanelComponent', () => {
         fixture.detectChanges();
 
         expect(fixture.componentInstance.categorySortLabelKey()).toBe(
-            'WORKSPACE.SORT_NAME_DESC'
+            'Name Z-A'
         );
         expect(fixture.componentInstance.categorySortIcon()).toBe(
             'arrow_downward'

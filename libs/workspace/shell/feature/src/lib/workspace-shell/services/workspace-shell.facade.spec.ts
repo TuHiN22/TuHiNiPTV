@@ -3,7 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import {
     PlaylistRefreshActionService,
@@ -316,40 +315,6 @@ describe('WorkspaceShellFacade', () => {
                     useValue: startupPreferences,
                 },
                 {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: (
-                            key: string,
-                            params?: Record<string, string | number>
-                        ) => {
-                            if (
-                                key ===
-                                    'WORKSPACE.SHELL.XTREAM_IMPORT_PROGRESS' &&
-                                params
-                            ) {
-                                return `${params.type} imported: ${params.current} / ${params.total}`;
-                            }
-
-                            if (
-                                key ===
-                                    'WORKSPACE.SHELL.XTREAM_REFRESH_PROGRESS' &&
-                                params
-                            ) {
-                                return `Local records processed: ${params.current} / ${params.total}`;
-                            }
-
-                            return key;
-                        },
-                        get: (key: string) => of(key),
-                        stream: (key: string) => of(key),
-                        onLangChange: of(null),
-                        onTranslationChange: of(null),
-                        onDefaultLangChange: of(null),
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                    },
-                },
-                {
                     provide: RecentCommandsService,
                     useValue: recentCommands,
                 },
@@ -402,34 +367,30 @@ describe('WorkspaceShellFacade', () => {
 
         xtreamStore.currentImportPhase.set('loading-categories');
         expect(xtreamImport.xtreamImportPhaseLabel()).toBe(
-            'WORKSPACE.SHELL.XTREAM_IMPORT_LOADING'
+            'Fetching playlist data from source...'
         );
 
         xtreamStore.currentImportPhase.set('loading-live');
         expect(xtreamImport.xtreamImportPhaseLabel()).toBe(
-            'WORKSPACE.SHELL.XTREAM_IMPORT_LOADING'
+            'Fetching playlist data from source...'
         );
-        expect(xtreamImport.xtreamImportSourceLabel()).toBe(
-            'WORKSPACE.SHELL.XTREAM_IMPORT_REMOTE_BADGE'
-        );
+        expect(xtreamImport.xtreamImportSourceLabel()).toBe('Remote source');
         expect(xtreamImport.xtreamImportDetailLabel()).toBe(
-            'WORKSPACE.SHELL.XTREAM_IMPORT_DETAIL_REMOTE'
+            'Waiting on the provider response.'
         );
 
         xtreamStore.currentImportPhase.set('saving-categories');
         expect(xtreamImport.xtreamImportPhaseLabel()).toBe(
-            'WORKSPACE.SHELL.XTREAM_IMPORT_SAVING'
+            'Saving playlist data locally...'
         );
 
         xtreamStore.currentImportPhase.set('saving-content');
         expect(xtreamImport.xtreamImportPhaseLabel()).toBe(
-            'WORKSPACE.SHELL.XTREAM_IMPORT_SAVING'
+            'Saving playlist data locally...'
         );
-        expect(xtreamImport.xtreamImportSourceLabel()).toBe(
-            'WORKSPACE.SHELL.XTREAM_IMPORT_LOCAL_BADGE'
-        );
+        expect(xtreamImport.xtreamImportSourceLabel()).toBe('Local library');
         expect(xtreamImport.xtreamImportDetailLabel()).toBe(
-            'WORKSPACE.SHELL.XTREAM_IMPORT_DETAIL_LOCAL'
+            'Preparing faster playlist switching for the next visit.'
         );
     });
 
@@ -484,16 +445,14 @@ describe('WorkspaceShellFacade', () => {
         });
 
         expect(xtreamImport.xtreamImportTitleLabel()).toBe(
-            'WORKSPACE.SHELL.XTREAM_REFRESH_TITLE'
+            'Refreshing playlist'
         );
-        expect(xtreamImport.xtreamImportSourceLabel()).toBe(
-            'WORKSPACE.SHELL.XTREAM_IMPORT_LOCAL_BADGE'
-        );
+        expect(xtreamImport.xtreamImportSourceLabel()).toBe('Local library');
         expect(xtreamImport.xtreamImportPhaseLabel()).toBe(
-            'WORKSPACE.SHELL.XTREAM_REFRESH_DELETING_CONTENT'
+            'Removing cached streams...'
         );
         expect(xtreamImport.xtreamImportDetailLabel()).toBe(
-            'WORKSPACE.SHELL.XTREAM_REFRESH_DETAIL_LOCAL'
+            'Keeping favorites, watch history, hidden categories, and playback progress ready for restore after sync.'
         );
         expect(xtreamImport.xtreamImportProgressLabel()).toBe(
             'Local records processed: 5 / 10'
@@ -510,11 +469,9 @@ describe('WorkspaceShellFacade', () => {
         xtreamStore.activeImportCurrentCount.set(20);
         xtreamStore.activeImportTotalCount.set(12323);
 
-        expect(xtreamImport.xtreamImportTypeLabel()).toBe(
-            'WORKSPACE.SHELL.RAIL_MOVIES'
-        );
+        expect(xtreamImport.xtreamImportTypeLabel()).toBe('Movies');
         expect(xtreamImport.xtreamImportProgressLabel()).toBe(
-            'WORKSPACE.SHELL.RAIL_MOVIES imported: 20 / 12,323'
+            'Movies imported: 20 / 12,323'
         );
     });
 
@@ -589,9 +546,7 @@ describe('WorkspaceShellFacade', () => {
 
         expect(stalkerStore.setSearchPhrase).toHaveBeenCalledWith('cnn');
         expect(facade.canUseSearch()).toBe(true);
-        expect(facade.searchStatusLabel()).toBe(
-            'WORKSPACE.SHELL.SEARCH_STATUS_LOADED_ONLY'
-        );
+        expect(facade.searchStatusLabel()).toBe('Loaded channels only');
     });
 
     it('treats stalker radio search as a remote section search', () => {
@@ -601,9 +556,7 @@ describe('WorkspaceShellFacade', () => {
 
         expect(stalkerStore.setSearchPhrase).toHaveBeenCalledWith('jazz');
         expect(facade.canUseSearch()).toBe(true);
-        expect(facade.searchScopeLabel()).toBe(
-            'WORKSPACE.SHELL.RAIL_RADIO / All Items'
-        );
+        expect(facade.searchScopeLabel()).toBe('Radio / All Items');
         expect(facade.searchStatusLabel()).toBe('');
     });
 
@@ -641,13 +594,11 @@ describe('WorkspaceShellFacade', () => {
         expect(facade.searchQuery()).toBe('news');
     });
 
-    it('uses the translated global favorites scope label on the global favorites route', () => {
+    it('uses the formatted global favorites scope label on the global favorites route', () => {
         facade.currentUrl.set('/workspace/global-favorites?q=news');
         searchSync.syncSearchFromRoute();
 
-        expect(facade.searchScopeLabel()).toBe(
-            'HOME.PLAYLISTS.GLOBAL_FAVORITES'
-        );
+        expect(facade.searchScopeLabel()).toBe('Global favorites');
     });
 
     it('removes the dashboard rail link when dashboard is hidden', () => {
@@ -656,24 +607,24 @@ describe('WorkspaceShellFacade', () => {
         expect(facade.workspaceLinks()).toEqual([
             {
                 icon: 'library_books',
-                tooltip: 'WORKSPACE.SHELL.RAIL_SOURCES',
+                tooltip: 'Sources',
                 path: ['/workspace/sources'],
             },
             {
                 icon: 'search',
-                tooltip: 'WORKSPACE.SHELL.RAIL_GLOBAL_SEARCH',
+                tooltip: 'Global search',
                 path: ['/workspace/search'],
                 exact: true,
             },
             {
                 icon: 'favorite',
-                tooltip: 'HOME.PLAYLISTS.GLOBAL_FAVORITES',
+                tooltip: 'Global favorites',
                 path: ['/workspace/global-favorites'],
                 exact: true,
             },
             {
                 icon: 'history',
-                tooltip: 'WORKSPACE.SHELL.RAIL_GLOBAL_RECENT',
+                tooltip: 'Recently viewed',
                 path: ['/workspace/global-recent'],
                 exact: true,
             },
@@ -698,11 +649,11 @@ describe('WorkspaceShellFacade', () => {
         ).toHaveBeenCalledWith('/workspace/xtreams/pl-1/vod');
     });
 
-    it('uses the translated recent scope label on the global recent route', () => {
+    it('uses the formatted recent scope label on the global recent route', () => {
         facade.currentUrl.set('/workspace/global-recent?q=news');
         searchSync.syncSearchFromRoute();
 
-        expect(facade.searchScopeLabel()).toBe('PORTALS.RECENTLY_VIEWED');
+        expect(facade.searchScopeLabel()).toBe('Recently viewed');
     });
 
     it('shows only actionable global commands on an empty dashboard', () => {
@@ -813,12 +764,11 @@ describe('WorkspaceShellFacade', () => {
         headerContext.setAction({
             id: 'm3u-multi-epg',
             icon: 'view_list',
-            tooltipKey: 'TOP_MENU.OPEN_MULTI_EPG',
-            ariaLabelKey: 'TOP_MENU.OPEN_MULTI_EPG',
+            tooltipKey: 'Open Multi-EPG view',
+            ariaLabelKey: 'Open Multi-EPG view',
             palette: {
-                labelKey: 'TOP_MENU.OPEN_MULTI_EPG',
-                descriptionKey:
-                    'WORKSPACE.SHELL.COMMANDS.OPEN_MULTI_EPG_DESCRIPTION',
+                labelKey: 'Open Multi-EPG view',
+                descriptionKey: 'Open the multi-channel EPG view',
                 keywords: ['epg', 'guide', 'schedule'],
                 priority: 10,
             },
@@ -851,10 +801,9 @@ describe('WorkspaceShellFacade', () => {
             id: 'clear-current-favorites',
             group: 'view',
             icon: 'delete_sweep',
-            labelKey: 'WORKSPACE.SHELL.CLEAR_FAVORITES_TYPE',
+            labelKey: 'Clear {{type}} favorites',
             labelParams: () => ({ type: 'Live TV' }),
-            descriptionKey:
-                'WORKSPACE.SHELL.COMMANDS.CLEAR_CURRENT_VIEW_DESCRIPTION',
+            descriptionKey: 'Clear all visible {{type}} items in this view',
             descriptionParams: () => ({ type: 'Live TV' }),
             priority: 10,
             run: clearCurrent,

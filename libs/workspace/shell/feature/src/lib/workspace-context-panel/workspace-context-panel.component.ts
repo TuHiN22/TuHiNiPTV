@@ -16,7 +16,6 @@ import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { StalkerStore } from '@iptvnator/portal/stalker/data-access';
 import {
     PortalCategorySortMode,
@@ -55,7 +54,6 @@ interface WorkspaceCategoryLike {
         MatIcon,
         MatMenuModule,
         MatTooltip,
-        TranslatePipe,
         WorkspaceContextCategoryViewComponent,
         WorkspaceContextErrorViewComponent,
     ],
@@ -68,7 +66,6 @@ export class WorkspaceContextPanelComponent {
     private readonly stalkerStore = inject(StalkerStore);
     private readonly dialog = inject(MatDialog);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly translate = inject(TranslateService);
 
     readonly context = input.required<WorkspaceContextRoute>();
     readonly section = input.required<string>();
@@ -127,13 +124,11 @@ export class WorkspaceContextPanelComponent {
             return '';
         }
 
-        const syncLabel = this.translate.instant(
-            this.getXtreamSyncLabelKey(this.section())
-        );
+        const syncLabel = this.getXtreamSyncLabelKey(this.section());
         const phaseKey = this.getXtreamImportPhaseLabelKey(
             this.xtreamImportPhase()
         );
-        const phaseLabel = phaseKey ? this.translate.instant(phaseKey) : '';
+        const phaseLabel = phaseKey ? phaseKey : '';
 
         return phaseLabel ? `${syncLabel} ${phaseLabel}` : syncLabel;
     });
@@ -161,22 +156,22 @@ export class WorkspaceContextPanelComponent {
     );
     readonly categorySortOptions: ReadonlyArray<{
         mode: PortalCategorySortMode;
-        translationKey: string;
+        label: string;
         icon: string;
     }> = [
         {
             mode: 'server',
-            translationKey: 'WORKSPACE.SORT_SERVER',
+            label: 'Server sorting',
             icon: 'dns',
         },
         {
             mode: 'name-asc',
-            translationKey: 'WORKSPACE.SORT_NAME_ASC',
+            label: 'Name A-Z',
             icon: 'sort_by_alpha',
         },
         {
             mode: 'name-desc',
-            translationKey: 'WORKSPACE.SORT_NAME_DESC',
+            label: 'Name Z-A',
             icon: 'arrow_downward',
         },
     ];
@@ -268,36 +263,36 @@ export class WorkspaceContextPanelComponent {
     readonly title = computed(() => {
         if (this.isXtreamCategories()) {
             if (this.section() === 'vod') {
-                return 'WORKSPACE.CONTEXT.MOVIE_CATEGORIES';
+                return 'Movie Categories';
             }
             if (this.section() === 'series') {
-                return 'WORKSPACE.CONTEXT.SERIES_CATEGORIES';
+                return 'Series Categories';
             }
-            return 'WORKSPACE.CONTEXT.LIVE_CATEGORIES';
+            return 'Live Categories';
         }
 
         if (this.isStalkerCategories()) {
             if (this.section() === 'vod') {
-                return 'WORKSPACE.CONTEXT.MOVIE_CATEGORIES';
+                return 'Movie Categories';
             }
             if (this.section() === 'series') {
-                return 'WORKSPACE.CONTEXT.SERIES_CATEGORIES';
+                return 'Series Categories';
             }
             if (this.section() === 'radio') {
-                return 'WORKSPACE.CONTEXT.RADIO_CATEGORIES';
+                return 'Radio Categories';
             }
-            return 'WORKSPACE.CONTEXT.LIVE_CATEGORIES';
+            return 'Live Categories';
         }
 
-        return 'WORKSPACE.CONTEXT.CATEGORIES';
+        return 'Categories';
     });
 
     readonly subtitle = computed(() => {
         if (this.isXtreamCategories()) {
-            return 'WORKSPACE.CONTEXT.XTREAM_SOURCE';
+            return 'Xtream source';
         }
         if (this.isStalkerCategories()) {
-            return 'WORKSPACE.CONTEXT.STALKER_PORTAL';
+            return 'Stalker portal';
         }
         return '';
     });
@@ -484,31 +479,31 @@ export class WorkspaceContextPanelComponent {
     private getXtreamSyncLabelKey(section: string): string {
         switch (section) {
             case 'live':
-                return 'WORKSPACE.CONTEXT.XTREAM_SYNCING_LIVE';
+                return 'Syncing live categories...';
             case 'series':
-                return 'WORKSPACE.CONTEXT.XTREAM_SYNCING_SERIES';
+                return 'Syncing series categories...';
             case 'vod':
             default:
-                return 'WORKSPACE.CONTEXT.XTREAM_SYNCING_MOVIES';
+                return 'Syncing movie categories...';
         }
     }
 
     private getXtreamImportPhaseLabelKey(phase: string | null): string {
         switch (phase) {
             case 'preparing-content':
-                return 'WORKSPACE.SHELL.XTREAM_IMPORT_PREPARING';
+                return 'Preparing local library...';
             case 'loading-categories':
             case 'loading-live':
             case 'loading-movies':
             case 'loading-series':
-                return 'WORKSPACE.SHELL.XTREAM_IMPORT_LOADING';
+                return 'Fetching playlist data from source...';
             case 'saving-categories':
             case 'saving-content':
-                return 'WORKSPACE.SHELL.XTREAM_IMPORT_SAVING';
+                return 'Saving playlist data locally...';
             case 'restoring-favorites':
-                return 'WORKSPACE.SHELL.XTREAM_IMPORT_RESTORING_FAVORITES';
+                return 'Restoring favorites from local library...';
             case 'restoring-recently-viewed':
-                return 'WORKSPACE.SHELL.XTREAM_IMPORT_RESTORING_RECENT';
+                return 'Restoring recently viewed from local library...';
             default:
                 return '';
         }
@@ -517,12 +512,12 @@ export class WorkspaceContextPanelComponent {
     private getCategorySortLabelKey(mode: PortalCategorySortMode): string {
         switch (mode) {
             case 'name-asc':
-                return 'WORKSPACE.SORT_NAME_ASC';
+                return 'Name A-Z';
             case 'name-desc':
-                return 'WORKSPACE.SORT_NAME_DESC';
+                return 'Name Z-A';
             case 'server':
             default:
-                return 'WORKSPACE.SORT_SERVER';
+                return 'Server sorting';
         }
     }
 

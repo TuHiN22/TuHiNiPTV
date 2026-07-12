@@ -24,11 +24,6 @@
                     {
                         "glob": "**/*",
                         "input": "apps/remote-control-web/public"
-                    },
-                    {
-                        "glob": "**/*",
-                        "input": "apps/web/src/assets/i18n",
-                        "output": "assets/i18n"
                     }
                 ],
                 "styles": ["apps/remote-control-web/src/styles.scss"]
@@ -75,12 +70,6 @@
                 }
             },
             "defaultConfiguration": "development"
-        },
-        "extract-i18n": {
-            "executor": "@angular/build:extract-i18n",
-            "options": {
-                "buildTarget": "remote-control-web:build"
-            }
         },
         "lint": {
             "executor": "@nx/eslint:lint"

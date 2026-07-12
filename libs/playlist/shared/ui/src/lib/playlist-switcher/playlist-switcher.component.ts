@@ -11,7 +11,6 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
@@ -23,8 +22,6 @@ import { MatMenu, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Store } from '@ngrx/store';
-import { normalizeDateLocale } from '@iptvnator/pipes';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DialogService } from '@iptvnator/ui/components';
 import { PlaylistActions } from '@iptvnator/m3u-state';
 import { PlaylistContextFacade } from '@iptvnator/playlist/shared/util';
@@ -34,7 +31,6 @@ import {
     PortalStatusService,
 } from '@iptvnator/services';
 import { PlaylistMeta } from '@iptvnator/shared/interfaces';
-import { startWith } from 'rxjs';
 import { PlaylistRefreshActionService } from '../playlist-refresh-action.service';
 import { PlaylistInfoComponent } from '../recent-playlists/playlist-info/playlist-info.component';
 
@@ -63,7 +59,6 @@ const DEFAULT_PLAYLIST_TYPE_FILTERS: Record<PlaylistFilterType, boolean> = {
         MatMenuModule,
         MatRippleModule,
         MatTooltip,
-        TranslatePipe,
     ],
 })
 export class PlaylistSwitcherComponent {
@@ -71,7 +66,6 @@ export class PlaylistSwitcherComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly playlistContext = inject(PlaylistContextFacade);
     private readonly portalStatusService = inject(PortalStatusService);
-    private readonly translate = inject(TranslateService);
     private readonly refreshAction = inject(PlaylistRefreshActionService);
     private readonly dialog = inject(MatDialog);
     private readonly dialogService = inject(DialogService);
@@ -79,10 +73,6 @@ export class PlaylistSwitcherComponent {
     private readonly snackBar = inject(MatSnackBar);
     private readonly store = inject(Store);
     private focusSearchTimeoutId: ReturnType<typeof setTimeout> | null = null;
-    private readonly languageTick = toSignal(
-        this.translate.onLangChange.pipe(startWith(null)),
-        { initialValue: null }
-    );
 
     readonly currentTitle = input.required<string>();
     readonly subtitle = input<string>('');
@@ -185,12 +175,7 @@ export class PlaylistSwitcherComponent {
      * PortalStatusService so it's shared across components.
      */
     private portalStatusAbortController: AbortController | null = null;
-    readonly currentLocale = computed(() => {
-        this.languageTick();
-        return normalizeDateLocale(
-            this.translate.currentLang || this.translate.defaultLang
-        );
-    });
+    readonly currentLocale = () => 'en-US';
 
     constructor() {
         this.destroyRef.onDestroy(() => {
@@ -298,10 +283,9 @@ export class PlaylistSwitcherComponent {
         event?.stopPropagation();
         this.menuTrigger().closeMenu();
         this.dialogService.openConfirmDialog({
-            title: this.translate.instant('HOME.PLAYLISTS.REMOVE_DIALOG.TITLE'),
-            message: this.translate.instant(
-                'HOME.PLAYLISTS.REMOVE_DIALOG.MESSAGE'
-            ),
+            title: 'Remove playlist',
+            message:
+                'Are you sure you want to delete this playlist completely?',
             onConfirm: () => this.removePlaylistConfirmed(playlist),
         });
     }
@@ -319,11 +303,9 @@ export class PlaylistSwitcherComponent {
         this.store.dispatch(
             PlaylistActions.removePlaylist({ playlistId: playlist._id })
         );
-        this.snackBar.open(
-            this.translate.instant('HOME.PLAYLISTS.REMOVE_DIALOG.SUCCESS'),
-            undefined,
-            { duration: 2000 }
-        );
+        this.snackBar.open('Playlist was removed successfully', undefined, {
+            duration: 2000,
+        });
     }
 
     getPlaylistIcon(playlist: PlaylistMeta): string {
@@ -351,15 +333,6 @@ export class PlaylistSwitcherComponent {
 
     getPlaylistMetaLabel(playlist: PlaylistMeta): string {
         const count = playlist.count ?? 0;
-        const channelsLabel = this.translate.instant(
-            'HOME.PLAYLISTS.CHANNELS_COUNT',
-            { count }
-        );
-        const fallback = `${count} channels`;
-        const countLabel =
-            channelsLabel && channelsLabel !== 'HOME.PLAYLISTS.CHANNELS_COUNT'
-                ? channelsLabel
-                : fallback;
 
         if (playlist.macAddress) {
             return 'Stalker Portal';
@@ -367,7 +340,7 @@ export class PlaylistSwitcherComponent {
         if (playlist.serverUrl) {
             return 'Xtream Code';
         }
-        return countLabel;
+        return `${count} channels`;
     }
 
     getStatusClass(playlistId: string): string {

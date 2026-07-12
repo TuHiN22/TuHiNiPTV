@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { TranslateService } from '@ngx-translate/core';
 import { DataService } from '@iptvnator/services';
-import { PlaylistMeta, StalkerPortalActions } from '@iptvnator/shared/interfaces';
+import {
+    PlaylistMeta,
+    StalkerPortalActions,
+} from '@iptvnator/shared/interfaces';
 import { StalkerSessionService } from '../../stalker-session.service';
 import { withStalkerContent } from './with-stalker-content.feature';
 
@@ -122,12 +124,6 @@ describe('withStalkerContent failure states', () => {
                         makeAuthenticatedRequest: jest.fn(),
                     },
                 },
-                {
-                    provide: TranslateService,
-                    useValue: {
-                        instant: jest.fn((key: string) => key),
-                    },
-                },
             ],
         });
 
@@ -205,7 +201,7 @@ describe('withStalkerContent failure states', () => {
             store
                 .getCategoryResource()
                 .map((category) => category.category_name)
-        ).toEqual(['PORTALS.ALL_CATEGORIES', 'Zulu', 'Alpha', 'Movies']);
+        ).toEqual(['All categories', 'Zulu', 'Alpha', 'Movies']);
     });
 
     it('normalizes content failures into empty collections instead of undefined state', async () => {
@@ -348,13 +344,13 @@ describe('withStalkerContent failure states', () => {
         expect(store.getCategoryResource()).toEqual([
             {
                 category_id: '*',
-                category_name: 'PORTALS.ALL_RADIO',
+                category_name: 'All radio',
             },
         ]);
         expect(store.radioCategories()).toEqual([
             {
                 category_id: '*',
-                category_name: 'PORTALS.ALL_RADIO',
+                category_name: 'All radio',
             },
         ]);
         expect(store.isCategoryResourceFailed()).toBeNull();

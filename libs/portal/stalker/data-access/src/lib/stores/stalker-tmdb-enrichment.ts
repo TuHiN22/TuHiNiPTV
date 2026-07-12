@@ -18,8 +18,8 @@ import {
  * so one code path covers both — only the TMDB media type differs.
  *
  * Stalker portals never expose a TMDB id, so resolution always goes
- * through the title search with the confidence gate. Cyrillic titles are
- * handled by the search-language override in TmdbEnrichmentService.
+ * through the title search with the confidence gate. All TMDB requests use
+ * English, including searches for non-Latin provider titles.
  */
 
 interface StalkerEnrichableStore {

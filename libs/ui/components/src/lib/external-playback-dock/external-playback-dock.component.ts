@@ -10,17 +10,11 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { TranslatePipe } from '@ngx-translate/core';
 import { ExternalPlayerSession } from '@iptvnator/shared/interfaces';
 
 @Component({
     selector: 'app-external-playback-dock',
-    imports: [
-        MatButtonModule,
-        MatIcon,
-        MatProgressSpinnerModule,
-        TranslatePipe,
-    ],
+    imports: [MatButtonModule, MatIcon, MatProgressSpinnerModule],
     templateUrl: './external-playback-dock.component.html',
     styleUrl: './external-playback-dock.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

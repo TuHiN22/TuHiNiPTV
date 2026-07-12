@@ -15,7 +15,6 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PlaylistType } from '@iptvnator/playlist/shared/ui';
 import { PlaylistActions } from '@iptvnator/m3u-state';
 import { DataService } from '@iptvnator/services';
@@ -46,7 +45,6 @@ export interface PlaylistMethodOption {
         MatIcon,
         StalkerPortalImportComponent,
         TextImportComponent,
-        TranslateModule,
         UrlUploadComponent,
         XtreamCodeImportComponent,
     ],
@@ -60,7 +58,6 @@ export class AddPlaylistDialogComponent {
     private dialogRef = inject(MatDialogRef<AddPlaylistDialogComponent>);
     private store = inject(Store);
     private snackBar = inject(MatSnackBar);
-    private translateService = inject(TranslateService);
     private data = inject<{ type?: PlaylistType } | null>(MAT_DIALOG_DATA, {
         optional: true,
     });
@@ -83,32 +80,32 @@ export class AddPlaylistDialogComponent {
         {
             value: 'url',
             icon: 'public',
-            labelKey: 'HOME.ADD_PLAYLIST.METHOD_URL_LABEL',
-            subKey: 'HOME.ADD_PLAYLIST.METHOD_URL_SUB',
+            labelKey: 'M3U URL',
+            subKey: 'Paste a link to a remote .m3u or .m3u8',
         },
         {
             value: 'file',
             icon: 'folder_open',
-            labelKey: 'HOME.ADD_PLAYLIST.METHOD_FILE_LABEL',
-            subKey: 'HOME.ADD_PLAYLIST.METHOD_FILE_SUB',
+            labelKey: 'M3U file',
+            subKey: 'Upload a playlist from your computer',
         },
         {
             value: 'xtream',
             icon: 'vpn_key',
-            labelKey: 'HOME.ADD_PLAYLIST.METHOD_XTREAM_LABEL',
-            subKey: 'HOME.ADD_PLAYLIST.METHOD_XTREAM_SUB',
+            labelKey: 'Xtream credentials',
+            subKey: 'Connect with host, username and password',
         },
         {
             value: 'stalker',
             icon: 'cast',
-            labelKey: 'HOME.ADD_PLAYLIST.METHOD_STALKER_LABEL',
-            subKey: 'HOME.ADD_PLAYLIST.METHOD_STALKER_SUB',
+            labelKey: 'Stalker portal',
+            subKey: 'MAC address and portal URL',
         },
         {
             value: 'text',
             icon: 'subject',
-            labelKey: 'HOME.ADD_PLAYLIST.METHOD_TEXT_LABEL',
-            subKey: 'HOME.ADD_PLAYLIST.METHOD_TEXT_SUB',
+            labelKey: 'Raw m3u text',
+            subKey: 'For one-off lists or when you only have text',
         },
     ];
 
@@ -135,9 +132,7 @@ export class AddPlaylistDialogComponent {
 
     rejectFile(filename: string): void {
         this.snackBar.open(
-            this.translateService.instant('HOME.FILE_UPLOAD.REJECTED', {
-                filename,
-            })
+            `File was rejected, unsupported file format ${filename}.`
         );
     }
 
@@ -173,7 +168,7 @@ export class AddPlaylistDialogComponent {
             PlaylistActions.parsePlaylist({
                 uploadType: 'TEXT',
                 playlist,
-                title: this.translateService.instant('HOME.IMPORTED_AS_TEXT'),
+                title: 'Imported as text',
             })
         );
         this.closeDialog();

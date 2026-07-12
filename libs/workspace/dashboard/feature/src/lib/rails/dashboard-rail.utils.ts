@@ -37,29 +37,29 @@ export function buildDashboardSourceActions(
             id: 'refresh',
             icon: 'sync',
             labelKey: playlist.serverUrl
-                ? 'HOME.PLAYLISTS.REFRESH_XTREAM'
-                : 'HOME.PLAYLISTS.REFRESH',
+                ? 'Refresh Xtream playlist from remote'
+                : 'Refresh playlist',
         });
     }
 
     actions.push({
         id: 'playlist-info',
         icon: 'edit',
-        labelKey: 'HOME.PLAYLISTS.SHOW_DETAILS',
+        labelKey: 'Show playlist details',
     });
 
     if (isXtreamAccountPlaylist(playlist)) {
         actions.push({
             id: 'account-info',
             icon: 'person',
-            labelKey: 'WORKSPACE.SHELL.ACCOUNT_INFO',
+            labelKey: 'Account info',
         });
     }
 
     actions.push({
         id: 'remove',
         icon: 'delete',
-        labelKey: 'HOME.PLAYLISTS.REMOVE_DIALOG.TITLE',
+        labelKey: 'Remove playlist',
         destructive: true,
         separatorBefore: true,
     });
@@ -83,8 +83,8 @@ export function liveRailTitleKeyForSource(
     source: 'favorites' | 'recent'
 ): string {
     return source === 'favorites'
-        ? 'WORKSPACE.DASHBOARD.LIVE_FAVORITES'
-        : 'WORKSPACE.DASHBOARD.RECENTLY_WATCHED_LIVE_TV';
+        ? 'Live now on your favorites'
+        : 'Recently watched live TV';
 }
 
 export function buildDashboardCollectionViewState(

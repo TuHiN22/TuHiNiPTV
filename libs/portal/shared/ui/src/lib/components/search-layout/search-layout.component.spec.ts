@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe } from 'ng-mocks';
 import { SearchLayoutComponent } from './search-layout.component';
 
 describe('SearchLayoutComponent', () => {
@@ -12,15 +10,7 @@ describe('SearchLayoutComponent', () => {
             imports: [SearchLayoutComponent],
         })
             .overrideComponent(SearchLayoutComponent, {
-                remove: { imports: [TranslatePipe] },
-                add: {
-                    imports: [
-                        MockPipe(
-                            TranslatePipe,
-                            (value: string | null | undefined) => value ?? ''
-                        ),
-                    ],
-                },
+                remove: { imports: [] },
             })
             .compileComponents();
 
@@ -60,9 +50,7 @@ describe('SearchLayoutComponent', () => {
 
     it('shows the back button only when showBackButton is set and emits backClick', () => {
         fixture.detectChanges();
-        expect(
-            fixture.debugElement.query(By.css('.header-back'))
-        ).toBeNull();
+        expect(fixture.debugElement.query(By.css('.header-back'))).toBeNull();
 
         fixture.componentRef.setInput('showBackButton', true);
         fixture.detectChanges();

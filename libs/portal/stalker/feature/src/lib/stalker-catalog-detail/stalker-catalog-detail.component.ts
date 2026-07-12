@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import {
     getStalkerReturnToState,
     PORTAL_EXTERNAL_PLAYBACK,
@@ -79,7 +78,6 @@ export class StalkerCatalogDetailComponent implements OnDestroy {
     private readonly router = inject(Router);
     readonly externalPlayback = inject(PORTAL_EXTERNAL_PLAYBACK);
     private readonly snackBar = inject(MatSnackBar);
-    private readonly translateService = inject(TranslateService);
     private readonly playlistService = inject(PlaylistsService);
     private readonly downloadsService = inject(DownloadsService);
     private readonly logger = createLogger('StalkerCatalogDetail');
@@ -261,13 +259,9 @@ export class StalkerCatalogDetailComponent implements OnDestroy {
     }
 
     showCopyNotification(): void {
-        this.snackBar.open(
-            this.translateService.instant('PORTALS.STREAM_URL_COPIED'),
-            undefined,
-            {
-                duration: 2000,
-            }
-        );
+        this.snackBar.open('Stream URL copied to clipboard', undefined, {
+            duration: 2000,
+        });
     }
 
     handleExternalFallbackRequest(request: PlaybackFallbackRequest): void {
@@ -382,13 +376,12 @@ export class StalkerCatalogDetailComponent implements OnDestroy {
         } catch (error) {
             this.logger.error('Failed to start inline VOD playback', error);
             const failure = classifyStalkerPlaybackFailure(error);
-            const errorMessage = this.translateService.instant(
+            const errorMessage =
                 failure === 'content-unavailable'
-                    ? 'PORTALS.CONTENT_NOT_AVAILABLE'
+                    ? 'This content is not available on this server'
                     : failure === 'stream-offline'
-                      ? 'PORTALS.STREAM_OFFLINE'
-                      : 'PORTALS.PLAYBACK_ERROR'
-            );
+                      ? 'STREAM is OFFLINE'
+                      : 'Failed to get playback URL';
             this.snackBar.open(errorMessage, undefined, {
                 duration: 3000,
             });

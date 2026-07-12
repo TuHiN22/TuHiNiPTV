@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { EpgProgram } from '@iptvnator/shared/interfaces';
-import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, of } from 'rxjs';
+import { of } from 'rxjs';
 import { EpgTimelineComponent } from './epg-timeline.component';
 import { TimelineBlock } from './epg-timeline.utils';
 
@@ -40,14 +39,8 @@ describe('EpgTimelineComponent', () => {
             providers: [
                 {
                     provide: MatDialog,
-                    useValue: { open: () => ({ afterClosed: () => of(undefined) }) },
-                },
-                {
-                    provide: TranslateService,
                     useValue: {
-                        currentLang: 'en',
-                        defaultLang: 'en',
-                        onLangChange: new BehaviorSubject(null),
+                        open: () => ({ afterClosed: () => of(undefined) }),
                     },
                 },
             ],

@@ -8,12 +8,8 @@
             [value]="query()"
             (input)="onQueryInput($event)"
             (keydown)="onInputKeydown($event)"
-            [placeholder]="
-                'WORKSPACE.COMMAND_PALETTE.SEARCH_PLACEHOLDER' | translate
-            "
-            [attr.aria-label]="
-                'WORKSPACE.COMMAND_PALETTE.SEARCH_LABEL' | translate
-            "
+            [placeholder]="'Type to filter commands'"
+            [attr.aria-label]="'Filter commands'"
         />
         <kbd class="palette-search__kbd">&#8984;K</kbd>
     </label>
@@ -25,7 +21,7 @@
             @for (group of commandGroups(); track group.group) {
                 <section class="palette-group">
                     <h3 class="palette-group__title">
-                        {{ getGroupTitleKey(group.group) | translate }}
+                        {{ getGroupTitleKey(group.group) }}
                     </h3>
                     @for (command of group.items; track command.id) {
                         <button
@@ -55,7 +51,7 @@
     } @else {
         <div class="palette-divider"></div>
         <div class="palette-empty">
-            {{ 'WORKSPACE.COMMAND_PALETTE.EMPTY' | translate }}
+            {{ 'No commands found' }}
         </div>
     }
 </div>

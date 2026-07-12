@@ -14,13 +14,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PlaylistActions } from '@iptvnator/m3u-state';
-import {
-    StalkerPortalIdentity,
-    StalkerSessionService,
-    normalizeStalkerPortalIdentity,
-} from '@iptvnator/portal/stalker/data-access';
+import { StalkerSessionService } from '@iptvnator/portal/stalker/data-access';
 import { Playlist } from '@iptvnator/shared/interfaces';
 import { v4 as uuid } from 'uuid';
 
@@ -43,7 +38,6 @@ function atLeastOneContentTypeValidator(
         MatIconModule,
         MatInputModule,
         ReactiveFormsModule,
-        TranslatePipe,
     ],
     selector: 'app-stalker-portal-import',
     templateUrl: './stalker-portal-import.component.html',
@@ -58,11 +52,6 @@ export class StalkerPortalImportComponent {
             _id: new FormControl(uuid()),
             title: new FormControl('', [Validators.required]),
             macAddress: new FormControl('', [Validators.required]),
-            serialNumber: new FormControl(''),
-            deviceId1: new FormControl(''),
-            deviceId2: new FormControl(''),
-            signature1: new FormControl(''),
-            signature2: new FormControl(''),
             password: new FormControl(''),
             username: new FormControl(''),
             portalUrl: new FormControl('', [
@@ -81,7 +70,6 @@ export class StalkerPortalImportComponent {
     private readonly stalkerSessionService = inject(StalkerSessionService);
     private readonly store = inject(Store);
     private readonly snackBar = inject(MatSnackBar);
-    readonly translate = inject(TranslateService);
 
     readonly isLoading = signal(false);
 
@@ -105,22 +93,13 @@ export class StalkerPortalImportComponent {
             return;
         }
 
-        const stalkerIdentity = normalizeStalkerPortalIdentity({
-            serialNumber: formValue.serialNumber ?? undefined,
-            deviceId1: formValue.deviceId1 ?? undefined,
-            deviceId2: formValue.deviceId2 ?? undefined,
-            signature1: formValue.signature1 ?? undefined,
-            signature2: formValue.signature2 ?? undefined,
-        });
-
         this.isTestingConnection.set(true);
         this.connectionStatus.set(null);
 
         try {
             const authResult = await this.stalkerSessionService.authenticate(
                 transformedUrl,
-                macAddress,
-                stalkerIdentity
+                macAddress
             );
 
             this.connectionStatus.set(authResult.token ? 'online' : 'offline');
@@ -136,17 +115,11 @@ export class StalkerPortalImportComponent {
     getStatusMessage(): string {
         switch (this.connectionStatus()) {
             case 'online':
-                return this.translate.instant(
-                    'HOME.STALKER_PORTAL.CONNECTION_ONLINE'
-                );
+                return 'Connection successful — portal is online';
             case 'offline':
-                return this.translate.instant(
-                    'HOME.STALKER_PORTAL.CONNECTION_OFFLINE'
-                );
+                return 'Portal reachable but rejected the connection. Check the MAC address or credentials.';
             case 'unavailable':
-                return this.translate.instant(
-                    'HOME.STALKER_PORTAL.CONNECTION_UNAVAILABLE'
-                );
+                return 'Could not reach the portal. Check the URL and your network.';
             default:
                 return '';
         }
@@ -191,11 +164,6 @@ export class StalkerPortalImportComponent {
             _id: uuid(),
             title: '',
             macAddress: '',
-            serialNumber: '',
-            deviceId1: '',
-            deviceId2: '',
-            signature1: '',
-            signature2: '',
             password: '',
             username: '',
             portalUrl: '',
@@ -221,13 +189,6 @@ export class StalkerPortalImportComponent {
             const transformedUrl = this.transformPortalUrl(originalUrl);
             const isFullStalkerPortal =
                 this.isFullStalkerPortalUrl(originalUrl);
-            const stalkerIdentity = normalizeStalkerPortalIdentity({
-                serialNumber: formValue.serialNumber ?? undefined,
-                deviceId1: formValue.deviceId1 ?? undefined,
-                deviceId2: formValue.deviceId2 ?? undefined,
-                signature1: formValue.signature1 ?? undefined,
-                signature2: formValue.signature2 ?? undefined,
-            });
 
             let stalkerToken: string | undefined;
             let stalkerAccountInfo: Playlist['stalkerAccountInfo'] | undefined;
@@ -238,8 +199,7 @@ export class StalkerPortalImportComponent {
                     const authResult =
                         await this.stalkerSessionService.authenticate(
                             transformedUrl,
-                            formValue.macAddress ?? '',
-                            stalkerIdentity
+                            formValue.macAddress ?? ''
                         );
 
                     stalkerToken = authResult.token;
@@ -260,7 +220,7 @@ export class StalkerPortalImportComponent {
                             stalkerAccountInfo.expireDate * 1000
                         );
                         this.snackBar.open(
-                            `Portal validated. Expires: ${expireDate.toLocaleDateString()}`,
+                            `Portal validated. Expires: ${expireDate.toLocaleDateString('en-US')}`,
                             undefined,
                             { duration: 3000 }
                         );
@@ -281,11 +241,6 @@ export class StalkerPortalImportComponent {
             }
 
             const {
-                serialNumber: _serialNumber,
-                deviceId1: _deviceId1,
-                deviceId2: _deviceId2,
-                signature1: _signature1,
-                signature2: _signature2,
                 importLive,
                 importVod,
                 importSeries,
@@ -307,7 +262,6 @@ export class StalkerPortalImportComponent {
                 stalkerToken,
                 stalkerAccountInfo,
                 importContentTypes,
-                ...this.toPlaylistIdentityFields(stalkerIdentity),
             } as Playlist;
 
             this.store.dispatch(PlaylistActions.addPlaylist({ playlist }));
@@ -323,32 +277,6 @@ export class StalkerPortalImportComponent {
      */
     isFullStalkerPortalUrl(url: string): boolean {
         return url.includes('/stalker_portal');
-    }
-
-    private toPlaylistIdentityFields(identity: StalkerPortalIdentity): {
-        stalkerSerialNumber?: string;
-        stalkerDeviceId1?: string;
-        stalkerDeviceId2?: string;
-        stalkerSignature1?: string;
-        stalkerSignature2?: string;
-    } {
-        return {
-            ...(identity.serialNumber
-                ? { stalkerSerialNumber: identity.serialNumber }
-                : {}),
-            ...(identity.deviceId1
-                ? { stalkerDeviceId1: identity.deviceId1 }
-                : {}),
-            ...(identity.deviceId2
-                ? { stalkerDeviceId2: identity.deviceId2 }
-                : {}),
-            ...(identity.signature1
-                ? { stalkerSignature1: identity.signature1 }
-                : {}),
-            ...(identity.signature2
-                ? { stalkerSignature2: identity.signature2 }
-                : {}),
-        };
     }
 
     /**
