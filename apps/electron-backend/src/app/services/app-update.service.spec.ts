@@ -220,6 +220,66 @@ describe('AppUpdateService', () => {
         );
     });
 
+    it('falls back to GitHub releases when updater metadata is missing', async () => {
+        const currentRelease = githubReleases.find(
+            (release) => release.tag_name === 'v0.22.0'
+        );
+        const fetcher = createReleaseFetcher([[currentRelease]]);
+        const { service, updater } = createService({ fetcher });
+        updater.checkForUpdates.mockRejectedValueOnce(
+            new Error(
+                'Cannot find latest.yml in the latest release artifacts: HttpError: 404'
+            )
+        );
+
+        await service.checkForUpdates();
+
+        expect(fetcher).toHaveBeenCalledTimes(1);
+        expect(service.getStatus()).toMatchObject({
+            error: undefined,
+            latestVersion: '0.22.0',
+            status: ELECTRON_BRIDGE_APP_UPDATE_STATUSES.NotAvailable,
+            supportedSelfUpdate: false,
+        });
+    });
+
+    it('offers a manual update when a newer release lacks updater metadata', async () => {
+        const fetcher = createReleaseFetcher([[githubReleases[0]]]);
+        const { service, updater } = createService({ fetcher });
+        updater.checkForUpdates.mockRejectedValueOnce(
+            new Error(
+                'Cannot find latest.yml in the latest release artifacts: HttpError: 404'
+            )
+        );
+
+        await service.checkForUpdates();
+
+        expect(service.getStatus()).toMatchObject({
+            latestVersion: '0.24.0',
+            status: ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Available,
+            supportedSelfUpdate: false,
+        });
+        expect(updater.downloadUpdate).not.toHaveBeenCalled();
+    });
+
+    it('never exposes verbose updater errors to the renderer', () => {
+        const { service } = createService();
+        const consoleError = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => undefined);
+
+        service.handleError(
+            new Error('HttpError: 500\nheaders: secret diagnostics\nstack trace')
+        );
+
+        expect(service.getStatus()).toMatchObject({
+            error: 'The automatic update could not be completed. Try again or download the latest version from GitHub Releases.',
+            status: ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Error,
+        });
+        expect(consoleError).toHaveBeenCalledTimes(1);
+        consoleError.mockRestore();
+    });
+
     it('deduplicates concurrent update checks', async () => {
         const { service, updater } = createService();
         let resolveCheck: ((value: unknown) => void) | undefined;

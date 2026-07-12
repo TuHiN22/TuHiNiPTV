@@ -184,11 +184,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
         ...this.osPlayers(),
     ]);
 
-    /** Current version of the app */
-    version = '';
-
-    /** Update message to show */
-    updateMessage = '';
+    /** Current version bundled with the running app. */
+    readonly version = this.dataService.getAppVersion();
     readonly appUpdateStatus = signal<ElectronBridgeAppUpdateStatus | null>(
         null
     );
@@ -258,7 +255,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.setSettings();
         this.bindDashboardControlsEnabledState();
         void this.loadEmbeddedMpvSupport();
-        this.checkAppVersion();
         this.bindAppUpdateStatusEvents();
         void this.loadAppUpdateStatus();
         void this.fetchLocalIpAddresses();
@@ -539,49 +535,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
      */
     setEpgUrls(epgUrls: string[] | string): void {
         applyEpgUrlsToFormArray(this.epgUrl, epgUrls);
-    }
-
-    /**
-     * Checks whether the latest version of the application
-     * is used and updates the version message in the
-     * settings UI
-     */
-    checkAppVersion(): void {
-        this.settingsService
-            .getAppVersion()
-            .pipe(take(1))
-            .subscribe((version) => this.showVersionInformation(version));
-    }
-
-    /**
-     * Updates the message in settings UI about the used
-     * version of the app
-     * @param currentVersion current version of the application
-     */
-    showVersionInformation(currentVersion: string): void {
-        const isOutdated = this.isCurrentVersionOutdated(currentVersion);
-
-        if (isOutdated) {
-            this.updateMessage = `${
-                'There is a new version available' as string
-            }: ${currentVersion}`;
-        } else {
-            this.updateMessage = 'You are using the latest version';
-        }
-    }
-
-    /**
-     * Compares actual with latest version of the
-     * application
-     * @param latestVersion latest version
-     * @returns returns true if an update is available
-     */
-    isCurrentVersionOutdated(latestVersion: string): boolean {
-        this.version = this.dataService.getAppVersion();
-        return this.settingsService.isVersionOutdated(
-            this.version,
-            latestVersion
-        );
     }
 
     /**

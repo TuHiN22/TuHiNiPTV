@@ -23,7 +23,6 @@ export class SettingsAboutSectionComponent {
     readonly activeSection = input.required<string>();
     readonly isDesktop = input(false);
     readonly version = input<string | undefined>();
-    readonly updateMessage = input<string | undefined>();
     readonly appUpdateStatus = input<ElectronBridgeAppUpdateStatus | null>(
         null
     );
@@ -73,7 +72,26 @@ export class SettingsAboutSectionComponent {
     readonly canOpenManualAppUpdate = computed(() => {
         const status = this.appUpdateStatus();
 
-        return Boolean(status && !status.supportedSelfUpdate);
+        return Boolean(
+            status &&
+                (!status.supportedSelfUpdate ||
+                    status.status ===
+                        ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Error)
+        );
+    });
+
+    readonly appUpdateErrorMessage = computed(() => {
+        const error = this.appUpdateStatus()?.error?.trim();
+
+        if (!error) {
+            return null;
+        }
+
+        if (/latest(?:-[\w-]+)?\.ya?ml|\b404\b/i.test(error)) {
+            return 'Automatic update files are unavailable for this release. Download the latest version from GitHub Releases.';
+        }
+
+        return error.split(/\r?\n/, 1)[0].slice(0, 240);
     });
 
     readonly appUpdateStatusLabel = computed(() => {

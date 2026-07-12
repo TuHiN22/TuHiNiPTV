@@ -21,7 +21,6 @@ function configureComponent(
     fixture.componentRef.setInput('activeSection', 'about');
     fixture.componentRef.setInput('isDesktop', true);
     fixture.componentRef.setInput('version', '0.22.0');
-    fixture.componentRef.setInput('updateMessage', '');
     fixture.componentRef.setInput('appUpdateStatus', status);
     fixture.detectChanges();
 }
@@ -35,6 +34,39 @@ describe('SettingsAboutSectionComponent app updates', () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(SettingsAboutSectionComponent);
+    });
+
+    it('renders the bundled application version', () => {
+        configureComponent(fixture, {
+            currentVersion: '0.22.0',
+            manualDownloadUrl:
+                'https://github.com/TuHiN22/TuHiNiPTV/releases/latest',
+            status: ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Idle,
+            supportedSelfUpdate: true,
+        });
+
+        expect(
+            fixture.nativeElement.querySelector('[data-test-id="app-version"]')
+                ?.textContent
+        ).toContain('0.22.0');
+    });
+
+    it('replaces verbose updater metadata errors with manual-update guidance', () => {
+        configureComponent(fixture, {
+            currentVersion: '0.22.0',
+            error: 'Cannot find latest.yml in the latest release artifacts\nHttpError: 404\nlong stack trace',
+            manualDownloadUrl:
+                'https://github.com/TuHiN22/TuHiNiPTV/releases/latest',
+            status: ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Error,
+            supportedSelfUpdate: true,
+        });
+
+        expect(
+            fixture.nativeElement.querySelector(
+                '[data-test-id="app-update-error"]'
+            )?.textContent
+        ).toContain('Download the latest version from GitHub Releases.');
+        expect(getButton(fixture, 'app-update-open-release')).toBeTruthy();
     });
 
     it('emits a download request when a supported update is available', () => {

@@ -53,7 +53,7 @@ import {
     selectIsEpgAvailable,
 } from '@iptvnator/m3u-state';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { from, of } from 'rxjs';
+import { of } from 'rxjs';
 import { ElectronServiceStub } from '../services/electron.service.stub';
 import { SettingsStore } from '../services/settings-store.service';
 import { SettingsService } from '../services/settings.service';
@@ -147,15 +147,7 @@ class MockSettingsStore {
 }
 
 class MockSettingsService {
-    getAppVersion = jest.fn().mockReturnValue(from(Promise.resolve('1.0.0')));
     changeTheme = jest.fn();
-    isVersionOutdated = jest.fn().mockImplementation(
-        (currentVersion: string, latestVersion: string) =>
-            currentVersion.localeCompare(latestVersion, undefined, {
-                numeric: true,
-                sensitivity: 'base',
-            }) < 0
-    );
 }
 
 interface SettingsSectionScrollDirectiveTestApi {
@@ -172,7 +164,6 @@ interface SettingsComponentPrivateTestApi {
 describe('SettingsComponent', () => {
     let component: SettingsComponent;
     let fixture: ComponentFixture<SettingsComponent>;
-    let electronService: DataService;
     let router: Router;
     let settingsStore: unknown;
     let dialogService: DialogService;
@@ -338,7 +329,6 @@ describe('SettingsComponent', () => {
         } as unknown as typeof window.electron;
 
         fixture = TestBed.createComponent(SettingsComponent);
-        electronService = TestBed.inject(DataService);
         settingsStore = TestBed.inject(SettingsStore);
         router = TestBed.inject(Router);
         dialogService = TestBed.inject(DialogService);
@@ -350,7 +340,6 @@ describe('SettingsComponent', () => {
         snackBar = TestBed.inject(MatSnackBar) as unknown as MatSnackBarStub;
 
         component = fixture.componentInstance;
-        component.checkAppVersion = jest.fn();
         component.fetchLocalIpAddresses = jest
             .fn()
             .mockResolvedValue(undefined);
@@ -538,7 +527,6 @@ describe('SettingsComponent', () => {
         const dialogFixture = TestBed.createComponent(SettingsComponent);
         const dialogComponent = dialogFixture.componentInstance;
 
-        dialogComponent.checkAppVersion = jest.fn();
         dialogComponent.fetchLocalIpAddresses = jest
             .fn()
             .mockResolvedValue(undefined);
@@ -576,7 +564,6 @@ describe('SettingsComponent', () => {
                 scrollTo,
             } as unknown as HTMLElement;
 
-            scrollComponent.checkAppVersion = jest.fn();
             scrollComponent.fetchLocalIpAddresses = jest
                 .fn()
                 .mockResolvedValue(undefined);
@@ -708,7 +695,6 @@ describe('SettingsComponent', () => {
                 TestBed.createComponent(SettingsComponent);
             const partialBridgeComponent =
                 partialBridgeFixture.componentInstance;
-            partialBridgeComponent.checkAppVersion = jest.fn();
             partialBridgeComponent.fetchLocalIpAddresses = jest
                 .fn()
                 .mockResolvedValue(undefined);
@@ -762,7 +748,6 @@ describe('SettingsComponent', () => {
                 TestBed.createComponent(SettingsComponent);
             const launchOnlyBridgeComponent =
                 launchOnlyBridgeFixture.componentInstance;
-            launchOnlyBridgeComponent.checkAppVersion = jest.fn();
             launchOnlyBridgeComponent.fetchLocalIpAddresses = jest
                 .fn()
                 .mockResolvedValue(undefined);
@@ -825,37 +810,6 @@ describe('SettingsComponent', () => {
                     .players()
                     .some((player) => player.id === VideoPlayer.EmbeddedMpv)
             ).toBe(true);
-        });
-    });
-
-    describe('Version check', () => {
-        const latestVersion = '1.0.0';
-        const currentVersion = '0.1.0';
-
-        beforeEach(() => {
-            const settingsService = TestBed.inject(SettingsService);
-            (settingsService.getAppVersion as jest.Mock).mockReturnValue(
-                of(latestVersion)
-            );
-        });
-
-        it('should return true if version is outdated', () => {
-            jest.spyOn(electronService, 'getAppVersion').mockReturnValue(
-                currentVersion
-            );
-            const isOutdated =
-                component.isCurrentVersionOutdated(latestVersion);
-            expect(isOutdated).toBeTruthy();
-        });
-
-        it('should update notification message if version is outdated', () => {
-            jest.spyOn(electronService, 'getAppVersion').mockReturnValue(
-                currentVersion
-            );
-            component.showVersionInformation(latestVersion);
-            expect(component.updateMessage).toBe(
-                'There is a new version available: 1.0.0'
-            );
         });
     });
 
@@ -996,7 +950,6 @@ describe('SettingsComponent', () => {
 
         const browserFixture = TestBed.createComponent(SettingsComponent);
         const browserComponent = browserFixture.componentInstance;
-        browserComponent.checkAppVersion = jest.fn();
         browserComponent.fetchLocalIpAddresses = jest
             .fn()
             .mockResolvedValue(undefined);
@@ -1176,7 +1129,6 @@ describe('SettingsComponent', () => {
             partialFileSaveFixture = TestBed.createComponent(SettingsComponent);
             const partialFileSaveComponent =
                 partialFileSaveFixture.componentInstance;
-            partialFileSaveComponent.checkAppVersion = jest.fn();
             partialFileSaveComponent.fetchLocalIpAddresses = jest
                 .fn()
                 .mockResolvedValue(undefined);
@@ -1427,7 +1379,6 @@ describe('SettingsComponent', () => {
 
         const webFixture = TestBed.createComponent(SettingsComponent);
         const webComponent = webFixture.componentInstance;
-        webComponent.checkAppVersion = jest.fn();
         webComponent.fetchLocalIpAddresses = jest
             .fn()
             .mockResolvedValue(undefined);

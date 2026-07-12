@@ -21,8 +21,7 @@
             <p>{{ 'Current version of the application' }}</p>
         </div>
         <div class="setting-item__control version-block">
-            <span>{{ version() }}</span>
-            <small>{{ updateMessage() }}</small>
+            <span data-test-id="app-version">{{ version() }}</span>
         </div>
     </div>
 
@@ -37,8 +36,8 @@
                     <strong>
                         {{ appUpdateStatusLabel() }}
                     </strong>
-                    @if (updateStatus.error) {
-                        <span>{{ updateStatus.error }}</span>
+                    @if (appUpdateErrorMessage(); as errorMessage) {
+                        <span data-test-id="app-update-error">{{ errorMessage }}</span>
                     }
                     @if (updateStatus.progress; as progress) {
                         <progress

@@ -152,6 +152,33 @@ function normalizeError(error: unknown): string {
     return String(error);
 }
 
+function isMissingUpdateMetadataError(error: unknown): boolean {
+    const message = normalizeError(error);
+
+    return (
+        /\b404\b/.test(message) &&
+        /latest(?:-[\w-]+)?\.ya?ml/i.test(message)
+    );
+}
+
+function toUserFacingUpdateError(error: unknown): string {
+    const message = normalizeError(error);
+
+    if (isMissingUpdateMetadataError(error)) {
+        return 'Automatic update files are unavailable for this release. Download the latest version from GitHub Releases.';
+    }
+
+    if (
+        /\b(?:ENOTFOUND|ECONNREFUSED|ECONNRESET|ETIMEDOUT)\b|ERR_(?:INTERNET_DISCONNECTED|NETWORK_CHANGED|NAME_NOT_RESOLVED)/i.test(
+            message
+        )
+    ) {
+        return 'GitHub could not be reached. Check your internet connection and try again.';
+    }
+
+    return 'The automatic update could not be completed. Try again or download the latest version from GitHub Releases.';
+}
+
 function normalizeVersion(value: string | null | undefined): string {
     return (value ?? '').trim().replace(/^v/i, '');
 }
@@ -235,6 +262,7 @@ export class AppUpdateService {
     private readonly releaseFetcher: ReleaseFetcher;
     private readonly releases: CachedGitHubRelease[] = [];
     private readonly updater: AppUpdaterAdapter | null = null;
+    private selfUpdateMetadataAvailable = true;
     private loadedReleasePages = 0;
     private loadedAllReleases = false;
     private checkForUpdatesPromise: Promise<ElectronBridgeAppUpdateStatus> | null =
@@ -301,12 +329,23 @@ export class AppUpdateService {
 
         try {
             if (this.updater) {
+                this.selfUpdateMetadataAvailable = true;
                 await this.updater.checkForUpdates();
             } else {
                 await this.checkGitHubReleaseForManualUpdate();
             }
         } catch (error) {
-            this.handleError(error);
+            if (this.updater && isMissingUpdateMetadataError(error)) {
+                this.selfUpdateMetadataAvailable = false;
+
+                try {
+                    await this.checkGitHubReleaseForManualUpdate();
+                } catch (fallbackError) {
+                    this.handleError(fallbackError);
+                }
+            } else {
+                this.handleError(error);
+            }
         }
 
         return this.getStatus();
@@ -368,7 +407,7 @@ export class AppUpdateService {
     }
 
     async downloadUpdate(): Promise<ElectronBridgeAppUpdateStatus> {
-        if (!this.updater) {
+        if (!this.updater || !this.getStatus().supportedSelfUpdate) {
             this.setStatus({
                 status: ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Unsupported,
             });
@@ -448,8 +487,9 @@ export class AppUpdateService {
     }
 
     handleError(error: unknown): void {
+        console.error('Automatic app update failed:', error);
         this.setStatus({
-            error: normalizeError(error),
+            error: toUserFacingUpdateError(error),
             status: ELECTRON_BRIDGE_APP_UPDATE_STATUSES.Error,
         });
     }
@@ -619,7 +659,8 @@ export class AppUpdateService {
             ...update,
             currentVersion: this.currentVersion,
             manualDownloadUrl: APP_UPDATE_MANUAL_DOWNLOAD_URL,
-            supportedSelfUpdate: this.supportedSelfUpdate,
+            supportedSelfUpdate:
+                this.supportedSelfUpdate && this.selfUpdateMetadataAvailable,
         };
         this.emitStatus();
     }
